@@ -1,0 +1,64 @@
+server:
+  port: 20010
+
+spring:
+  application:
+    name: authService
+  sql:
+    init:
+      mode: always
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+#    url: jdbc:mariadb://192.168.0.17:3306/newjeans
+    #    url: jdbc:mariadb://localhost:3307/mariadb
+#    url: jdbc:mariadb://localhost:3333/mariadb
+    url: jdbc:mariadb://localhost:3306/newjeans?serverTimezone=Asia/Seoul
+
+    username: root
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate.format_sql: true
+    show-sql: true
+    open-in-view: false
+    defer-datasource-initialization: true
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      file-size-threshold: 0
+      enabled: true
+
+
+  jwt:
+    secret: asdklfjdaslkfj2iofj308f230f203f20f03ffjf2jf0
+    token-valid-time: 86400000
+    refresh-token-valid-time: 604800000
+
+kakao:
+  client-id: 2515f45fc0d9a50bfeee4e2db7c37005
+  client-secret: VTtYUbpcA51R3KZaRhcB4cWDTqL40akQ
+  redirect-uri: "http://localhost:5173/kakaologin"
+
+# 로컬 이미지 저장 루트
+#ImgLocation: "D:/images"
+#ProfileImgLocation: "D:/profileImages"
+#uploadPath: "file:///D:/images/"
+#profileUploadPath: "file:///D:/profileImages/"
+
+# 서버 이미지 저장 루트
+#ImgLocation: "/app/images"
+#ProfileImgLocation: "/app/profileImages"
+#uploadPath: "file:///D:/images/"
+#profileUploadPath: "file:///D:/profileImages/"
+
+# MacBook 데스크톱 이미지 저장 경로 설정
+ImgLocation: "/Users/pc/Downloads/images"
+ProfileImgLocation: "/Users/pc/Downloads/profileImages"
+uploadPath: "file:///Users/pc/Downloads/images/"
+profileUploadPath: "file:///Users/pc/Downloads/profileImages/"
