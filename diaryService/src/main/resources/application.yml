@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: dailyLog
+    name: diaryService
   sql:
     init:
       mode: always
