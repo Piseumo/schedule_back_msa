@@ -1,0 +1,8 @@
+# 이미지 삭제
+docker rmi jeun0415/first-service:msa.k8.01
+
+# 이미지 생성
+docker build -t jeun0415/first-service:msa.k8.01 .
+
+# 이미지 dockerhub 업로드 명령어
+docker push jeun0415/first-service:msa.k8.01
