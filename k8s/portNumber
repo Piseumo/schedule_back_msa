@@ -1,0 +1,12 @@
+authService=70001
+diaryService=70002
+exchangeServices=70003
+fileServices=70004
+friendServices=70005
+imageServices=70006
+kakaoLoginServices=70007
+loginServices=70008
+scheduleServices=70009
+searchServices=70010
+statisticsServices=70011
+userServices=70012
