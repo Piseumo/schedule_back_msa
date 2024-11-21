@@ -1,9 +1,9 @@
 server:
-  port: 70003
+  port: 70002
 
 spring:
   application:
-    name: friendService
+    name: calendarService
   sql:
     init:
       mode: always
