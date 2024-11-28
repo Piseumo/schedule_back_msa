@@ -2,6 +2,7 @@ package com.example.calendarService.entity;
 
 import com.example.calendarService.constant.Color;
 import com.example.calendarService.constant.RepeatType;
+import com.example.calendarService.constant.Share;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "schedule")
-@Getter @Setter
+@Getter
 @ToString
 @NoArgsConstructor
 @Builder
@@ -52,6 +53,10 @@ public class Schedule {
 
     @Column(name = "repeat_group_id", nullable = false)
     private Long repeatGroupId;
+
+    @Column(name = "s_share", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Share share;
 
     @ManyToOne
     @JoinColumn(name = "cal_idx", nullable = false)

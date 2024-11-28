@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "diaryImage")
-@Getter @Setter
+@Getter
 @ToString
 public class DiaryImage {
 

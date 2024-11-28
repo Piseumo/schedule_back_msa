@@ -1,6 +1,7 @@
 package com.example.calendarService.entity;
 
 import com.example.calendarService.constant.Category;
+import com.example.calendarService.constant.Share;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,6 @@ import java.util.List;
 @Entity
 @Table(name = "diary")
 @Getter
-@Setter
 @ToString
 @Builder
 @NoArgsConstructor
@@ -37,6 +37,9 @@ public class Diary {
     @Enumerated(EnumType.STRING)
     private Category category = Category.DAILY;
 
+    @Column(name = "d_share", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Share share;
 
     @ManyToOne
     @JoinColumn(name = "cal_idx", nullable = false)

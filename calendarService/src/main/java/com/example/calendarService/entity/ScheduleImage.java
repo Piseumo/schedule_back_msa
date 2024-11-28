@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "scheduleImage")
-@Getter @Setter
+@Getter
 @ToString
 public class ScheduleImage {
 

@@ -5,7 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a570a80e-0f2c-4a36-b127-b30dcae6c4c2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Diary.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Diary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/DiaryImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/DiaryImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Schedule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/ScheduleImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/ScheduleImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/friendService/src/main/java/com/example/friendService/entity/Friend.java" beforeDir="false" afterPath="$PROJECT_DIR$/friendService/src/main/java/com/example/friendService/entity/Friend.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/portNumber" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/portNumber" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/entity/ProfileImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/entity/ProfileImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/entity/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +44,13 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -47,18 +63,21 @@
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectViewState">
-    <option name="flattenPackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/work/teamNJ_msa/k8s/services"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/work/teamNJ_msa/k8s/services&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\work\teamNJ_msa\k8s\services" />

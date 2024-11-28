@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "profile_image")
-@Getter @Setter
+@Getter
 @ToString
 public class ProfileImage {
 
