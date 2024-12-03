@@ -40,48 +40,11 @@ public class User {
     @Column(name = "u_joinday", updatable = false)
     private LocalDateTime joinDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cal_idx", nullable = false)
-    @JsonManagedReference
-    private Calendars calendars;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Provider provider;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true ,fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private ProfileImage profileImage;
-
-    @Column(name = "access_token")
-    private String accessToken;
-
-    @Column(name = "refresh_token")
-    private String refreshToken;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "access_token_expiry")
-    private Date accessTokenExpiry;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = " refresh_token_expiry")
-    private Date refreshTokenExpiry;
 
 
-    @OneToMany(mappedBy = "requester", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Friend> sentRequests;
 
-    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Friend> receivedRequests;
-
-    @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY)
-    private List<ExchangeDiary> exchangeDiariesAsUser1;
-
-    @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY)
-    private List<ExchangeDiary> exchangeDiariesAsUser2;
-
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ExchangeDiaryEntry> diaryEntries;
 }
