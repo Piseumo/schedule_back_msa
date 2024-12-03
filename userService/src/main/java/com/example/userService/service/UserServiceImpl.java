@@ -14,6 +14,8 @@ import com.example.userService.exception.loginException.UserPKException;
 import com.example.userService.exception.userException.UserErrorCode;
 import com.example.userService.exception.userException.UserNotFoundException;
 import com.example.userService.exception.userException.ValidationError;
+import com.example.userService.feign.CalendarClient;
+import com.example.userService.feign.CalendarDto;
 import com.example.userService.repository.ProfileImageRepository;
 import com.example.userService.repository.UserRepository;
 import com.example.userService.security.providers.JwtTokenProvider;
@@ -46,6 +48,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final Validator validator;
     private final ProfileImageService profileImageService;
+    private final CalendarClient calendarClient;
 
     // 회원가입
     @Override
@@ -61,7 +64,8 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            Calendars calendars = Calendars.builder().theme(Theme.LIGHT).build();
+            CalendarDto calendars = CalendarDto.builder().theme(CalendarDto.Theme.LIGHT).build();
+
             log.info("calendar = {}", calendarRepository.save(calendars));
 
             // 기존 회원가입 로직
@@ -70,7 +74,6 @@ public class UserServiceImpl implements UserService {
                     .password(passwordEncoder.encode(userRequestInsertDto.getPassword()))
                     .userName(userRequestInsertDto.getUserName())
                     .provider(Provider.LOCAL)
-                    .calendars(calendars)
                     .build();
 
             return userRepository.save(user);

@@ -24,8 +24,8 @@ public class Calendars {
     @Enumerated(EnumType.STRING)
     private Theme theme;
 
-    @OneToOne(mappedBy = "calendars")
-    @JsonBackReference
-    private User user;
+//    @OneToOne(mappedBy = "calendars")
+//    @JsonBackReference
+//    private User user;
 
 }

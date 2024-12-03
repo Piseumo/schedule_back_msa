@@ -24,9 +24,6 @@ public class ShareWithFriends {
     @JoinColumn(name = "d_idx")
     private Diary diary;
 
-    @JoinColumn(name = "f_idx")
-    private Friend friend;
-
     @Column(name = "sw_date")
     private LocalDateTime shareDate;
 }

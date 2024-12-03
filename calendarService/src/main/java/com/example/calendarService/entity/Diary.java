@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "diary")
-@Getter
+@Getter @Setter
 @ToString
 @Builder
 @NoArgsConstructor

@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.UUID;
 
+import static com.example.userService.feign.CalendarDto.Theme.LIGHT;
+
 @Service
 @RequiredArgsConstructor
 public class KakaoLoginServiceImpl implements KakaoLoginService {
@@ -29,7 +31,6 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
     private final UserRepository userRepository;
     private final Environment environment;
     private final ProfileImageService profileImageService;
-
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
@@ -83,7 +84,7 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
 
     private User createUserEntity(KakaoUserInfoDto kakaoUserInfoDto, String accessToken) {
         // Calendar 생성
-        Calendars calendars = Calendars.builder().theme(Theme.LIGHT).build();
+        Calendars calendars = Calendars.builder().theme(LIGHT).build();
 
         // User 엔티티 생성
         User user = User.builder()

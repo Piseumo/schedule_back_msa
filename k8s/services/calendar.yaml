@@ -14,9 +14,9 @@ spec: # 어떻게 만들지에 대한 내용
     spec: # pod 하나하나에 대한 내용
       containers:
         - name: calendar-service
-          image: jeun0415/calendar-service:msa.k8.01 # dockerhub에 있는 image
+          image: jeun0415/calendar-service:NJ.k8.01 # dockerhub에 있는 image
           ports:
-            - containerPort: 70002
+            - containerPort: 50002
           env:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
@@ -42,7 +42,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 70002
-      targetPort: 70002
+    - port: 50002
+      targetPort: 50002
   selector:
     app: calendar-service

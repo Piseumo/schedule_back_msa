@@ -14,9 +14,9 @@ spec: # 어떻게 만들지에 대한 내용
     spec: # pod 하나하나에 대한 내용
       containers:
         - name: friend-service
-          image: jeun0415/friend-service:msa.k8.01 # dockerhub에 있는 image
+          image: jeun0415/friend-service:NJ.k8.01 # dockerhub에 있는 image
           ports:
-            - containerPort: 70003
+            - containerPort: 50003
           env:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
@@ -42,7 +42,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 70003
-      targetPort: 70003
+    - port: 50003
+      targetPort: 50003
   selector:
     app: friend-service

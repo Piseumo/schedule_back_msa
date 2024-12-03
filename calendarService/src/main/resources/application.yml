@@ -62,3 +62,6 @@ ImgLocation: "/Users/pc/Downloads/images"
 ProfileImgLocation: "/Users/pc/Downloads/profileImages"
 uploadPath: "file:///Users/pc/Downloads/images/"
 profileUploadPath: "file:///Users/pc/Downloads/profileImages/"
+
+user-service-url: http://localhost:50001
+friend-service-url: http://localhost:50003

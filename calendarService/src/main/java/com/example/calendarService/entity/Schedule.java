@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "schedule")
-@Getter
+@Getter @Setter
 @ToString
 @NoArgsConstructor
 @Builder

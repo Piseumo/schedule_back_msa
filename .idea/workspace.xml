@@ -5,16 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a570a80e-0f2c-4a36-b127-b30dcae6c4c2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendarService/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/dto/response/DiaryResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Calendars.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Calendars.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Diary.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Diary.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/DiaryImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/DiaryImage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Schedule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/ScheduleImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/ScheduleImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/friendService/src/main/java/com/example/friendService/entity/Friend.java" beforeDir="false" afterPath="$PROJECT_DIR$/friendService/src/main/java/com/example/friendService/entity/Friend.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/ShareWithFriends.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/ShareWithFriends.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendarService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/friendService/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/friendService/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/maria/maria-configmap.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/maria-user/maria-configmap.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/maria/maria-secret.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/maria-user/maria-secret.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/maria/maria.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/maria-user/maria.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/k8s/portNumber" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/portNumber" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/entity/ProfileImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/entity/ProfileImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/services/calendar.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/services/calendar.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/services/friend.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/services/friend.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/services/service-configmap.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/services/service-configmap.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/services/user.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/services/user.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userService/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/userService/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/service/KakaoLoginServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/service/KakaoLoginServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/service/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/service/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +54,17 @@
       <state>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="userService" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="userService" type="f1a62948:ProjectNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -47,6 +74,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -65,23 +93,70 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/work/teamNJ_msa/k8s/services&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.CalendarApplication.executor": "Run",
+    "Gradle.calendarService [:com.example.calendarService.CalendarApplication.main()].executor": "Run",
+    "Gradle.userService [:com.example.userService.DailyLogApplication.main()].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "cew",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/work/msa_work",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "File.Encoding"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\work\teamNJ_msa\calendarService\src\main\java\com\example\calendarService" />
+      <recent name="D:\work\teamNJ_msa\calendarService\src\main\java\com\example\calendarService\entity" />
+      <recent name="D:\work\teamNJ_msa\k8s" />
       <recent name="D:\work\teamNJ_msa\k8s\services" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.calendarService.feign" />
+      <recent name="com.example.calendarService.constant" />
+      <recent name="com.example.calendarService.entity" />
+      <recent name="com.example.calendarService.repository" />
+      <recent name="com.example.calendarService.msadto" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.DailyLogApplication">
+    <configuration name="CalendarApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.calendarService.CalendarApplication" />
+      <module name="calendarService.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.calendarService.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DailyLogApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.userService.DailyLogApplication" />
+      <module name="userService.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.userService.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.DailyLogApplication" />
+        <item itemvalue="Application.CalendarApplication" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

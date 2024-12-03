@@ -14,9 +14,9 @@ spec: # 어떻게 만들지에 대한 내용
     spec: # pod 하나하나에 대한 내용
       containers:
         - name: user-service
-          image: jeun0415/user-service:msa.k8.01 # dockerhub에 있는 image
+          image: jeun0415/user-service:NJ.k8.01 # dockerhub에 있는 image
           ports:
-            - containerPort: 70001
+            - containerPort: 50001
           env:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
@@ -42,7 +42,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 70001
-      targetPort: 70001
+    - port: 50001
+      targetPort: 50001
   selector:
     app: user-service
