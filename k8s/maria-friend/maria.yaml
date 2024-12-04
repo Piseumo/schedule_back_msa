@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment # what to create?
 metadata:
-  name: mariadb-friend-deployment
+  name: mariadb-friends-deployment
 spec: # specification for deployment resource
   replicas: 1 # how many replicas of pods we want to create
   selector:
     matchLabels:
-      app: mariadb-friend
+      app: mariadb-friends
   template: # blueprint for pods
     metadata:
       labels:
-        app: mariadb-friend # service will look for this label
+        app: mariadb-friends # service will look for this label
     spec: # specification for pods
       containers:
-        - name: mariadb-friend
+        - name: mariadb-friends
           image: mariadb
           ports:
             - containerPort: 3306 #default one
@@ -24,17 +24,17 @@ spec: # specification for deployment resource
                   name: mariadb-secret
                   key: password
           volumeMounts:
-            - name: mariadb-initdb-config-friend
+            - name: mariadb-initdb-config-friends
               mountPath: /docker-entrypoint-initdb.d
       volumes:
-        - name: mariadb-initdb-config-friend
+        - name: mariadb-initdb-config-friends
           configMap:
-            name: mariadb-initdb-config-friend
+            name: mariadb-initdb-config-friends
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mariadb-friend
+  name: mariadb-friends
 spec:
   type: NodePort
   ports:
@@ -42,7 +42,7 @@ spec:
       targetPort: 3306
       nodePort: 30003
   selector:
-    app: mariadb-friend
+    app: mariadb-friends
 
 
 # pod scale 바꾸기

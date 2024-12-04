@@ -22,7 +22,7 @@ spec: # 어떻게 만들지에 대한 내용
               valueFrom:
                 configMapKeyRef:
                   name: NJ-k8s-configmap
-                  key: spring-datasource-url
+                  key: spring-datasource-url-user
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 configMapKeyRef:
