@@ -5,33 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a570a80e-0f2c-4a36-b127-b30dcae6c4c2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendarService/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/dto/response/DiaryResponseDto.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Calendars.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Calendars.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Diary.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Diary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/DiaryImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/DiaryImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/Schedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/ScheduleImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/ScheduleImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/ShareWithFriends.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/entity/ShareWithFriends.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendarService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/friendService/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/friendService/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/maria/maria-configmap.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/maria-user/maria-configmap.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/maria/maria-secret.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/maria-user/maria-secret.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/maria/maria.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/maria-user/maria.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/portNumber" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/portNumber" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/services/calendar.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/services/calendar.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/services/friend.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/services/friend.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/services/service-configmap.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/services/service-configmap.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/services/user.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/services/user.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/userService/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/service/KakaoLoginServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/service/KakaoLoginServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/service/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/java/com/example/userService/service/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userService/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/userService/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/feign/UserClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendarService/src/main/java/com/example/calendarService/feign/UserClient.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +75,7 @@
     "Gradle.calendarService [:com.example.calendarService.CalendarApplication.main()].executor": "Run",
     "Gradle.userService [:com.example.userService.DailyLogApplication.main()].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "cew",
+    "git-widget-placeholder": "tth",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/work/msa_work",
