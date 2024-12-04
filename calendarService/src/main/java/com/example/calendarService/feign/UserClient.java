@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(name = "user-service" , url = "${user-service-url}")
 public interface UserClient {
 
-    private final CalendarClient
-
     @PostMapping("/{userId}")
-    CalendarDto getUser(@PathVariable(value = "userId") String userId);
+    void getUser(@PathVariable(value = "userId") String userId);
 
 }
