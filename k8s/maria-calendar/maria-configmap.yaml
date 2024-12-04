@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mariadb-initdb-config-calendar
+  name: mariadb-initdb-config-calendars
 data:
   init.sql:
     CREATE DATABASE IF NOT EXISTS newjeans;

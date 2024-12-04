@@ -10,5 +10,7 @@ data:
   user-service-port: "50001"
   calendar-service-port: "50002"
   friend-service-port: "50003"
-  spring-datasource-url: "jdbc:mariadb://mariadb:3306/newjeans?serverTimezone=Asia/Seoul"
+  spring-datasource-url-user: "jdbc:mariadb://mariadb-userNJ:3333/msa"
+  spring-datasource-url-friend: "jdbc:mariadb://mariadb-friendNJ:3333/msa"
+  spring-datasource-url-calendar: "jdbc:mariadb://mariadb-calendarNJ:3333/msa"
   spring-datasource-username: "root"
