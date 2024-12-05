@@ -21,6 +21,29 @@ public class FriendServiceImpl implements FriendService{
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
 
+    //친구 검색 기능
+    @Transactional
+    @Override
+    public List<UserSearchResponseDto> searchUsersByUserName(Long userId, String userName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
+        // 현재 친구인 사용자 ID 가져오기
+        List<Long> friendIds = friendRepository.findFriendsByUser(user).stream()
+                .map(friend -> friend.getRequester().getIdx().equals(userId) ? friend.getReceiver().getIdx() : friend.getRequester().getIdx())
+                .collect(Collectors.toList());
+        friendIds.add(userId); // 자기 자신도 제외하기 위해 추가
+
+        return userRepository.findByUserNameContainingAndIdxNotIn(userName, friendIds).stream()
+                .map(foundUser -> new UserSearchResponseDto(
+                        foundUser.getIdx(),
+                        foundUser.getUserName(),
+                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png",
+                        foundUser.getEmail()
+                ))
+                .collect(Collectors.toList());
+    }
+
     // 친구 요청 보내기
     @Transactional
     @Override
@@ -46,7 +69,7 @@ public class FriendServiceImpl implements FriendService{
     }
 
 
-    //친구 요청 목록 조회
+    //받은 친구 요청 목록 조회
     @Override
     @Transactional
     public List<UserSearchResponseDto> getFriendRequests(Long userId) {
@@ -121,29 +144,6 @@ public class FriendServiceImpl implements FriendService{
                 .collect(Collectors.toList());
     }
 
-    
-    //친구 검색 기능
-    @Transactional
-    @Override
-    public List<UserSearchResponseDto> searchUsersByUserName(Long userId, String userName) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-
-        // 현재 친구인 사용자 ID 가져오기
-        List<Long> friendIds = friendRepository.findFriendsByUser(user).stream()
-                .map(friend -> friend.getRequester().getIdx().equals(userId) ? friend.getReceiver().getIdx() : friend.getRequester().getIdx())
-                .collect(Collectors.toList());
-        friendIds.add(userId); // 자기 자신도 제외하기 위해 추가
-
-        return userRepository.findByUserNameContainingAndIdxNotIn(userName, friendIds).stream()
-                .map(foundUser -> new UserSearchResponseDto(
-                        foundUser.getIdx(),
-                        foundUser.getUserName(),
-                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png",
-                        foundUser.getEmail()
-                ))
-                .collect(Collectors.toList());
-    }
 
 
     // 친구 삭제
