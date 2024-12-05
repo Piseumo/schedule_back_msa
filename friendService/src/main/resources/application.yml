@@ -6,7 +6,7 @@ spring:
     name: friendService
   sql:
     init:
-      mode: always
+      mode: never
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
@@ -60,3 +60,6 @@ profileUploadPath: "file:///D:/profileImages/"
 #ProfileImgLocation: "/Users/pc/Downloads/profileImages"
 #uploadPath: "file:///Users/pc/Downloads/images/"
 #profileUploadPath: "file:///Users/pc/Downloads/profileImages/"
+
+calendar-service-url: http://localhost:50002
+user-service-url: http://localhost:50001

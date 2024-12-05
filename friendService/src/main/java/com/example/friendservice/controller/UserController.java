@@ -1,8 +1,8 @@
-package com.example.userservice.controller;
+package com.example.friendservice.controller;
 
-import com.example.userservice.dto.request.UserRequestUpdateDto;
-import com.example.userservice.service.ImageService;
-import com.example.userservice.service.UserService;
+import com.example.friendservice.dto.request.UserRequestUpdateDto;
+import com.example.friendservice.service.ImageService;
+import com.example.friendservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,8 +25,6 @@ public class UserController {
         userService.updateUserName(userRequestUpdateDto);
         return ResponseEntity.status(HttpStatus.OK).body("UserNickname updated successfully");
     }
-    // 유저 여부 조회
-    @GetMapping(value = "/")
 
     //유저 프로필 이미지 수정
     @PostMapping(value = "/updateProfileImage/{idx}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -54,7 +52,7 @@ public class UserController {
         userService.deleteUser(email, authToken);
         return ResponseEntity.status(HttpStatus.OK).body("Success Delete Account");
     }
-    
+
 
 }
 
