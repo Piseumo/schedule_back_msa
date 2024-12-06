@@ -9,7 +9,7 @@ public interface FriendService {
 
     void sendFriendRequest(Long requesterId, Long receiverId);
 
-    List<UserSearchResponseDto> getFriendRequests(Long userId);
+    List<Long> getFriendRequests(Long userId);
 
     void acceptFriendRequest(Long requesterId, Long receiverId);
 

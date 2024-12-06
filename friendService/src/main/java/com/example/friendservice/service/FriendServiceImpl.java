@@ -5,6 +5,7 @@ import com.example.friendservice.dto.response.FriendListResponseDto;
 import com.example.friendservice.dto.response.UserSearchResponseDto;
 import com.example.friendservice.entity.Friend;
 import com.example.friendservice.entity.User;
+import com.example.friendservice.feign.UserFeignClient;
 import com.example.friendservice.repository.FriendRepository;
 import com.example.friendservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -20,28 +21,19 @@ public class FriendServiceImpl implements FriendService{
 
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
+    private final UserFeignClient userFeignClient;
 
-    //친구 검색 기능
+    //친구가 아닌 유저 검색
     @Transactional
     @Override
     public List<UserSearchResponseDto> searchUsersByUserName(Long userId, String userName) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-
         // 현재 친구인 사용자 ID 가져오기
-        List<Long> friendIds = friendRepository.findFriendsByUser(user).stream()
-                .map(friend -> friend.getRequester().getIdx().equals(userId) ? friend.getReceiver().getIdx() : friend.getRequester().getIdx())
+        List<Long> friendIds = friendRepository.findFriendsByUser(userId).stream()
+                .map(friend -> friend.getRequesterId().equals(userId) ? friend.getReceiverId() : friend.getRequesterId())
                 .collect(Collectors.toList());
         friendIds.add(userId); // 자기 자신도 제외하기 위해 추가
 
-        return userRepository.findByUserNameContainingAndIdxNotIn(userName, friendIds).stream()
-                .map(foundUser -> new UserSearchResponseDto(
-                        foundUser.getIdx(),
-                        foundUser.getUserName(),
-                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png",
-                        foundUser.getEmail()
-                ))
-                .collect(Collectors.toList());
+        return userFeignClient.searchUsers(userName, friendIds);
     }
 
     // 친구 요청 보내기
@@ -63,8 +55,11 @@ public class FriendServiceImpl implements FriendService{
         }
 
         // 새로운 Friend 인스턴스 생성
-        Friend friendRequest = new Friend(requester, receiver);
-        friendRequest.setStatus(Status.PENDING);
+        Friend friendRequest = Friend.builder()
+                .requesterId(requesterId)
+                .receiverId(receiverId)
+                .status(Status.PENDING).build();
+
         friendRepository.save(friendRequest);
     }
 
@@ -72,23 +67,13 @@ public class FriendServiceImpl implements FriendService{
     //받은 친구 요청 목록 조회
     @Override
     @Transactional
-    public List<UserSearchResponseDto> getFriendRequests(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-
-        List<Friend> friendRequests = friendRepository.findByReceiverAndStatus(user, Status.PENDING);
-
-        return friendRequests.stream()
-                .map(friend -> {
-                    User requester = friend.getRequester();
-                    return new UserSearchResponseDto(
-                            requester.getIdx(),
-                            requester.getUserName(),
-                            requester.getProfileImage() != null ? requester.getProfileImage().getImgUrl() : "/images/default.png", // 기본 이미지 경로 설정
-                            requester.getEmail()
-                    );
-                })
+    public List<Long> getFriendRequests(Long userId) {
+        List<Long> requesterId = friendRepository.findByReceiverAndStatus(userId, Status.PENDING).stream()
+                .map(friend -> friend.getRequesterId())
                 .collect(Collectors.toList());
+
+
+        return userFeignClient.geg(requesterId);
     }
 
 
@@ -134,7 +119,7 @@ public class FriendServiceImpl implements FriendService{
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
 
-        List<Friend> friends = friendRepository.findByReceiverAndStatus(user, Status.ACCEPTED);
+        List<Friend> friends = friendRepository.findByReceiverAndStatus(userId, Status.ACCEPTED);
 
         return friends.stream()
                 .map(friend -> {
