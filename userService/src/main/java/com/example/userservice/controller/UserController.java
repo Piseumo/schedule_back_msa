@@ -1,6 +1,7 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.request.UserRequestUpdateDto;
+import com.example.userservice.dto.response.UserSearchResponseDto;
 import com.example.userservice.service.ImageService;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/user-service")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -25,8 +28,6 @@ public class UserController {
         userService.updateUserName(userRequestUpdateDto);
         return ResponseEntity.status(HttpStatus.OK).body("UserNickname updated successfully");
     }
-    // 유저 여부 조회
-    @GetMapping(value = "/")
 
     //유저 프로필 이미지 수정
     @PostMapping(value = "/updateProfileImage/{idx}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -54,7 +55,20 @@ public class UserController {
         userService.deleteUser(email, authToken);
         return ResponseEntity.status(HttpStatus.OK).body("Success Delete Account");
     }
-    
 
+
+    // 유저 검색
+    @GetMapping(value = "/search")
+    public List<UserSearchResponseDto> searchUsers(@RequestParam String userName, @RequestParam List<Long> friendIds) {
+
+        return userService.searchUserByUserName(userName, friendIds);
+    }
+
+    // 친구 요청 목록 조회
+    @GetMapping(value = "/request")
+    private ResponseEntity<List<UserSearchResponseDto>> friendRequestList(@PathVariable List<Long> friendId){
+        List<UserSearchResponseDto> friendListId = userService.searchRequester(friendId);
+        return ResponseEntity.ok(friendListId);
+    }
 }
 

@@ -4,6 +4,7 @@ import com.example.userservice.constant.Provider;
 import com.example.userservice.dto.request.UserRequestInsertDto;
 import com.example.userservice.dto.request.UserRequestUpdateDto;
 import com.example.userservice.dto.response.UserResponseDto;
+import com.example.userservice.dto.response.UserSearchResponseDto;
 import com.example.userservice.entity.ProfileImage;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.commonException.CommonErrorCode;
@@ -30,6 +31,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -79,6 +83,35 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElseThrow(() -> new BizException(CommonErrorCode.NOT_FOUND));
     }
 
+    //유저 검색(feign)
+    @Override
+    @Transactional
+    public List<UserSearchResponseDto> searchUserByUserName(String userName, List<Long> friendIds) {
+
+        return userRepository.findByUserNameContainingAndIdxNotIn(userName, friendIds).stream()
+                .map(foundUser -> new UserSearchResponseDto(
+                        foundUser.getIdx(),
+                        foundUser.getUserName(),
+                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png",
+                        foundUser.getEmail()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    //유저 요청 목록 조회(feign)
+    @Override
+    @Transactional                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+    public List<UserSearchResponseDto> searchRequester(List<Long> requesterId) {
+
+        return userRepository.findAllById(requesterId).stream()
+                .map(foundUser -> new UserSearchResponseDto(
+                        foundUser.getIdx(),
+                        foundUser.getUserName(),
+                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png",
+                        foundUser.getEmail()
+                ))
+                .collect(Collectors.toList());
+    }
 
     // 닉네임 수정
     @Override
@@ -142,4 +175,6 @@ public class UserServiceImpl implements UserService {
 
         userRepository.deleteById(user.getIdx());
     }
+
+
 }
