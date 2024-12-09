@@ -59,7 +59,7 @@ public class FriendServiceImpl implements FriendService{
     //받은 친구 요청 목록 조회
     @Override
     @Transactional
-    public ResponseEntity<List<UserSearchResponseDto>> getFriendRequests(Long userId) {
+    public List<UserSearchResponseDto> getFriendRequests(Long userId) {
         List<Long> requesterId = friendRepository.findByReceiverIdAndStatus(userId, Status.PENDING).stream()
                 .map(friend -> friend.getRequesterId())
                 .collect(Collectors.toList());
@@ -71,20 +71,11 @@ public class FriendServiceImpl implements FriendService{
     @Transactional
     @Override
     public void acceptFriendRequest(Long requesterId, Long receiverId) {
-        // 반대 방향의 친구 요청이 이미 있는지 확인
-        if (!friendRepository.existsByRequesterIdAndReceiverId(receiverId, requesterId)) {
-            Friend reverseFriendRequest = Friend.builder()
-                    .requesterId(requesterId)
-                    .receiverId(receiverId)
-                    .status(Status.ACCEPTED).build();
-            friendRepository.save(reverseFriendRequest);
-        } // 무슨 로직인지 질문
-
         // 요청자와 수신자 간의 기존 요청을 수락
         Friend friendRequest = friendRepository.findByRequesterIdAndReceiverId(requesterId, receiverId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid friend request"));
         friendRequest.setStatus(Status.ACCEPTED);
-        friendRepository.save(friendRequest); // 무슨 로직인지 질문
+        friendRepository.save(friendRequest);
 
     }
 
@@ -111,7 +102,6 @@ public class FriendServiceImpl implements FriendService{
 
         return userFeignClient.getFriendsList(userIds);
     }
-
 
 
     // 친구 삭제

@@ -25,10 +25,10 @@ public class FriendController {
 
     // 친구 요청 조회
     @GetMapping("/{idx}/requests")
-    public ResponseEntity<String> getFriendRequests(@PathVariable(name = "idx") Long userId) {
-        ResponseEntity<List<UserSearchResponseDto>> friendRequests = friendService.getFriendRequests(userId);
+    public ResponseEntity<List<UserSearchResponseDto>> getFriendRequests(@PathVariable(name = "idx") Long userId) {
+        List<UserSearchResponseDto> friendRequests = friendService.getFriendRequests(userId);
 
-        return ResponseEntity.ok("친구 요청 조회가 성공하였습니다.");
+        return ResponseEntity.ok(friendRequests);
     }
 
     // 친구 요청 수락

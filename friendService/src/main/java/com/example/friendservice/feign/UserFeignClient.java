@@ -18,7 +18,7 @@ public interface UserFeignClient {
 
     // 친구 요청 목록 조회
     @GetMapping("/user-service/request")
-    ResponseEntity<List<UserSearchResponseDto>> friendRequestList(@RequestParam List<Long> friendId);
+    List<UserSearchResponseDto> friendRequestList(@RequestParam List<Long> friendId);
 
     @GetMapping("/user-service/friends")
     List<UserSearchResponseDto> getFriendsList(@RequestParam List<Long> friendsId);
