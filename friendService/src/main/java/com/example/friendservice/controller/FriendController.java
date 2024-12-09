@@ -25,8 +25,10 @@ public class FriendController {
 
     // 친구 요청 조회
     @GetMapping("/{idx}/requests")
-    public void getFriendRequests(@PathVariable(name = "idx") Long userId) {
-        List<Long> friendRequests = friendService.getFriendRequests(userId);
+    public ResponseEntity<String> getFriendRequests(@PathVariable(name = "idx") Long userId) {
+        ResponseEntity<List<UserSearchResponseDto>> friendRequests = friendService.getFriendRequests(userId);
+
+        return ResponseEntity.ok("친구 요청 조회가 성공하였습니다.");
     }
 
     // 친구 요청 수락
@@ -45,9 +47,9 @@ public class FriendController {
 
     // 친구 목록 조회
     @GetMapping("/{idx}/list")
-    public ResponseEntity<List<FriendListResponseDto>> getFriendsList(@PathVariable(name = "idx") Long userId) {
-        List<FriendListResponseDto> friends = friendService.getFriendsList(userId);
-        return ResponseEntity.ok(friends);
+    public List<UserSearchResponseDto> getFriendsList(@PathVariable(name = "idx") Long userId) {
+        List<UserSearchResponseDto> friends = friendService.getFriendsList(userId);
+        return friends;
     }
 
 

@@ -56,7 +56,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("Success Delete Account");
     }
 
-
     // 유저 검색
     @GetMapping(value = "/search")
     public List<UserSearchResponseDto> searchUsers(@RequestParam String userName, @RequestParam List<Long> friendIds) {
@@ -66,9 +65,15 @@ public class UserController {
 
     // 친구 요청 목록 조회
     @GetMapping(value = "/request")
-    private ResponseEntity<List<UserSearchResponseDto>> friendRequestList(@PathVariable List<Long> friendId){
+    private ResponseEntity<List<UserSearchResponseDto>> friendRequestList(@RequestParam List<Long> friendId){
         List<UserSearchResponseDto> friendListId = userService.searchRequester(friendId);
         return ResponseEntity.ok(friendListId);
+    }
+
+    @GetMapping("/friends")
+    public List<UserSearchResponseDto> getFriendsList(@RequestParam List<Long> friendsId) {
+        List<UserSearchResponseDto> friends = userService.searchFriend(friendsId);
+        return friends;
     }
 }
 

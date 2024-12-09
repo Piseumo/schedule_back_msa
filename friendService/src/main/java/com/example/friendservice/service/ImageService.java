@@ -1,6 +1,5 @@
 package com.example.friendservice.service;
 
-import com.example.dailyLog.entity.*;
 import com.example.friendservice.entity.*;
 import org.springframework.web.multipart.MultipartFile;
 

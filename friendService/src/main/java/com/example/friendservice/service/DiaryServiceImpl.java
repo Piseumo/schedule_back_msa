@@ -7,7 +7,6 @@ import com.example.friendservice.dto.response.DiaryResponseCategoryDto;
 import com.example.friendservice.dto.response.DiaryResponseDayDto;
 import com.example.friendservice.dto.response.DiaryResponseDayListDto;
 import com.example.friendservice.dto.response.DiaryResponseMonthDto;
-import com.example.dailyLog.entity.*;
 import com.example.friendservice.entity.Calendars;
 import com.example.friendservice.entity.Diary;
 import com.example.friendservice.entity.DiaryImage;

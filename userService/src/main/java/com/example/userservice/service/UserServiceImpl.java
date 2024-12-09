@@ -9,14 +9,12 @@ import com.example.userservice.entity.ProfileImage;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.commonException.CommonErrorCode;
 import com.example.userservice.exception.commonException.error.BizException;
-import com.example.userservice.exception.commonException.error.MyInternalServerError;
 import com.example.userservice.exception.loginException.DuplicateEmailException;
 import com.example.userservice.exception.loginException.LoginErrorCode;
 import com.example.userservice.exception.loginException.UserPKException;
 import com.example.userservice.exception.userException.UserErrorCode;
 import com.example.userservice.exception.userException.UserNotFoundException;
 import com.example.userservice.feign.CalendarClient;
-import com.example.userservice.repository.CalendarRepository;
 import com.example.userservice.repository.ProfileImageRepository;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.security.providers.JwtTokenProvider;
@@ -42,7 +40,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final CalendarRepository calendarRepository;
     private final ProfileImageRepository profileImageRepository;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
@@ -76,7 +73,6 @@ public class UserServiceImpl implements UserService {
 //        }
     }
 
-
     // 회원 찾기
     @Override
     public User findUserById(Long id) {
@@ -92,8 +88,7 @@ public class UserServiceImpl implements UserService {
                 .map(foundUser -> new UserSearchResponseDto(
                         foundUser.getIdx(),
                         foundUser.getUserName(),
-                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png",
-                        foundUser.getEmail()
+                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png"
                 ))
                 .collect(Collectors.toList());
     }
@@ -107,8 +102,21 @@ public class UserServiceImpl implements UserService {
                 .map(foundUser -> new UserSearchResponseDto(
                         foundUser.getIdx(),
                         foundUser.getUserName(),
-                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png",
-                        foundUser.getEmail()
+                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png"
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // 친구 목록 조회(feign)
+    @Override
+    @Transactional
+    public List<UserSearchResponseDto> searchFriend(List<Long> friendsId) {
+
+        return userRepository.findAllById(friendsId).stream()
+                .map(foundUser -> new UserSearchResponseDto(
+                        foundUser.getIdx(),
+                        foundUser.getUserName(),
+                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png"
                 ))
                 .collect(Collectors.toList());
     }
@@ -131,7 +139,6 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("닉네임 업데이트 중 오류 발생", e);
         }
     }
-
 
     // 프로필 사진 수정
     @Override

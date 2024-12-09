@@ -6,7 +6,6 @@ import com.example.friendservice.dto.request.ScheduleRequestUpdateDto;
 import com.example.friendservice.dto.response.ScheduleResponseDayDto;
 import com.example.friendservice.dto.response.ScheduleResponseMonthDto;
 import com.example.friendservice.dto.response.ScheduleResponseYearDto;
-import com.example.dailyLog.entity.*;
 import com.example.friendservice.entity.Calendars;
 import com.example.friendservice.entity.Schedule;
 import com.example.friendservice.entity.ScheduleImage;

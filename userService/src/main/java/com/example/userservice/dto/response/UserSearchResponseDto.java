@@ -2,9 +2,11 @@ package com.example.userservice.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserSearchResponseDto {
 
     private Long userId;      // 요청한 사용자 ID
@@ -17,11 +19,10 @@ public class UserSearchResponseDto {
     private String email;
 
     // 친구 요청 조회 시 사용할 생성자 (diaryId 없음)
-    public UserSearchResponseDto(Long userId, String userName, String profileImageUrl, String email) {
+    public UserSearchResponseDto(Long userId, String userName, String profileImageUrl) {
         this.userId = userId;
         this.userName = userName;
         this.profileImageUrl = profileImageUrl;
-        this.email = email;
     }
 
 }

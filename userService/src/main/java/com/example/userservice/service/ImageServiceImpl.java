@@ -5,9 +5,7 @@ import com.example.userservice.exception.imageException.EmptyFileData;
 import com.example.userservice.exception.imageException.FileUploadError;
 import com.example.userservice.exception.imageException.ImageErrorCode;
 import com.example.userservice.exception.imageException.InvalidFileName;
-import com.example.userservice.repository.DiaryImageRepository;
 import com.example.userservice.repository.ProfileImageRepository;
-import com.example.userservice.repository.ScheduleImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,8 +25,6 @@ public class ImageServiceImpl implements ImageService {
     @Value("${ProfileImgLocation}")
     private String profileImageLocation;
 
-    private final DiaryImageRepository diaryImageRepository;
-    private final ScheduleImageRepository scheduleImageRepository;
     private final ProfileImageRepository profileImageRepository;
     private final FileService fileService;
 
@@ -41,54 +37,6 @@ public class ImageServiceImpl implements ImageService {
         String oriImgName = imageFile.getOriginalFilename();
         if (oriImgName == null || !oriImgName.contains(".")) {
             throw new InvalidFileName(ImageErrorCode.INVALID_FILE_NAME);
-        }
-    }
-
-    @Transactional
-    @Override
-    public DiaryImage saveDiaryImage(MultipartFile imageFile, Diary diary) {
-
-        validateImageFile(imageFile);
-
-        try {
-            String oriImgName = imageFile.getOriginalFilename();
-            String savedFileName = fileService.uploadFile(imageLocation, oriImgName, imageFile.getBytes());
-            String imageUrl = "/images/" + savedFileName;
-
-            // Image 엔티티 생성 및 설정
-            DiaryImage diaryImage = new DiaryImage();
-            diaryImage.setImgName(savedFileName);
-            diaryImage.setOriImgName(oriImgName);
-            diaryImage.setImgUrl(imageUrl);
-            diaryImage.setDiary(diary);
-
-            return diaryImageRepository.save(diaryImage);
-        } catch (Exception e) {
-            throw new FileUploadError(ImageErrorCode.FILE_UPLOAD_ERROR);
-        }
-    }
-
-    @Transactional
-    @Override
-    public ScheduleImage saveScheduleImage(MultipartFile imageFile, Schedule schedule) {
-
-        validateImageFile(imageFile);
-
-        try {
-            String oriImgName = imageFile.getOriginalFilename();
-            String savedFileName = fileService.uploadFile(imageLocation, oriImgName, imageFile.getBytes());
-            String imageUrl = "/images/" + savedFileName;
-
-            // Image 엔티티 생성 및 설정
-            ScheduleImage scheduleImage = new ScheduleImage();
-            scheduleImage.setImgName(savedFileName);
-            scheduleImage.setOriImgName(oriImgName);
-            scheduleImage.setImgUrl(imageUrl);
-            scheduleImage.setSchedule(schedule);
-
-            return scheduleImageRepository.save(scheduleImage);
-        } catch (Exception e) {
-            throw new FileUploadError(ImageErrorCode.FILE_UPLOAD_ERROR);
         }
     }
 

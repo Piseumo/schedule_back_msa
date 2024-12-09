@@ -4,7 +4,6 @@ import com.example.userservice.constant.Provider;
 import com.example.userservice.constant.Theme;
 import com.example.userservice.dto.KakaoTokenDto;
 import com.example.userservice.dto.request.KakaoUserInfoDto;
-import com.example.userservice.entity.Calendars;
 import com.example.userservice.entity.ProfileImage;
 import com.example.userservice.entity.User;
 import com.example.userservice.repository.UserRepository;
@@ -84,9 +83,6 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
     }
 
     private User createUserEntity(KakaoUserInfoDto kakaoUserInfoDto, String accessToken) {
-        // Calendar 생성
-        Calendars calendars = Calendars.builder().theme(Theme.LIGHT).build();
-
         // User 엔티티 생성
         User user = User.builder()
                 .email(kakaoUserInfoDto.getKakaoAccount().getEmail())

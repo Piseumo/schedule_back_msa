@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "friend",uniqueConstraints = @UniqueConstraint(columnNames = {"req_idx", "rec_idx"}))
+@Table(name = "friend",uniqueConstraints = @UniqueConstraint(columnNames = {"u_idx1", "u_idx2"}))
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

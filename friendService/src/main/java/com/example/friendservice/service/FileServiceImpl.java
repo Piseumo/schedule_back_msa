@@ -1,6 +1,5 @@
 package com.example.friendservice.service;
 
-import com.example.dailyLog.exception.imageException.*;
 import com.example.friendservice.exception.imageException.*;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;

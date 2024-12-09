@@ -19,4 +19,5 @@ public interface UserService {
     void deleteUser(String email, String authToken);
     List<UserSearchResponseDto> searchUserByUserName(String userName, List<Long> friendIds);
     List<UserSearchResponseDto> searchRequester(List<Long> requesterId);
+    List<UserSearchResponseDto> searchFriend(List<Long> requesterId);
 }

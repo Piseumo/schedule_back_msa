@@ -63,15 +63,6 @@ public class User {
     @Column(name = " refresh_token_expiry")
     private Date refreshTokenExpiry;
 
-
-    @OneToMany(mappedBy = "requester", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Friend> sentRequests;
-
-    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Friend> receivedRequests;
-
     @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY)
     private List<ExchangeDiary> exchangeDiariesAsUser1;
 

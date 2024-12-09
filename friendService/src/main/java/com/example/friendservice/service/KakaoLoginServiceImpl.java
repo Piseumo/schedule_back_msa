@@ -93,7 +93,6 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
                 .password(UUID.randomUUID().toString()) // 일반 로그인과 충돌을 피하기 위한 임시 패스워드
                 .userName(kakaoUserInfoDto.getKakaoAccount().getProfile().getNickname())
                 .provider(Provider.KAKAO)
-                .calendars(calendars)
                 .accessToken(accessToken)
                 .build();
 

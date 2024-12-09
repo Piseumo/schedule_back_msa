@@ -1,26 +1,24 @@
 package com.example.friendservice.service;
 
 import com.example.friendservice.constant.Status;
-import com.example.friendservice.dto.response.FriendListResponseDto;
 import com.example.friendservice.dto.response.UserSearchResponseDto;
 import com.example.friendservice.entity.Friend;
-import com.example.friendservice.entity.User;
 import com.example.friendservice.feign.UserFeignClient;
 import com.example.friendservice.repository.FriendRepository;
-import com.example.friendservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class FriendServiceImpl implements FriendService{
 
     private final FriendRepository friendRepository;
-    private final UserRepository userRepository;
     private final UserFeignClient userFeignClient;
 
     //친구가 아닌 유저 검색
@@ -43,14 +41,9 @@ public class FriendServiceImpl implements FriendService{
         if (requesterId.equals(receiverId)) {
             throw new IllegalArgumentException("Cannot send an friend request to oneself.");
         }
-        User requester = userRepository.findById(requesterId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid requester ID"));
-        User receiver = userRepository.findById(receiverId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid receiver ID"));
-
         // 중복 요청 방지 로직
-        if (friendRepository.existsByRequesterAndReceiver(requester, receiver) ||
-            friendRepository.existsByRequesterAndReceiver(receiver, requester)) {
+        if (friendRepository.existsByRequesterIdAndReceiverId(requesterId, receiverId) ||
+            friendRepository.existsByRequesterIdAndReceiverId(receiverId, requesterId)) {
             throw new IllegalStateException("Already sent a friend request to this user.");
         }
 
@@ -63,43 +56,37 @@ public class FriendServiceImpl implements FriendService{
         friendRepository.save(friendRequest);
     }
 
-
     //받은 친구 요청 목록 조회
     @Override
     @Transactional
-    public List<Long> getFriendRequests(Long userId) {
-        List<Long> requesterId = friendRepository.findByReceiverAndStatus(userId, Status.PENDING).stream()
+    public ResponseEntity<List<UserSearchResponseDto>> getFriendRequests(Long userId) {
+        List<Long> requesterId = friendRepository.findByReceiverIdAndStatus(userId, Status.PENDING).stream()
                 .map(friend -> friend.getRequesterId())
                 .collect(Collectors.toList());
 
-
-        return userFeignClient.geg(requesterId);
+        return userFeignClient.friendRequestList(requesterId);
     }
-
 
     // 친구 요청 수락
     @Transactional
     @Override
     public void acceptFriendRequest(Long requesterId, Long receiverId) {
-        User requester = userRepository.findById(requesterId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid requester ID"));
-        User receiver = userRepository.findById(receiverId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid receiver ID"));
+        // 반대 방향의 친구 요청이 이미 있는지 확인
+        if (!friendRepository.existsByRequesterIdAndReceiverId(receiverId, requesterId)) {
+            Friend reverseFriendRequest = Friend.builder()
+                    .requesterId(requesterId)
+                    .receiverId(receiverId)
+                    .status(Status.ACCEPTED).build();
+            friendRepository.save(reverseFriendRequest);
+        } // 무슨 로직인지 질문
 
         // 요청자와 수신자 간의 기존 요청을 수락
-        Friend friendRequest = friendRepository.findByRequesterAndReceiver(requester, receiver)
+        Friend friendRequest = friendRepository.findByRequesterIdAndReceiverId(requesterId, receiverId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid friend request"));
         friendRequest.setStatus(Status.ACCEPTED);
-        friendRepository.save(friendRequest);
+        friendRepository.save(friendRequest); // 무슨 로직인지 질문
 
-        // 반대 방향의 친구 요청이 이미 있는지 확인
-        if (!friendRepository.existsByRequesterAndReceiver(receiver, requester)) {
-            Friend reverseFriendRequest = new Friend(receiver, requester);
-            reverseFriendRequest.setStatus(Status.ACCEPTED);
-            friendRepository.save(reverseFriendRequest);
-        }
     }
-
 
     // 친구 요청 거절
     @Transactional
@@ -111,22 +98,18 @@ public class FriendServiceImpl implements FriendService{
         friendRepository.save(friendRequest);
     }
 
-
     // 친구 목록 조회
     @Transactional
     @Override
-    public List<FriendListResponseDto> getFriendsList(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+    public List<UserSearchResponseDto> getFriendsList(Long userId) {
+        List<Friend> friends = friendRepository.findByReceiverIdAndStatus(userId, Status.ACCEPTED);
 
-        List<Friend> friends = friendRepository.findByReceiverAndStatus(userId, Status.ACCEPTED);
-
-        return friends.stream()
-                .map(friend -> {
-                    User friendUser = friend.getRequester().getIdx().equals(userId) ? friend.getReceiver() : friend.getRequester();
-                    return new FriendListResponseDto(friendUser.getIdx(), friendUser.getUserName());
-                })
+        List<Long> userIds = friends.stream()
+                .flatMap(friend -> Stream.of(friend.getRequesterId(), friend.getReceiverId()))
+                .distinct()
                 .collect(Collectors.toList());
+
+        return userFeignClient.getFriendsList(userIds);
     }
 
 
@@ -135,13 +118,9 @@ public class FriendServiceImpl implements FriendService{
     @Transactional
     @Override
     public void deleteFriend(Long userId, Long deletedFriendId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-        User friend = userRepository.findById(deletedFriendId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid friend ID"));
 
-        friendRepository.deleteByRequesterAndReceiver(user, friend);
-        friendRepository.deleteByRequesterAndReceiver(friend, user);
+        friendRepository.deleteByRequesterIdAndReceiverId(userId, deletedFriendId);
+        friendRepository.deleteByRequesterIdAndReceiverId(deletedFriendId, userId);
     }
 }
 

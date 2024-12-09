@@ -68,7 +68,6 @@ public class AuthController {
         user.setPassword(userDetails.getPassword());
         user.setUserName(userDetails.getUserName());
         user.setProfileImage(userDetails.getProfileImage());
-        user.setCalendars(userDetails.getCalendarIdx());
         user.setProvider(Provider.LOCAL);
 
         LoginResponseDto responseDto = loginService.generateAndSaveTokens(user);
