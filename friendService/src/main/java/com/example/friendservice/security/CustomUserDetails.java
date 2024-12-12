@@ -1,6 +1,5 @@
 package com.example.friendservice.security;
 
-import com.example.friendservice.entity.Calendars;
 import com.example.friendservice.entity.ProfileImage;
 import com.example.friendservice.entity.User;
 import lombok.*;
@@ -20,7 +19,6 @@ public class CustomUserDetails implements UserDetails {
     private String password;
     private String userName;
     private ProfileImage profileImage;
-    private Calendars calendarIdx;
 
     public CustomUserDetails(User user) {
         this.idx = user.getIdx();
@@ -28,7 +26,6 @@ public class CustomUserDetails implements UserDetails {
         this.password = user.getPassword();
         this.userName = user.getUserName();
         this.profileImage = user.getProfileImage();
-        this.calendarIdx = user.getCalendars();
     }
 
     @Override

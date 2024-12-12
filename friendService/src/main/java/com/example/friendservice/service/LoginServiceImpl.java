@@ -49,7 +49,6 @@ public class LoginServiceImpl implements LoginService {
                 .email(user.getEmail())
                 .userName(user.getUserName())
                 .profileImageUrl(dbUser.getProfileImage() != null ? dbUser.getProfileImage().getImgUrl() : "")
-                .calendarIdx(user.getCalendars().getIdx())
                 .build();
     }
 

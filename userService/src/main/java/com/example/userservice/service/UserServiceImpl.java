@@ -4,18 +4,17 @@ import com.example.userservice.constant.Provider;
 import com.example.userservice.dto.request.UserRequestInsertDto;
 import com.example.userservice.dto.request.UserRequestUpdateDto;
 import com.example.userservice.dto.response.UserResponseDto;
+import com.example.userservice.dto.response.UserSearchResponseDto;
 import com.example.userservice.entity.ProfileImage;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.commonException.CommonErrorCode;
 import com.example.userservice.exception.commonException.error.BizException;
-import com.example.userservice.exception.commonException.error.MyInternalServerError;
 import com.example.userservice.exception.loginException.DuplicateEmailException;
 import com.example.userservice.exception.loginException.LoginErrorCode;
 import com.example.userservice.exception.loginException.UserPKException;
 import com.example.userservice.exception.userException.UserErrorCode;
 import com.example.userservice.exception.userException.UserNotFoundException;
 import com.example.userservice.feign.CalendarClient;
-import com.example.userservice.repository.CalendarRepository;
 import com.example.userservice.repository.ProfileImageRepository;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.security.providers.JwtTokenProvider;
@@ -31,6 +30,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -38,7 +40,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final CalendarRepository calendarRepository;
     private final ProfileImageRepository profileImageRepository;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
@@ -72,13 +73,53 @@ public class UserServiceImpl implements UserService {
 //        }
     }
 
-
     // 회원 찾기
     @Override
     public User findUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new BizException(CommonErrorCode.NOT_FOUND));
     }
 
+    //유저 검색(feign)
+    @Override
+    @Transactional
+    public List<UserSearchResponseDto> searchUserByUserName(String userName, List<Long> friendIds) {
+
+        return userRepository.findByUserNameContainingAndIdxNotIn(userName, friendIds).stream()
+                .map(foundUser -> new UserSearchResponseDto(
+                        foundUser.getIdx(),
+                        foundUser.getUserName(),
+                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png"
+                ))
+                .collect(Collectors.toList());
+    }
+
+    //유저 요청 목록 조회(feign)
+    @Override
+    @Transactional                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+    public List<UserSearchResponseDto> searchRequester(List<Long> requesterId) {
+
+        return userRepository.findAllById(requesterId).stream()
+                .map(foundUser -> new UserSearchResponseDto(
+                        foundUser.getIdx(),
+                        foundUser.getUserName(),
+                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png"
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // 친구 목록 조회(feign)
+    @Override
+    @Transactional
+    public List<UserSearchResponseDto> searchFriend(List<Long> friendsId) {
+
+        return userRepository.findAllById(friendsId).stream()
+                .map(foundUser -> new UserSearchResponseDto(
+                        foundUser.getIdx(),
+                        foundUser.getUserName(),
+                        foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png"
+                ))
+                .collect(Collectors.toList());
+    }
 
     // 닉네임 수정
     @Override
@@ -98,7 +139,6 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("닉네임 업데이트 중 오류 발생", e);
         }
     }
-
 
     // 프로필 사진 수정
     @Override
@@ -142,4 +182,6 @@ public class UserServiceImpl implements UserService {
 
         userRepository.deleteById(user.getIdx());
     }
+
+
 }

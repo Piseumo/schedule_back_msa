@@ -27,6 +27,7 @@ public class FriendController {
     @GetMapping("/{idx}/requests")
     public ResponseEntity<List<UserSearchResponseDto>> getFriendRequests(@PathVariable(name = "idx") Long userId) {
         List<UserSearchResponseDto> friendRequests = friendService.getFriendRequests(userId);
+
         return ResponseEntity.ok(friendRequests);
     }
 
@@ -46,9 +47,9 @@ public class FriendController {
 
     // 친구 목록 조회
     @GetMapping("/{idx}/list")
-    public ResponseEntity<List<FriendListResponseDto>> getFriendsList(@PathVariable(name = "idx") Long userId) {
-        List<FriendListResponseDto> friends = friendService.getFriendsList(userId);
-        return ResponseEntity.ok(friends);
+    public List<UserSearchResponseDto> getFriendsList(@PathVariable(name = "idx") Long userId) {
+        List<UserSearchResponseDto> friends = friendService.getFriendsList(userId);
+        return friends;
     }
 
 

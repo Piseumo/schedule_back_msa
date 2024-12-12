@@ -1,6 +1,5 @@
 package com.example.friendservice.exception.commonException;
 
-import com.example.dailyLog.exception.commonException.error.*;
 import com.example.friendservice.exception.commonException.error.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

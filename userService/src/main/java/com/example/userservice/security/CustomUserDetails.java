@@ -1,6 +1,5 @@
 package com.example.userservice.security;
 
-import com.example.userservice.entity.Calendars;
 import com.example.userservice.entity.ProfileImage;
 import com.example.userservice.entity.User;
 import lombok.*;

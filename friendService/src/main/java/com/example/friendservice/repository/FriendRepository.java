@@ -12,17 +12,17 @@ import java.util.Optional;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
     // 특정 유저가 받은 모든 친구 요청 조회 (수락 대기 상태)
-    List<Friend> findByReceiverAndStatus(User receiver, Status status);
+    List<Friend> findByReceiverIdAndStatus(Long receiverId, Status status);
 
-    boolean existsByRequesterAndReceiver(User requester, User receiver);
+    boolean existsByRequesterIdAndReceiverId(Long requesterId, Long receiverId);
 
     // 두 유저 간의 친구 상태 조회 (중복 요청 방지)
-    Optional<Friend> findByRequesterAndReceiver(User requester, User receiver);
+    Optional<Friend> findByRequesterIdAndReceiverId(Long requesterId, Long receiverId);
 
     //친구 검색 관련
-    @Query("SELECT f FROM Friend f WHERE (f.requester = :user OR f.receiver = :user) AND f.status = 'ACCEPTED'")
-    List<Friend> findFriendsByUser(@Param("user") User user);
+    @Query("SELECT f FROM Friend f WHERE (f.requesterId = :userId OR f.receiverId = :userId) AND f.status = 'ACCEPTED'")
+    List<Friend> findFriendsByUser(@Param("userId") Long userId);
 
     // 친구 삭제
-    void deleteByRequesterAndReceiver(User requester, User receiver);
+    void deleteByRequesterIdAndReceiverId(Long requesterId, Long receiverId);
 }

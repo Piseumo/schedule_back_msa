@@ -75,7 +75,6 @@ public class UserServiceImpl implements UserService {
                     .password(passwordEncoder.encode(userRequestInsertDto.getPassword()))
                     .userName(userRequestInsertDto.getUserName())
                     .provider(Provider.LOCAL)
-                    .calendars(calendars)
                     .build();
 
             return userRepository.save(user);

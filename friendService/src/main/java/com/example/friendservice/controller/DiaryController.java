@@ -2,7 +2,6 @@ package com.example.friendservice.controller;
 
 import com.example.friendservice.dto.request.DiaryRequestInsertDto;
 import com.example.friendservice.dto.request.DiaryRequestUpdateDto;
-import com.example.dailyLog.dto.response.*;
 import com.example.friendservice.dto.response.DiaryResponseCategoryDto;
 import com.example.friendservice.dto.response.DiaryResponseDayDto;
 import com.example.friendservice.dto.response.DiaryResponseDayListDto;

@@ -2,9 +2,11 @@ package com.example.friendservice.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserSearchResponseDto {
 
     private Long userId;      // 요청한 사용자 ID

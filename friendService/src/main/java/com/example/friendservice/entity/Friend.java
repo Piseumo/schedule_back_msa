@@ -2,8 +2,7 @@ package com.example.friendservice.entity;
 
 import com.example.friendservice.constant.Status;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,18 +12,23 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "friend",uniqueConstraints = @UniqueConstraint(columnNames = {"req_idx", "rec_idx"}))
+@Table(
+        name = "friend",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"req_idx", "rec_idx"}) // 복합 유니크 키 설정
+)
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "f_idx")
     private Long idx;
 
-    @Column(name = "u_idx1")
+    @Column(name = "req_idx", nullable = false)
     private Long requesterId;
 
-    @Column(name = "u_idx2")
+    @Column(name = "rec_idx", nullable = false)
     private Long receiverId;
 
     @Enumerated(EnumType.STRING)

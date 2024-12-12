@@ -1,6 +1,5 @@
 package com.example.userservice.dto.request;
 
-import com.example.userservice.entity.Calendars;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -21,6 +20,4 @@ public class UserRequestDto {
 
     private LocalDateTime joinDate;
 
-    @Schema(hidden = true)
-    private Calendars calendars;
 }
