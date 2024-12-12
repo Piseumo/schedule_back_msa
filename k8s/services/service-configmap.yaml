@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: NJ-k8s-configmap
+  name: nj-k8s-configmap
 data:
   access_token_expiration_time: "86400" # 하루
   refresh_token_expiration_time: "2592000" # 한 달
