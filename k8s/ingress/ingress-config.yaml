@@ -1,31 +1,32 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cew-ingress
+  name: newjeans-ingress
 spec:
   rules:
     - http:
         paths:
-          - path: /calendarService
+          - path: /user-service
             pathType: Prefix
             backend:
               service:
-                name: calendarService
+                name: user-service
                 port:
-                  number: 70002
-          - path: /friendService
+                  number: 50001
+          - path: /calendar-service
             pathType: Prefix
             backend:
               service:
-                name: friendService
+                name: calendar-service
                 port:
-                  number: 70003
-          - path: /userService
+                  number: 50002
+          - path: /friend-service
             pathType: Prefix
             backend:
               service:
-                name: userService
+                name: friend-service
                 port:
-                  number: 70001
+                  number: 50003
+
 
   ingressClassName: nginx
