@@ -1,6 +1,7 @@
 package com.example.calendarservice.dto.request;
 
 import com.example.calendarservice.constant.Category;
+import com.example.calendarservice.constant.Share;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -19,6 +20,8 @@ public class DiaryRequestInsertDto {
     private LocalDate date;
 
     private Category category;
+
+    private Share share;
 
     @Schema(example = "c_idx", hidden = true)
     private Long calendarIdx;
