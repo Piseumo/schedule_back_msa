@@ -232,6 +232,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                         .repeatType(effectiveRepeatType)
                         .repeatEndDate(effectiveRepeatEndDate)
                         .repeatGroupId(repeatGroupId)
+                        .share(scheduleRequestInsertDto.getShare())
                         .build();
                 scheduleRepository.save(createSchedule);
 
@@ -319,6 +320,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                                         .location(scheduleRequestUpdateDto.getLocation())
                                         .color(scheduleRequestUpdateDto.getColor())
                                         .calendars(updateSchedule.getCalendars())
+                                        .share(scheduleRequestUpdateDto.getShare())
                                         .repeatType(RepeatType.NONE)
                                         .repeatEndDate(null)
                                         .repeatGroupId(newRepeatGroupId)
@@ -337,6 +339,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                                             .end(currentEnd)
                                             .location(scheduleRequestUpdateDto.getLocation())
                                             .color(scheduleRequestUpdateDto.getColor())
+                                            .share(scheduleRequestUpdateDto.getShare())
                                             .calendars(updateSchedule.getCalendars())
                                             .repeatType(scheduleRequestUpdateDto.getRepeatType())
                                             .repeatEndDate(scheduleRequestUpdateDto.getRepeatEndDate())

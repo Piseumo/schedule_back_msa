@@ -1,6 +1,7 @@
 package com.example.calendarservice.entity;
 
 import com.example.calendarservice.constant.Category;
+import com.example.calendarservice.constant.Share;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -45,4 +46,8 @@ public class Diary {
     @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DiaryImage> diaryImages = new ArrayList<>();
 
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "d_share", nullable = false)
+    private Share share = Share.NONE;
 }
