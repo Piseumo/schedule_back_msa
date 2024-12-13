@@ -2,6 +2,7 @@ package com.example.calendarservice.dto.response;
 
 import com.example.calendarservice.constant.Color;
 import com.example.calendarservice.constant.RepeatType;
+import com.example.calendarservice.constant.Share;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -26,6 +27,8 @@ public class ScheduleResponseDayDto {
     private String location;
 
     private Color color;
+
+    private Share share;
 
     private List<String> images;
 

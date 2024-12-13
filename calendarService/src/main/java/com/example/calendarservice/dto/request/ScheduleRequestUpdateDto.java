@@ -2,6 +2,7 @@ package com.example.calendarservice.dto.request;
 
 import com.example.calendarservice.constant.Color;
 import com.example.calendarservice.constant.RepeatType;
+import com.example.calendarservice.constant.Share;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
 import lombok.*;
@@ -32,6 +33,8 @@ public class ScheduleRequestUpdateDto {
         private String location;
 
         private Color color;
+
+        private Share share;
 
         private List<String> deletedImageList;
 

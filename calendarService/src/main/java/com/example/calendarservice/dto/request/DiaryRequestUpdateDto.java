@@ -1,6 +1,7 @@
 package com.example.calendarservice.dto.request;
 
 import com.example.calendarservice.constant.Category;
+import com.example.calendarservice.constant.Share;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,8 @@ public class DiaryRequestUpdateDto {
 //    private LocalDate date;
 
     private Category category;
+
+    private Share share;
 
     private List<String> deletedImageList;
 

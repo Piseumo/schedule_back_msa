@@ -1,6 +1,7 @@
 package com.example.calendarservice.dto.response;
 
 import com.example.calendarservice.constant.Color;
+import com.example.calendarservice.constant.Share;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,5 +17,7 @@ public class ScheduleResponseMonthDto {
     private LocalDateTime start;
 
     private Color color;
+
+    private Share share;
 
 }

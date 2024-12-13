@@ -63,7 +63,7 @@ public class Schedule {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "s_share", nullable = false)
-    private Share share;
+    private Share share = Share.NONE;
 
     // 날짜 유효성 검사
     @PrePersist

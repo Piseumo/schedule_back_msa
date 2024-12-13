@@ -1,7 +1,6 @@
 package com.example.calendarservice.entity;
 
 import com.example.calendarservice.constant.Theme;
-import com.example.calendarservice.service.UserService;
 import jakarta.persistence.*;
 import lombok.*;
 
