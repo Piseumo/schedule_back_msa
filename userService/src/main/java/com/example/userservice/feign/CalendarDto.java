@@ -1,5 +1,6 @@
 package com.example.userservice.feign;
 
+import com.example.userservice.constant.Theme;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,9 +11,4 @@ public class CalendarDto {
     private Long idx;
 
     private Theme theme;
-
-    public enum Theme {
-
-        LIGHT, DARK, HYS, JHI
-    }
 }

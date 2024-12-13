@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment # what to create?
+metadata:
+  name: mariadb-messages-deployment
+spec: # specification for deployment resource
+  replicas: 1 # how many replicas of pods we want to create
+  selector:
+    matchLabels:
+      app: mariadb-messages
+  template: # blueprint for pods
+    metadata:
+      labels:
+        app: mariadb-messages # service will look for this label
+    spec: # specification for pods
+      containers:
+        - name: mariadb-messages
+          image: mariadb
+          ports:
+            - containerPort: 3306 #default one
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: password
+          volumeMounts:
+            - name: mariadb-initdb-config-calendars
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: mariadb-initdb-config-calendars
+          configMap:
+            name: mariadb-initdb-config-calendars
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-messages
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 30002
+  selector:
+    app: mariadb-messages
+
+
+# pod scale 바꾸기
+# kubectl scale deployment mariadb-deployment --replicas=1

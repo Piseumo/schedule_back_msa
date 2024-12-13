@@ -1,20 +1,22 @@
 package com.example.dailyLog.entity;
 
-import com.example.dailyLog.constant.ExchangeDiaryStatus;
 import com.example.dailyLog.constant.MessageStatus;
-import com.example.dailyLog.constant.Status;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
-@NoArgsConstructor
 @Table(name = "message")
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Message {
 
     @Id
@@ -28,11 +30,14 @@ public class Message {
     @Column(name = "receiver_idx", nullable = false)
     private Long receiverId;
 
+    @Column(name = "m_content", columnDefinition = "TEXT")
+    private String content;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "m_status", nullable = false)
     private MessageStatus status;
 
+    @CreatedDate
     @Column(name = "m_timestamp", updatable = false)
     private LocalDateTime timeStamp;
-
 }
