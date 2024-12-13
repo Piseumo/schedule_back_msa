@@ -61,9 +61,9 @@ public class Schedule {
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ScheduleImage> scheduleImages = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "s_share", nullable = false)
-    private Share share;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "s_share", nullable = false)
+//    private Share share;
 
     // 날짜 유효성 검사
     @PrePersist

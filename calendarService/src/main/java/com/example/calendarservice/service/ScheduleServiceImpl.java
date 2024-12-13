@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -97,7 +98,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             LocalDate startOfYear = LocalDate.of(year, 1, 1);
             LocalDate endOfYear = LocalDate.of(year, 12, 31);
 
-            List<Schedule> schedules = scheduleRepository.findByCalendarsIdxAndStartBetween(calendarIdx,startOfYear.atStartOfDay(), endOfYear.atTime(23, 59, 59));
+            List<Schedule> schedules = scheduleRepository.findByCalendarsIdxAndStartBetween(calendarIdx, startOfYear.atStartOfDay(), endOfYear.atTime(23, 59, 59));
 
             return schedules.stream()
                     .map(schedule -> ScheduleResponseYearDto.builder()
@@ -164,12 +165,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     // 일정 1개 조회
     @Transactional
     @Override
-    public ScheduleResponseDayDto findScheduleByOne(Long scheduleIdx){
+    public ScheduleResponseDayDto findScheduleByOne(Long scheduleIdx) {
         // 유효성 검사
         Schedule schedule = scheduleRepository.findById(scheduleIdx)
                 .orElseThrow(() -> new ScheduleNotFoundException(ScheduleErrorCode.SCHEDULE_NOT_FOUND));
 
-        try{
+        try {
             List<String> imageUrls = schedule.getScheduleImages()
                     .stream()
                     .map(ScheduleImage::getImgUrl)
@@ -192,7 +193,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
 
-    // 일정 입력
     @Transactional
     @Override
     public void saveSchedule(ScheduleRequestInsertDto scheduleRequestInsertDto, List<MultipartFile> imageFileList) {
@@ -204,7 +204,23 @@ public class ScheduleServiceImpl implements ScheduleService {
             LocalDateTime currentEnd = scheduleRequestInsertDto.getEnd();
             Long repeatGroupId = System.currentTimeMillis(); // 반복 그룹 ID 생성
 
+            RepeatType effectiveRepeatType = scheduleRequestInsertDto.getRepeatType();
+            LocalDate effectiveRepeatEndDate = scheduleRequestInsertDto.getRepeatEndDate();
+
+            // 시작날짜, 종료날짜 차이가 하루 이상인지 확인
+            long daysBetween = Duration.between(currentStart.toLocalDate().atStartOfDay(), currentEnd.toLocalDate().atStartOfDay()).toDays();
+
+            // 차이가 하루 이상이고 반복 유형이 NONE인 경우 반복 유형을 DAILY로 설정하고 반복 종료 날짜를 end 날짜로 설정
+            if (daysBetween >= 1 && effectiveRepeatType == RepeatType.NONE) {
+                effectiveRepeatType = RepeatType.DAILY;
+                effectiveRepeatEndDate = currentEnd.toLocalDate();
+            }
+
             do {
+                if (currentEnd.toLocalDate().isAfter(effectiveRepeatEndDate)) {
+                    currentEnd = LocalDateTime.of(effectiveRepeatEndDate, currentEnd.toLocalTime());
+                }
+
                 Schedule createSchedule = Schedule.builder()
                         .title(scheduleRequestInsertDto.getTitle())
                         .content(scheduleRequestInsertDto.getContent())
@@ -213,8 +229,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                         .location(scheduleRequestInsertDto.getLocation())
                         .color(scheduleRequestInsertDto.getColor())
                         .calendars(calendarIdx)
-                        .repeatType(scheduleRequestInsertDto.getRepeatType())
-                        .repeatEndDate(scheduleRequestInsertDto.getRepeatEndDate())
+                        .repeatType(effectiveRepeatType)
+                        .repeatEndDate(effectiveRepeatEndDate)
                         .repeatGroupId(repeatGroupId)
                         .build();
                 scheduleRepository.save(createSchedule);
@@ -228,12 +244,11 @@ public class ScheduleServiceImpl implements ScheduleService {
                     }
                 }
 
-                if (scheduleRequestInsertDto.getRepeatType() == RepeatType.NONE) {
-
+                if (effectiveRepeatType == RepeatType.NONE) {
                     break; // 반복 없음 처리
                 }
 
-                switch (scheduleRequestInsertDto.getRepeatType()) {
+                switch (effectiveRepeatType) {
                     case DAILY:
                         currentStart = currentStart.plusDays(1);
                         currentEnd = currentEnd.plusDays(1);
@@ -255,13 +270,12 @@ public class ScheduleServiceImpl implements ScheduleService {
                     default:
                         throw new IllegalArgumentException("Invalid repeat type");
                 }
-            } while (!currentStart.toLocalDate().isAfter(scheduleRequestInsertDto.getRepeatEndDate()));
+            } while (!currentStart.toLocalDate().isAfter(effectiveRepeatEndDate));
 
         } catch (Exception e) {
             throw new ServiceException("Failed to save schedule in ScheduleService.saveSchedule", e);
         }
     }
-
 
     // 일정 수정을 위해 필요한 삭제 메서드 (별도의 비동기 트랜잭션으로 삭제 처리)
     @Async

@@ -6,7 +6,6 @@ import com.example.calendarservice.exception.imageException.FileUploadError;
 import com.example.calendarservice.exception.imageException.ImageErrorCode;
 import com.example.calendarservice.exception.imageException.InvalidFileName;
 import com.example.calendarservice.repository.DiaryImageRepository;
-import com.example.calendarservice.repository.ProfileImageRepository;
 import com.example.calendarservice.repository.ScheduleImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,6 @@ public class ImageServiceImpl implements ImageService {
 
     private final DiaryImageRepository diaryImageRepository;
     private final ScheduleImageRepository scheduleImageRepository;
-    private final ProfileImageRepository profileImageRepository;
     private final FileService fileService;
 
     // 유효성 검사 메소드
@@ -90,90 +88,5 @@ public class ImageServiceImpl implements ImageService {
         } catch (Exception e) {
             throw new FileUploadError(ImageErrorCode.FILE_UPLOAD_ERROR);
         }
-    }
-
-    @Transactional
-    @Override
-    public ProfileImage saveProfileImage(MultipartFile imageFile, User user) throws Exception {
-        try {
-
-            ProfileImage existingImage = user.getProfileImage();
-            if (existingImage != null) {
-                fileService.deleteFile(existingImage.getImgUrl());
-                profileImageRepository.delete(existingImage);
-            }
-
-            String oriImgName = imageFile.getOriginalFilename();
-            String savedFileName = fileService.uploadFile(profileImageLocation, oriImgName, imageFile.getBytes());
-            String imageUrl = "/profileImages/" + savedFileName;
-
-
-            // ProfileImage 엔티티 생성 및 설정
-            ProfileImage profileImage = new ProfileImage();
-            profileImage.setImgName(savedFileName);
-            profileImage.setOriImgName(oriImgName);
-            profileImage.setImgUrl(imageUrl);
-            profileImage.setUser(user);
-
-            user.setProfileImage(profileImage);
-            return profileImageRepository.save(profileImage);
-        } catch (Exception e) {
-            throw new FileUploadError(ImageErrorCode.FILE_UPLOAD_ERROR);
-        }
-    }
-
-    // 카카오 유저 이미지를 받아 저장하는 메서드
-    @Transactional
-    @Override
-    public ProfileImage saveProfileImageFromUrl(byte[] imageBytes, User user) {
-        try {
-            // 기본 프로필 이미지 URL과 파일명 설정
-            String oriImgName;
-            String savedFileName;
-            String imageUrl;
-
-            if (imageBytes == null || imageBytes.length == 0) {
-                // 이미지 데이터가 없으면 기본 이미지 설정
-                oriImgName = "default_original_name";
-                savedFileName = "default_image_name.jpg";
-                imageUrl = "/defaultImages/" + savedFileName; // 기본 이미지가 저장된 경로
-
-                ProfileImage profileImage = new ProfileImage();
-                profileImage.setImgName(savedFileName);
-                profileImage.setOriImgName(oriImgName);
-                profileImage.setImgUrl(imageUrl);
-                profileImage.setUser(user);
-
-                return profileImageRepository.save(profileImage);
-            } else {
-                // 카카오 프로필 이미지가 존재하는 경우 저장
-                oriImgName = "kakao_profile_image.jpg";
-                savedFileName = fileService.uploadFile(profileImageLocation, oriImgName, imageBytes);
-                imageUrl = "/profileImages/" + savedFileName;
-
-                ProfileImage profileImage = new ProfileImage();
-                profileImage.setImgName(savedFileName);
-                profileImage.setOriImgName(oriImgName);
-                profileImage.setImgUrl(imageUrl);
-                profileImage.setUser(user);
-
-                return profileImageRepository.save(profileImage);
-            }
-        } catch (Exception e) {
-            throw new FileUploadError(ImageErrorCode.FILE_UPLOAD_ERROR);
-        }
-    }
-
-    //프로필 이미지 반환 메서드
-    @Transactional(readOnly = true)
-    @Override
-    public String getProfileImage(Long userIdx) {
-        ProfileImage profileImage = profileImageRepository.findByUserIdx(userIdx).orElse(null);
-        if (profileImage == null || profileImage.getImgUrl() == null || profileImage.getImgUrl().isEmpty()) {
-            log.info("사용자 {}에 대한 프로필 이미지가 없으므로 기본 이미지를 반환합니다.", userIdx);
-            return "/defaultImages/default.jpg"; // 기본 이미지 URL 설정
-        }
-        log.info("사용자 {}의 프로필 이미지 URL: {}", userIdx, profileImage.getImgUrl());
-        return profileImage.getImgUrl();
     }
 }
