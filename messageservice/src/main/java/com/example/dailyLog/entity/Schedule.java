@@ -1,10 +1,10 @@
-package com.example.calendarservice.entity;
+package com.example.dailyLog.entity;
 
-import com.example.calendarservice.constant.Color;
-import com.example.calendarservice.constant.RepeatType;
-import com.example.calendarservice.constant.Share;
+import com.example.dailyLog.constant.Color;
+import com.example.dailyLog.constant.RepeatType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -60,10 +60,6 @@ public class Schedule {
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ScheduleImage> scheduleImages = new ArrayList<>();
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "s_share", nullable = false)
-    private Share share;
 
     // 날짜 유효성 검사
     @PrePersist

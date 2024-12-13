@@ -1,7 +1,7 @@
-package com.example.calendarservice.entity;
+package com.example.dailyLog.entity;
 
-import com.example.calendarservice.constant.Theme;
-import com.example.calendarservice.service.UserService;
+import com.example.dailyLog.constant.Theme;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +24,8 @@ public class Calendars {
     @Enumerated(EnumType.STRING)
     private Theme theme;
 
-    @Column(name = "u_idx", nullable = false)
-    private Long userIdx;
+    @OneToOne(mappedBy = "calendars")
+    @JsonBackReference
+    private User user;
 
 }
