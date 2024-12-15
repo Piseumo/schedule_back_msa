@@ -31,7 +31,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator' // 메트릭 자동생성
 	implementation 'io.micrometer:micrometer-core' // 메트릭 생성 라이브러리
 	implementation 'io.micrometer:micrometer-registry-prometheus' // 프로메테우스에서 메트릭 자동으로..
-
+	implementation 'org.springframework.boot:spring-boot-starter-web' // sse
 	// zipkin 시작
 	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 	implementation 'io.zipkin.brave:brave-instrumentation-spring-web'

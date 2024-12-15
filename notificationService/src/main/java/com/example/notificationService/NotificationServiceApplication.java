@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableFeignClients
-public class FriendServiceApplication {
+public class NotificationServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FriendServiceApplication.class, args);
+		SpringApplication.run(NotificationServiceApplication.class, args);
 	}
 
 }

@@ -22,6 +22,7 @@ public class FriendController {
         return ResponseEntity.ok("Friend request sent successfully.");
     }
 
+
     // 친구 요청 조회
     @GetMapping("/{idx}/requests")
     public ResponseEntity<List<UserSearchResponseDto>> getFriendRequests(@PathVariable(name = "idx") Long userId) {
