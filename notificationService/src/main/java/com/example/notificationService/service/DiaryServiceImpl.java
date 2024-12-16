@@ -1,4 +1,4 @@
-package com.example.friendservice.service;
+package com.example.notificationService.service;
 
 import com.example.friendservice.constant.Category;
 import com.example.friendservice.dto.request.DiaryRequestInsertDto;

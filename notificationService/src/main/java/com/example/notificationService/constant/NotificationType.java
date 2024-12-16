@@ -1,5 +1,4 @@
-package com.example.friendservice.constant;
-
+package com.example.notificationService.constant;
 
 import lombok.Getter;
 

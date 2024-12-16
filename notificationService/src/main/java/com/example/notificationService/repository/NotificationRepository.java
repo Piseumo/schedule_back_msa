@@ -1,4 +1,4 @@
-package com.example.friendservice.repository;
+package com.example.notificationService.repository;
 
 
 import org.springframework.stereotype.Repository;
@@ -45,5 +45,8 @@ public class NotificationRepository {
 
     public void deleteAllEventCacheStartsWithId(String id) {
         eventCache.keySet().removeIf(key -> key.startsWith(id));
+    }
+
+    public void deleteEventCacheById(String emitterId) {
     }
 }
