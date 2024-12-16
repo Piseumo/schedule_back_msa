@@ -1,9 +1,15 @@
 package com.example.calendarservice.controller;
 
+import com.example.calendarservice.dto.response.SharedContentDto;
 import com.example.calendarservice.service.SharedService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/shared")
@@ -14,7 +20,11 @@ public class SharedController {
 
 
     // 쓰레드 첫화면(모든 친구의 공유 컨텐츠 조회)
-
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<SharedContentDto>> getSharedContents(@PathVariable Long userIdx) {
+        List<SharedContentDto> sharedContents = sharedService.findAllShared(userIdx);
+        return ResponseEntity.ok(sharedContents);
+    }
 
 
     // 클릭 했을 때 쓰레드 컨텐츠 개별 화면 조회 (+댓글 조회 메소드 호출)
