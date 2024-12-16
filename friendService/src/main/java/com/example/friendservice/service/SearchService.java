@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface SearchService {
 
-    public List<SearchResponseDto> search(String query, String filterType);
+    public List<SearchResponseDto> search(String query, String filterType, Long calendarIdx);
 }

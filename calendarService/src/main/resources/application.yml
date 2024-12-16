@@ -53,3 +53,4 @@ profileUploadPath: "file:///D:/profileImages/"
 
 user-service-url: http://localhost:50001
 friend-service-url: http://localhost:50003
+message-service-url: http://localhost:50004

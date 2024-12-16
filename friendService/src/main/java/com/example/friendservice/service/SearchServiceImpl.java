@@ -17,15 +17,15 @@ public class SearchServiceImpl implements SearchService{
     private final SearchRepository searchRepository;
 
     @Override
-    public List<SearchResponseDto> search(String query, String filterType) {
+    public List<SearchResponseDto> search(String query, String filterType, Long calendarIdx) {
         List<Object[]> results;
 
         if ("SCHEDULE".equalsIgnoreCase(filterType)) {
-            results = searchRepository.searchSchedule(query);
+            results = searchRepository.searchSchedule(query, calendarIdx);
         } else if ("DIARY".equalsIgnoreCase(filterType)) {
-            results = searchRepository.searchDiary(query);
+            results = searchRepository.searchDiary(query, calendarIdx);
         } else {
-            results = searchRepository.searchAll(query);
+            results = searchRepository.searchAll(query, calendarIdx);
         }
 
         return results.stream()

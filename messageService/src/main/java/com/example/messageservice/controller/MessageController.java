@@ -68,9 +68,9 @@ public class MessageController {
         return ResponseEntity.ok(conversations);
     }
 
-    @DeleteMapping("/{messageId}")
-    public ResponseEntity<Void> deleteMessage(@PathVariable(name = "messageId") Long messageId) {
-        messageService.deleteMessage(messageId);
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{messageId}")
+//    public ResponseEntity<Void> deleteMessage(@PathVariable(name = "messageId") Long messageId) {
+//        messageService.deleteMessage(messageId);
+//        return ResponseEntity.noContent().build();
+//    }
 }

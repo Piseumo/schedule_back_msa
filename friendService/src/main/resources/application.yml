@@ -64,3 +64,4 @@ profileUploadPath: "file:///D:/profileImages/"
 
 user-service-url: http://localhost:50001
 calendar-service-url: http://localhost:50002
+message-service-url: http://localhost:50004

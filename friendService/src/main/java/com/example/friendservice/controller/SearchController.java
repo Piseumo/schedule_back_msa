@@ -21,8 +21,9 @@ public class SearchController {
     @GetMapping
     public ResponseEntity<List<SearchResponseDto>> search(
             @RequestParam(name = "query") String query,
-            @RequestParam(name = "filterType", defaultValue = "ALL") String filterType){
-        List<SearchResponseDto> results = searchService.search(query, filterType);
+            @RequestParam(name = "filterType", defaultValue = "ALL") String filterType,
+            @RequestParam(name = "calendarIdx") Long calendarIdx){
+        List<SearchResponseDto> results = searchService.search(query, filterType, calendarIdx);
         return ResponseEntity.ok(results);
     }
 }
