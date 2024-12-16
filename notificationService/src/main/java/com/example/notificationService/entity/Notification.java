@@ -1,6 +1,6 @@
-package com.example.friendservice.entity;
+package com.example.notificationService.entity;
 
-import com.example.friendservice.constant.NotificationType;
+import com.example.notificationService.constant.NotificationType;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,8 +1,8 @@
-package com.example.friendservice.service;
+package com.example.notificationService.service;
 
-import com.example.friendservice.constant.NotificationType;
-import com.example.friendservice.entity.Notification;
-import com.example.friendservice.repository.NotificationRepository;
+import com.example.notificationService.constant.NotificationType;
+import com.example.notificationService.entity.Notification;
+import com.example.notificationService.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.lang.reflect.Member;
 import java.util.Map;
 
 import static org.springframework.retry.policy.TimeoutRetryPolicy.DEFAULT_TIMEOUT;
@@ -20,27 +19,30 @@ import static org.springframework.retry.policy.TimeoutRetryPolicy.DEFAULT_TIMEOU
 @Slf4j
 public class NotificationServiceImpl implements NotificationService {
 
-    private  final NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
 
-    public SseEmitter subscribe(String member, String lastEventId) {
-        String emitterId = member + "_" + System.currentTimeMillis();
+    /**
+     * SSE 구독 요청 처리
+     */
+    public SseEmitter subscribe(String username, String lastEventId) {
+        String emitterId = username + "_" + System.currentTimeMillis();
 
         SseEmitter sseEmitter = notificationRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
-        log.info("new emitter added : {}", sseEmitter);
-        log.info("lastEventId : {}", lastEventId);
+        log.info("New emitter added: {}", sseEmitter);
+        log.info("LastEventId: {}", lastEventId);
 
-        /* 상황별 emitter 삭제 처리 */
-        sseEmitter.onCompletion(() -> notificationRepository.deleteEmitterById(emitterId)); //완료 시, 타임아웃 시, 에러 발생 시
+        // SSE 이벤트 제거 처리
+        sseEmitter.onCompletion(() -> notificationRepository.deleteEmitterById(emitterId));
         sseEmitter.onTimeout(() -> notificationRepository.deleteEmitterById(emitterId));
         sseEmitter.onError((e) -> notificationRepository.deleteEmitterById(emitterId));
 
-        /* 503 Service Unavailable 방지용 dummy event 전송 */
-        send(sseEmitter, emitterId, createDummyNotification(member));
+        // 연결 유지를 위한 더미 데이터 전송
+        send(sseEmitter, emitterId, createDummyNotification(username));
 
-        /* client가 미수신한 event 목록이 존재하는 경우 */
-        if(!lastEventId.isEmpty()) { //client가 미수신한 event가 존재하는 경우 이를 전송하여 유실 예방
-            Map<String, Object> eventCaches = notificationRepository.findAllEventCacheStartsWithUsername(member); //id에 해당하는 eventCache 조회
-            eventCaches.entrySet().stream() //미수신 상태인 event 목록 전송
+        // 미수신된 알림 전송
+        if (!lastEventId.isEmpty()) {
+            Map<String, Object> eventCaches = notificationRepository.findAllEventCacheStartsWithUsername(username);
+            eventCaches.entrySet().stream()
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
                     .forEach(entry -> emitEventToClient(sseEmitter, entry.getKey(), entry.getValue()));
         }
@@ -48,31 +50,63 @@ public class NotificationServiceImpl implements NotificationService {
         return sseEmitter;
     }
 
-    /**
-     * [SSE 통신]specific user에게 알림 전송
-     */
-    public void send(String receiver, String content, String type, String url) {
-        Notification notification = createNotification(receiver, content, type, url);
-        /* 로그인한 client의 sseEmitter 전체 호출 */
-        Map<String, SseEmitter> sseEmitters = notificationRepository.findAllEmitterStartsWithUsername(receiver);
-        sseEmitters.forEach(
-                (key, sseEmitter) -> {
-                    log.info("key, notification : {}, {}", key, notification);
-                    notificationRepository.saveEventCache(key, notification); //저장
-                    emitEventToClient(sseEmitter, key, notification); //전송
-                }
-        );
+    // 개별 메서드: 친구 신청 알림
+    @Override
+    public SseEmitter sendFriendRequest(String username) {
+        sendNotification(username, "새로운 친구 요청이 있습니다.", NotificationType.FRIEND_REQUEST);
+        return null;
+    }
+
+    // 개별 메서드: 친구 수락 알림
+    @Override
+    public SseEmitter sendFriendAccept(String username) {
+        sendNotification(username, "친구 요청이 수락되었습니다!", NotificationType.FRIEND_ACCEPT);
+        return null;
+    }
+
+    // 개별 메서드: 쪽지 알림
+    @Override
+    public SseEmitter sendMessage(String username) {
+        sendNotification(username, "새로운 쪽지가 도착했습니다.", NotificationType.MESSAGE);
+        return null;
+    }
+
+    // 개별 메서드: 댓글 알림
+    @Override
+    public SseEmitter sendComment(String username) {
+        sendNotification(username, "새로운 댓글이 등록되었습니다.", NotificationType.COMMENT);
+        return null;
+    }
+
+    // 개별 메서드: 친구 새 글 알림
+    @Override
+    public SseEmitter sendFriendPost(String username) {
+        sendNotification(username, "친구가 새 글을 작성했습니다.", NotificationType.FRIEND_NEW_POST);
+        return null;
     }
 
     /**
-     * [SSE 통신]dummy data 생성
-     * : 503 Service Unavailable 방지
+     * 공통 알림 전송 메서드
+     */
+    private void sendNotification(String receiver, String content, NotificationType type) {
+        Notification notification = createNotification(receiver, content, type);
+
+        Map<String, SseEmitter> sseEmitters = notificationRepository.findAllEmitterStartsWithUsername(receiver);
+        sseEmitters.forEach((key, sseEmitter) -> {
+            log.info("Sending notification: key={}, notification={}", key, notification);
+            notificationRepository.saveEventCache(key, notification); // 캐시에 저장
+            emitEventToClient(sseEmitter, key, notification); // 전송
+        });
+    }
+
+    /**
+     * 더미 데이터 생성 (503 방지)
      */
     private Notification createDummyNotification(String receiver) {
         return Notification.builder()
                 .notificationId(receiver + "_" + System.currentTimeMillis())
                 .receiver(receiver)
-                .content("send dummy data to client.")
+                .content("Dummy notification to keep the connection alive.")
                 .notificationType(NotificationType.MESSAGE.getAlias())
                 .url(NotificationType.MESSAGE.getPath())
                 .readYn('N')
@@ -81,64 +115,22 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     /**
-     * [SSE 통신]notification type별 data 생성
+     * 알림 객체 생성 (공통 메서드)
      */
-    private Notification createNotification(String receiver, String content, String type, String url) {
-        if(type.equals(NotificationType.COMMENT.getAlias())) { //댓글
-            return Notification.builder()
-                    .receiver(receiver)
-                    .content(content)
-                    .notificationType(NotificationType.COMMENT.getAlias())
-                    .url(url)
-                    .readYn('N')
-                    .deletedYn('N')
-                    .build();
-        } else if(type.equals(NotificationType.FRIEND_REQUEST.getAlias())) { //친구신청
-            return Notification.builder()
-                    .receiver(receiver)
-                    .content(content)
-                    .notificationType(NotificationType.FRIEND_REQUEST.getAlias())
-                    .url(url)
-                    .readYn('N')
-                    .deletedYn('N')
-                    .build();
-        } else if(type.equals(NotificationType.FRIEND_ACCEPT.getAlias())) { //친구수락
-            return Notification.builder()
-                    .receiver(receiver)
-                    .content(content)
-                    .notificationType(NotificationType.FRIEND_ACCEPT.getAlias())
-                    .url(url)
-                    .readYn('N')
-                    .deletedYn('N')
-                    .build();
-        } else if(type.equals(NotificationType.MESSAGE.getAlias())) { //쪽지
-            return Notification.builder()
-                    .receiver(receiver)
-                    .content(content)
-                    .notificationType(NotificationType.MESSAGE.getAlias())
-                    .url(url)
-                    .readYn('N')
-                    .deletedYn('N')
-                    .build();
-        }
-        else if(type.equals(NotificationType.FRIEND_NEW_POST.getAlias())) { //새글
-            return Notification.builder()
-                    .receiver(receiver)
-                    .content(content)
-                    .notificationType(NotificationType.FRIEND_NEW_POST.getAlias())
-                    .url(url)
-                    .readYn('N')
-                    .deletedYn('N')
-                    .build();
-        }
-
-        else {
-            return null;
-        }
+    private Notification createNotification(String receiver, String content, NotificationType type) {
+        return Notification.builder()
+                .notificationId(receiver + "_" + System.currentTimeMillis())
+                .receiver(receiver)
+                .content(content)
+                .notificationType(type.getAlias())
+                .url(type.getPath())
+                .readYn('N')
+                .deletedYn('N')
+                .build();
     }
 
     /**
-     * [SSE 통신]notification type별 event 전송
+     * SSE 이벤트 전송 로직
      */
     private void send(SseEmitter sseEmitter, String emitterId, Object data) {
         try {
@@ -146,22 +138,22 @@ public class NotificationServiceImpl implements NotificationService {
                     .id(emitterId)
                     .name("sse")
                     .data(data, MediaType.APPLICATION_JSON));
-        } catch(IOException exception) {
+        } catch (IOException e) {
             notificationRepository.deleteEmitterById(emitterId);
-            sseEmitter.completeWithError(exception);
+            sseEmitter.completeWithError(e);
         }
     }
 
     /**
-     * [SSE 통신]
+     * 클라이언트로 알림 전송
      */
     private void emitEventToClient(SseEmitter sseEmitter, String emitterId, Object data) {
         try {
             send(sseEmitter, emitterId, data);
-            notificationRepository.deleteEmitterById(emitterId);
+            notificationRepository.deleteEventCacheById(emitterId);
         } catch (Exception e) {
             notificationRepository.deleteEmitterById(emitterId);
-            throw new RuntimeException("Connection Failed.");
+            throw new RuntimeException("Connection Failed.", e);
         }
     }
 }

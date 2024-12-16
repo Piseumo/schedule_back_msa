@@ -1,4 +1,4 @@
-package com.example.friendservice.controller;
+package com.example.notificationService.controller;
 
 import com.example.friendservice.dto.request.ScheduleRequestInsertDto;
 import com.example.friendservice.dto.request.ScheduleRequestUpdateDto;
