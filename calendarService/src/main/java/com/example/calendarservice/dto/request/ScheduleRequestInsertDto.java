@@ -28,12 +28,9 @@ public class ScheduleRequestInsertDto {
 
         private Color color;
 
-<<<<<<< HEAD
         private Share share;
 
         @Schema(example = "c_idx", hidden = true)
-=======
->>>>>>> upStream/main
         private Long calendarIdx;
 
         // 반복 일정 관련 필드 추가
