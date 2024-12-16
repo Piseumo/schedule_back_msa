@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,9 @@ public class SharedServiceImpl implements SharedService{
     public List<Shared> findAllShared(Long userIdx){
 
         List<UserSearchResponseDto> friendsList = friendClient.getFriendsList(userIdx);
+        List<Long> friendIdxList = friendsList.stream()
+                .map(UserSearchResponseDto::getUserId)
+                .toList();
 
     }
 
