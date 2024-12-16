@@ -24,12 +24,12 @@ spec: # specification for deployment resource
                   name: mariadb-secret
                   key: password
           volumeMounts:
-            - name: mariadb-initdb-config-calendars
+            - name: mariadb-initdb-config-messages
               mountPath: /docker-entrypoint-initdb.d
       volumes:
-        - name: mariadb-initdb-config-calendars
+        - name: mariadb-initdb-config-messages
           configMap:
-            name: mariadb-initdb-config-calendars
+            name: mariadb-initdb-config-messages
 ---
 apiVersion: v1
 kind: Service
@@ -40,7 +40,7 @@ spec:
   ports:
     - port: 3306
       targetPort: 3306
-      nodePort: 30002
+      nodePort: 30004
   selector:
     app: mariadb-messages
 

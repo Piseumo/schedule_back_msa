@@ -1,8 +1,8 @@
-package com.example.notificationService.service;
+package com.example.friendservice.service;
 
-import com.example.notificationService.constant.NotificationType;
-import com.example.notificationService.entity.Notification;
-import com.example.notificationService.repository.NotificationRepository;
+import com.example.friendservice.constant.NotificationType;
+import com.example.friendservice.entity.Notification;
+import com.example.friendservice.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

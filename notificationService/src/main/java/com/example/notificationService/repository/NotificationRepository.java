@@ -1,4 +1,4 @@
-package com.example.notificationService.repository;
+package com.example.friendservice.repository;
 
 
 import org.springframework.stereotype.Repository;

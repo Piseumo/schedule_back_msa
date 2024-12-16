@@ -1,4 +1,4 @@
-package com.example.notificationService.service;
+package com.example.friendservice.service;
 
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

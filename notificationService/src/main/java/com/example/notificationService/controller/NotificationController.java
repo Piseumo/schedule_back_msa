@@ -1,6 +1,6 @@
-package com.example.notificationService.controller;
+package com.example.friendservice.controller;
 
-import com.example.notificationService.service.NotificationService;
+import com.example.friendservice.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.NoArgsConstructor;

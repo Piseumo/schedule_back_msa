@@ -1,4 +1,4 @@
-package com.example.notificationService.dto.response;
+package com.example.friendservice.dto.response;
 
 public class NotificationResponseDto {
 }

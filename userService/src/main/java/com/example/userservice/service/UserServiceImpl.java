@@ -1,6 +1,7 @@
 package com.example.userservice.service;
 
 import com.example.userservice.constant.Provider;
+import com.example.userservice.dto.request.UserInfoDto;
 import com.example.userservice.dto.request.UserRequestInsertDto;
 import com.example.userservice.dto.request.UserRequestUpdateDto;
 import com.example.userservice.dto.response.UserResponseDto;
@@ -119,6 +120,19 @@ public class UserServiceImpl implements UserService {
                         foundUser.getProfileImage() != null ? foundUser.getProfileImage().getImgUrl() : "/images/default.png"
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public UserInfoDto getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+
+        return UserInfoDto.builder()
+                .id(user.getIdx())
+                .userName(user.getUserName())
+                .profileImage(user.getProfileImage())
+                .build();
     }
 
     // 닉네임 수정

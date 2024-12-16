@@ -27,7 +27,7 @@ public class SharedServiceImpl implements SharedService{
         List<Long> friendIdxList = friendsList.stream()
                 .map(UserSearchResponseDto::getUserId)
                 .toList();
-
+        return null;
     }
 
 
