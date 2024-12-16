@@ -16,6 +16,8 @@ public class ScheduleResponseMonthDto {
 
     private LocalDateTime start;
 
+    private LocalDateTime end;
+
     private Color color;
 
     private Share share;

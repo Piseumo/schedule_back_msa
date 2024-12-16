@@ -32,11 +32,11 @@ public class Shared {
 
 
     @Column(name = "sh_date_time", nullable = false)
-    private LocalDateTime dateTime;
+    private LocalDateTime shareDateTime;
 
     // 날짜 수정 메서드 추가
     public void updateDateTime() {
-        this.dateTime = LocalDateTime.now();
+        this.shareDateTime = LocalDateTime.now();
     }
 
     public void updateDiaryIdx(Long diaryIdx) {
