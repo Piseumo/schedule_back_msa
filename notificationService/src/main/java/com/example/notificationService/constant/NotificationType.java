@@ -1,6 +1,5 @@
 package com.example.notificationService.constant;
 
-
 import lombok.Getter;
 
 @Getter

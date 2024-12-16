@@ -1,6 +1,6 @@
-package com.example.notificationService.repository;
+package com.example.friendservice.repository;
 
-import com.example.notificationService.entity.Schedule;
+import com.example.friendservice.entity.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

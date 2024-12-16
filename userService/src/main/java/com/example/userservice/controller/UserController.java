@@ -1,5 +1,6 @@
 package com.example.userservice.controller;
 
+import com.example.userservice.dto.request.UserInfoDto;
 import com.example.userservice.dto.request.UserRequestUpdateDto;
 import com.example.userservice.dto.response.UserSearchResponseDto;
 import com.example.userservice.service.ImageService;
@@ -74,6 +75,12 @@ public class UserController {
     public List<UserSearchResponseDto> getFriendsList(@RequestParam List<Long> friendsId) {
         List<UserSearchResponseDto> friends = userService.searchFriend(friendsId);
         return friends;
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserInfoDto> getUserInfo(@PathVariable(name = "userId") Long userId) {
+        UserInfoDto userInfo = userService.getUserById(userId);
+        return ResponseEntity.ok(userInfo);
     }
 }
 

@@ -1,11 +1,11 @@
 package com.example.notificationService.controller;
 
-import com.example.notificationService.dto.request.ScheduleRequestInsertDto;
-import com.example.notificationService.dto.request.ScheduleRequestUpdateDto;
-import com.example.notificationService.dto.response.ScheduleResponseDayDto;
-import com.example.notificationService.dto.response.ScheduleResponseMonthDto;
-import com.example.notificationService.dto.response.ScheduleResponseYearDto;
-import com.example.notificationService.service.ScheduleService;
+import com.example.friendservice.dto.request.ScheduleRequestInsertDto;
+import com.example.friendservice.dto.request.ScheduleRequestUpdateDto;
+import com.example.friendservice.dto.response.ScheduleResponseDayDto;
+import com.example.friendservice.dto.response.ScheduleResponseMonthDto;
+import com.example.friendservice.dto.response.ScheduleResponseYearDto;
+import com.example.friendservice.service.ScheduleService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

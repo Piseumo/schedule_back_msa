@@ -29,9 +29,44 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.subscribe(userDetails.getUsername(), lastEventId));
 
     }
+
+    @Operation(summary = "친구 신청 알림")
+    @GetMapping(value = "/friend-request", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> friendRequest(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(notificationService.sendFriendRequest(userDetails.getUsername()));
+    }
+
+    @Operation(summary = "친구 수락 알림")
+    @GetMapping(value = "/friend-accept", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> friendAccept(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(notificationService.sendFriendAccept(userDetails.getUsername()));
+    }
+
+    @Operation(summary = "쪽지 알림")
+    @GetMapping(value = "/message", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> messageNotification(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(notificationService.sendMessage(userDetails.getUsername()));
+    }
+
+    @Operation(summary = "댓글 알림")
+    @GetMapping(value = "/comment", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> commentNotification(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(notificationService.sendComment(userDetails.getUsername()));
+    }
+
+    @Operation(summary = "친구 새 글 알림")
+    @GetMapping(value = "/friend-post", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> friendPostNotification(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(notificationService.sendFriendPost(userDetails.getUsername()));
+    }
+
+}
     // 다섯개 알람 각각 어떻게 뭘받고 뭘 보낼지 정하고 쌤한테 확인 받기
+
 //    친구 신청 : 1번님이 userId님에게 친구 신청을 하였습니다<수락, 거절>
 //- 보낸사람(1번), userId
+
+
 //
 //친구 수락: userid 님이 2번님에게 보낸 친구신청이 수락 되었습니다.
 //- userid, 받은사람(2번)
@@ -46,4 +81,4 @@ public class NotificationController {
 //[userid 랑 oo님 id -> oo의 cal id -> s d idx -> userid를 선택 했을때 ]
 //    ㄴ 아마도 이걸 한방에 객체로 보낼듯
 
-}
+

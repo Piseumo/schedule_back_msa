@@ -1,6 +1,6 @@
-package com.example.notificationService.service;
+package com.example.friendservice.service;
 
-import com.example.notificationService.dto.response.SearchResponseDto;
+import com.example.friendservice.dto.response.SearchResponseDto;
 
 import java.util.List;
 

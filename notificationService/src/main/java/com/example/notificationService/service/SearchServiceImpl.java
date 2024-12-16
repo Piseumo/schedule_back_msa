@@ -1,7 +1,7 @@
-package com.example.notificationService.service;
+package com.example.friendservice.service;
 
-import com.example.notificationService.dto.response.SearchResponseDto;
-import com.example.notificationService.repository.SearchRepository;
+import com.example.friendservice.dto.response.SearchResponseDto;
+import com.example.friendservice.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

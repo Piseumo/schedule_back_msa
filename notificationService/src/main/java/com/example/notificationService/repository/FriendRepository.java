@@ -1,8 +1,8 @@
-package com.example.notificationService.repository;
+package com.example.friendservice.repository;
 
-import com.example.notificationService.constant.Status;
-import com.example.notificationService.entity.Friend;
-import com.example.notificationService.entity.User;
+import com.example.friendservice.constant.Status;
+import com.example.friendservice.entity.Friend;
+import com.example.friendservice.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

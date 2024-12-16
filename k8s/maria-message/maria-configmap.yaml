@@ -1,18 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mariadb-initdb-config-calendars
+  name: mariadb-initdb-config-messages
 data:
   init.sql:
     CREATE DATABASE IF NOT EXISTS newjeans;
     
     USE newjeans;
-    
-    -- INSERT INTO 'calendars' table
-    INSERT INTO calendars (cal_idx, c_theme) VALUES
-    (1, 'LIGHT'),
-    (2, 'LIGHT'),
-    (3, 'LIGHT'),
-    (4, 'LIGHT'),
-    (5, 'LIGHT');
-

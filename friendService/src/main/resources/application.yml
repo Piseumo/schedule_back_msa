@@ -33,6 +33,17 @@ spring:
       file-size-threshold: 0
       enabled: true
 
+  jwt:
+    secret: asdklfjdaslkfj2iofj308f230f203f20f03ffjf2jf0
+    token-valid-time: 86400000
+    refresh-token-valid-time: 604800000
+
+kakao:
+  client-id: 2515f45fc0d9a50bfeee4e2db7c37005
+  client-secret: VTtYUbpcA51R3KZaRhcB4cWDTqL40akQ
+  redirect-uri: "http://localhost:5173/kakaologin"
+
+
 # 로컬 이미지 저장 루트
 #ImgLocation: "D:/images"
 #ProfileImgLocation: "D:/profileImages"
@@ -53,3 +64,4 @@ profileUploadPath: "file:///D:/profileImages/"
 
 user-service-url: http://localhost:50001
 calendar-service-url: http://localhost:50002
+message-service-url: http://localhost:50004

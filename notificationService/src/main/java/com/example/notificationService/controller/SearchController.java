@@ -1,7 +1,7 @@
-package com.example.notificationService.controller;
+package com.example.friendservice.controller;
 
-import com.example.notificationService.dto.response.SearchResponseDto;
-import com.example.notificationService.service.SearchService;
+import com.example.friendservice.dto.response.SearchResponseDto;
+import com.example.friendservice.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

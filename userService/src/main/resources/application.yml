@@ -65,3 +65,4 @@ profileUploadPath: "file:///Users/pc/Downloads/profileImages/"
 
 calendar-service-url: http://localhost:50002
 friend-service-url: http://localhost:50003
+message-service-url: http://localhost:50004

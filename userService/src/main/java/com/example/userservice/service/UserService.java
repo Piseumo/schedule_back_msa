@@ -1,5 +1,6 @@
 package com.example.userservice.service;
 
+import com.example.userservice.dto.request.UserInfoDto;
 import com.example.userservice.dto.request.UserRequestInsertDto;
 import com.example.userservice.dto.request.UserRequestUpdateDto;
 import com.example.userservice.dto.response.UserResponseDto;
@@ -20,4 +21,5 @@ public interface UserService {
     List<UserSearchResponseDto> searchUserByUserName(String userName, List<Long> friendIds);
     List<UserSearchResponseDto> searchRequester(List<Long> requesterId);
     List<UserSearchResponseDto> searchFriend(List<Long> requesterId);
+    UserInfoDto getUserById(Long userId);
 }

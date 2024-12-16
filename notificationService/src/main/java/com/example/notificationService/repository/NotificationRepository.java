@@ -46,4 +46,7 @@ public class NotificationRepository {
     public void deleteAllEventCacheStartsWithId(String id) {
         eventCache.keySet().removeIf(key -> key.startsWith(id));
     }
+
+    public void deleteEventCacheById(String emitterId) {
+    }
 }
