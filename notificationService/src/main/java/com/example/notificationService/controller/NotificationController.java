@@ -1,5 +1,6 @@
 package com.example.notificationService.controller;
 
+import com.example.notificationService.service.NotiSubscriptionService;
 import com.example.notificationService.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,48 +21,54 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequiredArgsConstructor
 public class NotificationController {
 
+    private final NotiSubscriptionService notiSubscriptionService;
     private final NotificationService notificationService;
 
     @Operation(summary = "sse세션연결")
     @GetMapping(value = "/api/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> subscribe(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails,
-                                                @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
-        return ResponseEntity.ok(notificationService.subscribe(userDetails.getUsername(), lastEventId));
-
+    public ResponseEntity<SseEmitter> subscribe(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
+        return ResponseEntity.ok(notiSubscriptionService.subscribe(userDetails.getUsername(), lastEventId));
     }
 
     @Operation(summary = "친구 신청 알림")
-    @GetMapping(value = "/friend-request", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> friendRequest(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(notificationService.sendFriendRequest(userDetails.getUsername()));
+    @GetMapping(value = "/friend-request")
+    public ResponseEntity<Void> friendRequest(@AuthenticationPrincipal UserDetails userDetails) {
+        notificationService.sendFriendRequest(userDetails.getUsername());
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "친구 수락 알림")
-    @GetMapping(value = "/friend-accept", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> friendAccept(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(notificationService.sendFriendAccept(userDetails.getUsername()));
+    @GetMapping(value = "/friend-accept")
+    public ResponseEntity<Void> friendAccept(@AuthenticationPrincipal UserDetails userDetails) {
+        notificationService.sendFriendAccept(userDetails.getUsername());
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "쪽지 알림")
-    @GetMapping(value = "/message", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> messageNotification(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(notificationService.sendMessage(userDetails.getUsername()));
+    @GetMapping(value = "/message")
+    public ResponseEntity<Void> messageNotification(@AuthenticationPrincipal UserDetails userDetails) {
+        notificationService.sendMessage(userDetails.getUsername());
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "댓글 알림")
-    @GetMapping(value = "/comment", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> commentNotification(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(notificationService.sendComment(userDetails.getUsername()));
+    @GetMapping(value = "/comment")
+    public ResponseEntity<Void> commentNotification(@AuthenticationPrincipal UserDetails userDetails) {
+        notificationService.sendComment(userDetails.getUsername());
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "친구 새 글 알림")
-    @GetMapping(value = "/friend-post", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> friendPostNotification(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(notificationService.sendFriendPost(userDetails.getUsername()));
+    @GetMapping(value = "/friend-post")
+    public ResponseEntity<Void> friendPostNotification(@AuthenticationPrincipal UserDetails userDetails) {
+        notificationService.sendFriendPost(userDetails.getUsername());
+        return ResponseEntity.ok().build();
     }
 
 }
-    // 다섯개 알람 각각 어떻게 뭘받고 뭘 보낼지 정하고 쌤한테 확인 받기
+// 다섯개 알람 각각 어떻게 뭘받고 뭘 보낼지 정하고 쌤한테 확인 받기
 
 //    친구 신청 : 1번님이 userId님에게 친구 신청을 하였습니다<수락, 거절>
 //- 보낸사람(1번), userId
