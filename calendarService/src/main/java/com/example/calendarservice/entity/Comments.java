@@ -1,10 +1,7 @@
 package com.example.calendarservice.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +11,8 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Setter
 public class Comments {
 
     @Id
@@ -24,11 +23,8 @@ public class Comments {
     @Column(name = "u_idx")
     private Long userIdx;
 
-    @Column(name = "s_idx")
-    private Long scheduleIdx;
-
-    @Column(name = "d_idx")
-    private Long diaryIdx;
+    @Column(name = "sh_idx")
+    private Long sharedIdx;
 
     @Column(name = "com_date_time", nullable = false)
     private LocalDateTime dateTime;
