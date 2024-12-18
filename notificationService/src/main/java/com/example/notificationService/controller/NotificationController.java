@@ -10,10 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
@@ -34,9 +31,9 @@ public class NotificationController {
 
     @Operation(summary = "친구 신청 알림")
     @GetMapping(value = "/friend-request")
-    public ResponseEntity<Void> friendRequest(@AuthenticationPrincipal UserDetails userDetails) {
-        notificationService.sendFriendRequest(userDetails.getUsername());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Boolean> friendRequest(@RequestParam String userName, String friendName) {
+        notificationService.sendFriendRequest(userName, friendName);
+        return ResponseEntity.ok(true);
     }
 
     @Operation(summary = "친구 수락 알림")

@@ -30,7 +30,7 @@ public class Notification {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String notificationType;  // 알림 유형 (공지, 댓글 등)
+    private NotificationType notificationType;  // 알림 유형 (공지, 댓글 등)
 
     @Column(nullable = false)
     private String url;  // 알림 클릭 시 이동할 URL

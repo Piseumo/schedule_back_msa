@@ -3,6 +3,7 @@ package com.example.notificationService.service;
 import com.example.notificationService.constant.NotificationType;
 import com.example.notificationService.entity.Notification;
 import com.example.notificationService.repository.NotificationRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.springframework.retry.policy.TimeoutRetryPolicy.DEFAULT_TIMEOUT;
 
@@ -21,46 +24,67 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
 
+    //친구 신청 알람
+    @Transactional
     @Override
-    public void sendFriendRequest(String username) {
-        sendNotification(username, "You have a new friend request!", NotificationType.FRIEND_REQUEST);
+    public void sendFriendRequest(String userName, String friendName) {
+        sendNotification(friendName, userName+"에게"+"님이 친구 요청을 보냈습니다", NotificationType.FRIEND_REQUEST);
     }
 
+    //친구 수락
+    @Transactional
     @Override
     public void sendFriendAccept(String username) {
         sendNotification(username, "Your friend request has been accepted!", NotificationType.FRIEND_ACCEPT);
     }
 
+    @Transactional
     @Override
     public void sendMessage(String username) {
         sendNotification(username, "You have a new message!", NotificationType.MESSAGE);
     }
 
+    @Transactional
     @Override
     public void sendComment(String username) {
         sendNotification(username, "A new comment has been posted on your post.", NotificationType.COMMENT);
     }
 
+    @Transactional
     @Override
     public void sendFriendPost(String username) {
         sendNotification(username, "Your friend has posted something new!", NotificationType.FRIEND_NEW_POST);
     }
 
-    private void sendNotification(String receiver, String content, NotificationType type) {
+    // 메세지정보 전달
+    private void sendNotification(String username, String content, NotificationType type) {
+        // Notification 생성
         Notification notification = Notification.builder()
-                .notificationId(receiver + "_" + System.currentTimeMillis())
-                .receiver(receiver)
+                .notificationId(username + "_" + System.currentTimeMillis())
+                .receiver(username)
                 .content(content)
-                .notificationType(type.getAlias())
+                .notificationType(type)
                 .url(type.getPath())
                 .readYn('N')
                 .deletedYn('N')
                 .build();
 
-        Map<String, SseEmitter> sseEmitters = notificationRepository.findAllEmitterStartsWithUsername(receiver);
+        // Receiver로 시작하는 모든 Notification 조회
+        List<Notification> notifications = notificationRepository.findAllEmitterStartsWithUsername(username);
+
+        // Notification 리스트를 Map<String, SseEmitter>로 변환
+        Map<String, SseEmitter> sseEmitters = notifications.stream()
+                .collect(Collectors.toMap(
+                        Notification::getNotificationId, // Key: Notification ID
+                        n -> new SseEmitter(Long.MAX_VALUE) // Value: 새로운 SseEmitter 생성
+                ));
+
+        // SseEmitter로 알림 전송 및 캐시 저장
         sseEmitters.forEach((key, sseEmitter) -> emitAndCacheEvent(sseEmitter, key, notification));
     }
 
+
+    // 실제 메세지 전송 및 캐쉬 저장 하는 곳
     private void emitAndCacheEvent(SseEmitter emitter, String key, Notification notification) {
         try {
             notificationRepository.saveEventCache(key, notification); // 캐시 저장

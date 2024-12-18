@@ -7,7 +7,7 @@ import java.lang.reflect.Member;
 
 public interface NotificationService {
 
-    void sendFriendRequest(String username);
+    void sendFriendRequest(String userName, String friendName);
     void sendFriendAccept(String username);
     void sendMessage(String username);
     void sendComment(String username);

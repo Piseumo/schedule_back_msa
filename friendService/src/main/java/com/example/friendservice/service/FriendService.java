@@ -1,12 +1,14 @@
 package com.example.friendservice.service;
 
+import com.example.friendservice.dto.request.FriendRequestDto;
 import com.example.friendservice.dto.response.UserSearchResponseDto;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface FriendService {
 
-    void sendFriendRequest(Long requesterId, Long receiverId);
+    ResponseEntity<Void> sendFriendRequest(FriendRequestDto friendRequestDto);
 
     List<UserSearchResponseDto> getFriendRequests(Long userId);
 
