@@ -2,6 +2,8 @@ package com.example.calendarservice.service;
 
 import com.example.calendarservice.dto.request.CommentsRequestInsertDto;
 import com.example.calendarservice.dto.request.CommentsRequestUpdateDto;
+import com.example.calendarservice.dto.request.SharedRequestInsertDto;
+import com.example.calendarservice.dto.request.SharedRequestUpdateDto;
 import com.example.calendarservice.dto.response.CommentsResponseAllDto;
 import com.example.calendarservice.dto.response.SharedContentDto;
 import com.example.calendarservice.dto.response.UserSearchResponseDto;
@@ -35,6 +37,38 @@ public class SharedServiceImpl implements SharedService{
     private final DiaryRepository diaryRepository;
     private final CommentsRepository commentsRepository;
 
+
+
+    // 공유 내역 테이블 생성
+    @Transactional
+    public void saveShared(SharedRequestInsertDto sharedRequestInsertDto){
+
+
+        Shared createShared = Shared.builder()
+                .scheduleIdx(sharedRequestInsertDto.getScheduleIdx())
+                .diaryIdx(sharedRequestInsertDto.getDiaryIdx())
+                .friendIdx(sharedRequestInsertDto.getFriendIdx())
+                .shareDateTime(sharedRequestInsertDto.getShareDateTime())
+                .build();
+        sharedRepository.save(createShared);
+    }
+
+
+    // 공유 친구, 시간 수정
+    @Transactional
+    public void updateShared(SharedRequestUpdateDto sharedRequestUpdateDto){
+
+        Shared updateShared = sharedRepository.findById(sharedRequestUpdateDto.getSharedIdx())
+                .orElseThrow(() -> new IllegalArgumentException("공유 내역이 존재하지 않습니다."));
+
+        if (sharedRequestUpdateDto.getFriendIdx() != null){
+            updateShared.setFriendIdx(sharedRequestUpdateDto.getFriendIdx());
+        }
+        if (sharedRequestUpdateDto.getShareDateTime() != null){
+            updateShared.setShareDateTime(sharedRequestUpdateDto.getShareDateTime());
+        }
+        sharedRepository.save(updateShared);
+    }
 
 
     // 쓰레드 첫화면(모든 친구의 공유 컨텐츠 조회)
@@ -152,6 +186,16 @@ public class SharedServiceImpl implements SharedService{
                 .orElseThrow(() -> new IllegalArgumentException("공유 일정 or 일기가 존재하지 않습니다."));
         sharedRepository.delete(shared);
     }
+
+
+
+    // 클릭 했을 때 쓰레드 컨텐츠 개별 화면에서 공유 취소
+//    @Transactional
+//    public void deleteShared(Long sharedIdx){
+//        Shared shared = sharedRepository.findById(sharedIdx)
+//                .orElseThrow(() -> new IllegalArgumentException("공유 일정 or 일기가 존재하지 않습니다."));
+//        sharedRepository.delete(shared);
+//    }
 
 
 

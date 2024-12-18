@@ -3,6 +3,8 @@ package com.example.calendarservice.service;
 import com.example.calendarservice.constant.Category;
 import com.example.calendarservice.dto.request.DiaryRequestInsertDto;
 import com.example.calendarservice.dto.request.DiaryRequestUpdateDto;
+import com.example.calendarservice.dto.request.SharedRequestInsertDto;
+import com.example.calendarservice.dto.request.SharedRequestUpdateDto;
 import com.example.calendarservice.dto.response.DiaryResponseCategoryDto;
 import com.example.calendarservice.dto.response.DiaryResponseDayDto;
 import com.example.calendarservice.dto.response.DiaryResponseDayListDto;
@@ -10,15 +12,7 @@ import com.example.calendarservice.dto.response.DiaryResponseMonthDto;
 import com.example.calendarservice.entity.Calendars;
 import com.example.calendarservice.entity.Diary;
 import com.example.calendarservice.entity.DiaryImage;
-import com.example.calendarservice.exception.calendarsException.CalendarsErrorCode;
-import com.example.calendarservice.exception.calendarsException.CalendarsNotFoundException;
-import com.example.calendarservice.exception.commonException.CommonErrorCode;
-import com.example.calendarservice.exception.commonException.error.InvalidDay;
-import com.example.calendarservice.exception.commonException.error.InvalidMonth;
-import com.example.calendarservice.exception.commonException.error.InvalidYear;
-import com.example.calendarservice.exception.diaryException.DiaryErrorCode;
-import com.example.calendarservice.exception.diaryException.DiaryNotFoundException;
-import com.example.calendarservice.exception.diaryException.InvalidCategory;
+import com.example.calendarservice.entity.Shared;
 import com.example.calendarservice.repository.CalendarRepository;
 import com.example.calendarservice.repository.DiaryRepository;
 import com.example.calendarservice.repository.DiaryImageRepository;
@@ -29,9 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.example.calendarservice.constant.Share.ALL;
+import static com.example.calendarservice.constant.Share.CHOOSE;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +40,7 @@ public class DiaryServiceImpl implements DiaryService{
     private final DiaryImageRepository diaryImageRepository;
     private final ImageService imageService;
     private final FileService fileService;
+    private final SharedService sharedService;
 
 
     // 월달력 전체 일기 조회(마커)
@@ -56,9 +55,9 @@ public class DiaryServiceImpl implements DiaryService{
         if (year < 1 || year > 9999) {
             throw new IllegalArgumentException("Year must be a positive number and within the range of valid years");
         }
-        if (!calendarRepository.existsById(calendarIdx)) {
-            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
-        }
+//        if (!calendarRepository.existsById(calendarIdx)) {
+//            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
+//        }
 
         try {
             LocalDate startOfMonth = LocalDate.of(year, month, 1);
@@ -84,19 +83,19 @@ public class DiaryServiceImpl implements DiaryService{
     public List<DiaryResponseDayListDto> findDiaryByDayList(Long calendarIdx, int year, int month, int day){
 
         // 유효성 검사
-        if (!calendarRepository.existsById(calendarIdx)) {
-            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
-        }
-        if (month < 1 || month > 12) {
-            throw new InvalidMonth(CommonErrorCode.INVALID_MONTH);
-        }
-        if (year < 1 || year > 9999) {
-            throw new InvalidYear(CommonErrorCode.INVALID_YEAR);
-        }
-        int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
-        if (day < 1 || day > lastDayOfMonth) {
-            throw new InvalidDay(CommonErrorCode.INVALID_DAY);
-        }
+//        if (!calendarRepository.existsById(calendarIdx)) {
+//            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
+//        }
+//        if (month < 1 || month > 12) {
+//            throw new InvalidMonth(CommonErrorCode.INVALID_MONTH);
+//        }
+//        if (year < 1 || year > 9999) {
+//            throw new InvalidYear(CommonErrorCode.INVALID_YEAR);
+//        }
+//        int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
+//        if (day < 1 || day > lastDayOfMonth) {
+//            throw new InvalidDay(CommonErrorCode.INVALID_DAY);
+//        }
 
         try {
             LocalDate date = LocalDate.of(year, month, day);
@@ -113,6 +112,7 @@ public class DiaryServiceImpl implements DiaryService{
                                 .images(diary.getDiaryImages().stream()
                                     .map(DiaryImage::getImgUrl)
                                     .collect(Collectors.toList()))
+                                .share(diary.getShare())
                                 .build();
                     })
                     .sorted(Comparator.comparing(DiaryResponseDayListDto::getDate))
@@ -128,17 +128,17 @@ public class DiaryServiceImpl implements DiaryService{
     @Override
     public List<DiaryResponseCategoryDto> findDiaryCategory(Long calendarIdx, String category) {
 
-        if (!calendarRepository.existsById(calendarIdx)) {
-            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
-        }
+//        if (!calendarRepository.existsById(calendarIdx)) {
+//            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
+//        }
 
-        if (!"ALL".equalsIgnoreCase(category)) {
-            try {
-                Category.valueOf(category.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new InvalidCategory(DiaryErrorCode.INVALID_CATEGORY);
-            }
-        }
+//        if (!"ALL".equalsIgnoreCase(category)) {
+//            try {
+//                Category.valueOf(category.toUpperCase());
+//            } catch (IllegalArgumentException e) {
+//                throw new InvalidCategory(DiaryErrorCode.INVALID_CATEGORY);
+//            }
+//        }
 
         try {
             if (category.equals("ALL")) {
@@ -177,7 +177,7 @@ public class DiaryServiceImpl implements DiaryService{
     public DiaryResponseDayDto findDiaryByDay(Long idx){
 
             Diary diary = diaryRepository.findById(idx)
-                    .orElseThrow(() -> new DiaryNotFoundException(DiaryErrorCode.DIARY_NOT_FOUND));
+                    .orElseThrow(() -> new IllegalArgumentException("일기가 존재하지 않습니다."));
 
         try {
             List<String> imageUrls = diary.getDiaryImages()
@@ -190,6 +190,7 @@ public class DiaryServiceImpl implements DiaryService{
                     .content(diary.getContent())
                     .date(diary.getDate())
                     .category(diary.getCategory())
+                    .share(diary.getShare())
                     .images(imageUrls) // 이미지 URL 리스트로 설정
                     .build();
         } catch (Exception e) {
@@ -203,7 +204,7 @@ public class DiaryServiceImpl implements DiaryService{
     @Override
     public void saveDiary(DiaryRequestInsertDto diaryRequestInsertDto,List<MultipartFile> imageFileList) {
             Calendars calendarIdx = calendarRepository.findById(diaryRequestInsertDto.getCalendarIdx())
-                    .orElseThrow(() -> new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND));
+                    .orElseThrow(() -> new IllegalArgumentException("캘린더가 존재하지 않습니다."));
 
         try {
 
@@ -213,8 +214,21 @@ public class DiaryServiceImpl implements DiaryService{
                     .date(diaryRequestInsertDto.getDate())
                     .category(diaryRequestInsertDto.getCategory())
                     .calendars(calendarIdx)
+                    .share(diaryRequestInsertDto.getShare())
                     .build();
-            diaryRepository.save(createDiary);
+            createDiary = diaryRepository.save(createDiary);
+
+            List<Long> friendIdxList = diaryRequestInsertDto.getFriendIdxList();
+            if (friendIdxList != null && !friendIdxList.isEmpty()){
+                for (Long friendIdx : friendIdxList){
+                    SharedRequestInsertDto sharedRequestInsertDto = SharedRequestInsertDto.builder()
+                            .diaryIdx(createDiary.getIdx())
+                            .friendIdx(friendIdx)
+                            .shareDateTime(LocalDateTime.now())
+                            .build();
+                    sharedService.saveShared(sharedRequestInsertDto);
+                }
+            }
 
             for (MultipartFile file : imageFileList) {
                 if (!file.isEmpty()) {
@@ -238,7 +252,7 @@ public class DiaryServiceImpl implements DiaryService{
             imageFileList = Collections.emptyList();
         }
         Diary updateDiary = diaryRepository.findById(diaryRequestUpdateDto.getIdx())
-                .orElseThrow(() -> new DiaryNotFoundException(DiaryErrorCode.DIARY_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException("일기가 존재하지 않습니다."));
 
     //다이어리 기본 내용 수정
         try {
@@ -254,7 +268,32 @@ public class DiaryServiceImpl implements DiaryService{
             if (diaryRequestUpdateDto.getCategory() != null) {
                 updateDiary.setCategory(diaryRequestUpdateDto.getCategory());
             }
+            if (diaryRequestUpdateDto.getShare() != null){
+                if (diaryRequestUpdateDto.getShare() == ALL){
+                    SharedRequestUpdateDto sharedRequestUpdateDto = SharedRequestUpdateDto.builder()
+                            .diaryIdx(diaryRequestUpdateDto.getIdx())
+                            .friendIdx(null)
+                            .shareDateTime(LocalDateTime.now())
+                            .build();
+                } else if (diaryRequestUpdateDto.getShare() == CHOOSE) {
+                    List<Long> friendIdxList = diaryRequestUpdateDto.getFriendIdxList();
+                    if (friendIdxList != null && !friendIdxList.isEmpty()){
+                        for (Long friendIdx : friendIdxList){
+                            SharedRequestUpdateDto sharedRequestUpdateDto = SharedRequestUpdateDto.builder()
+                                    .diaryIdx(createDiary.getIdx())
+                                    .friendIdx(friendIdx)
+                                    .shareDateTime(LocalDateTime.now())
+                                    .build();
+                            sharedService.saveShared(sharedRequestInsertDto);
+                        }
+                    }
+                } else {
+                    updateDiary.setShare(diaryRequestUpdateDto.getShare());
+                }
+            }
+
             diaryRepository.save(updateDiary);
+
 
     // 이미지 삭제
             List<String> deleteImageList = diaryRequestUpdateDto.getDeletedImageList();
@@ -285,7 +324,7 @@ public class DiaryServiceImpl implements DiaryService{
     @Override
     public void deleteDiary(Long idx){
         Diary diary = diaryRepository.findById(idx)
-                .orElseThrow(() -> new DiaryNotFoundException(DiaryErrorCode.DIARY_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException("일기가 존재하지 않습니다."));
         try {
             diaryRepository.delete(diary);
         }catch (Exception e) {

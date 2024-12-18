@@ -7,6 +7,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class DiaryRequestInsertDto {
@@ -25,4 +26,6 @@ public class DiaryRequestInsertDto {
 
     @Schema(example = "c_idx", hidden = true)
     private Long calendarIdx;
+
+    private List<Long> friendIdxList;
 }
