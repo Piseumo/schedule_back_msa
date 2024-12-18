@@ -11,8 +11,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.util.Map;
 
-public class NotiSubscriptionServiceImpl {
-
     @Service
     @RequiredArgsConstructor
     @Slf4j
@@ -23,7 +21,7 @@ public class NotiSubscriptionServiceImpl {
         @Override
         public SseEmitter subscribe(String username, String lastEventId) {
             String emitterId = username + "_" + System.currentTimeMillis();
-            SseEmitter sseEmitter = notificationRepository.save(emitterId, new SseEmitter(Long.MAX_VALUE));
+            SseEmitter sseEmitter = notificationRepository.subscribeSave(emitterId, new SseEmitter(Long.MAX_VALUE));
 
             log.info("New SSE connection established: {}", emitterId);
 
@@ -71,4 +69,3 @@ public class NotiSubscriptionServiceImpl {
             }
         }
     }
-}

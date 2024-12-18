@@ -1,52 +1,46 @@
 package com.example.notificationService.repository;
 
 
-import org.springframework.stereotype.Repository;
+import com.example.notificationService.entity.Notification;
+import feign.Param;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
-@Repository
-public class NotificationRepository {
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
-    private final Map<String, Object> eventCache = new ConcurrentHashMap<>();
 
-    public SseEmitter save(String emitterId, SseEmitter sseEmitter) {
-        emitters.put(emitterId, sseEmitter);
-        return sseEmitter;
-    }
+    // 1. SSE Emitter 저장
+    @Query("SELECT s FROM Notification n WHERE n.notificationId = :emitterId")
+    SseEmitter findEmitterById(@Param("emitterId") String emitterId);
 
-    public void saveEventCache(String eventCacheId, Object event) {
-        eventCache.put(eventCacheId, event);
-    }
+    // 2. SSE 이벤트 캐시 저장 - 캐시를 저장할 데이터베이스 또는 서비스 구현 필요
+    void saveEventCache(String eventCacheId, Object event);
 
-    public Map<String, SseEmitter> findAllEmitterStartsWithUsername(String username) {
-        return emitters.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith(username))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
+    // 3. Receiver로 시작하는 모든 Emitters 찾기
+    @Query("SELECT n FROM Notification n WHERE n.receiver LIKE CONCAT(:username, '%')")
+    List<Notification> findAllEmitterStartsWithUsername(@Param("username") String username);
 
-    public Map<String, Object> findAllEventCacheStartsWithUsername(String username) {
-        return eventCache.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith(username))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
+    // 4. Receiver로 시작하는 모든 이벤트 캐시 찾기
+    @Query("SELECT n FROM Notification n WHERE n.receiver LIKE CONCAT(:username, '%')")
+    List<Object> findAllEventCacheStartsWithUsername(@Param("username") String username);
 
-    public void deleteEmitterById(String id) {
-        emitters.remove(id);
-    }
+    // 5. 특정 Emitter 삭제
+    @Query("DELETE FROM Notification n WHERE n.notificationId = :emitterId")
+    void deleteEmitterById(@Param("emitterId") String id);
 
-    public void deleteAllEmitterStartsWithId(String id) {
-        emitters.keySet().removeIf(key -> key.startsWith(id));
-    }
+    // 6. 특정 ID로 시작하는 모든 Emitters 삭제
+    @Query("DELETE FROM Notification n WHERE n.notificationId LIKE CONCAT(:id, '%')")
+    void deleteAllEmitterStartsWithId(@Param("id") String id);
 
-    public void deleteAllEventCacheStartsWithId(String id) {
-        eventCache.keySet().removeIf(key -> key.startsWith(id));
-    }
+    // 7. 특정 ID로 시작하는 모든 이벤트 캐시 삭제
+    @Query("DELETE FROM Notification n WHERE n.notificationId LIKE CONCAT(:id, '%')")
+    void deleteAllEventCacheStartsWithId(@Param("id") String id);
 
-    public void deleteEventCacheById(String emitterId) {
-    }
+    // 8. 특정 Event Cache 삭제
+    @Query("DELETE FROM Notification n WHERE n.notificationId = :eventCacheId")
+    void deleteEventCacheById(@Param("eventCacheId") String emitterId);
 }

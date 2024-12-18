@@ -1,9 +1,11 @@
 package com.example.friendservice.controller;
 
+import com.example.friendservice.dto.request.FriendRequestDto;
 import com.example.friendservice.dto.response.UserSearchResponseDto;
 import com.example.friendservice.service.FriendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +19,8 @@ public class FriendController {
 
     // 친구 요청 보내기
     @PostMapping("/request")
-    public ResponseEntity<String> sendFriendRequest(@RequestParam(name = "requesterId") Long requesterId, @RequestParam(name = "receiverId") Long receiverId) {
-        friendService.sendFriendRequest(requesterId, receiverId);
+    public ResponseEntity<String> sendFriendRequest(@RequestBody FriendRequestDto friendRequestDto) {
+        friendService.sendFriendRequest(friendRequestDto);
         return ResponseEntity.ok("Friend request sent successfully.");
     }
 

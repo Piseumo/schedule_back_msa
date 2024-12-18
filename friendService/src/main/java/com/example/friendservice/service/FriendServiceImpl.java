@@ -1,12 +1,16 @@
 package com.example.friendservice.service;
 
 import com.example.friendservice.constant.Status;
+import com.example.friendservice.dto.request.FriendRequestDto;
 import com.example.friendservice.dto.response.UserSearchResponseDto;
 import com.example.friendservice.entity.Friend;
+import com.example.friendservice.feign.NotiFeignClient;
 import com.example.friendservice.feign.UserFeignClient;
 import com.example.friendservice.repository.FriendRepository;
+import com.example.friendservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +23,7 @@ public class FriendServiceImpl implements FriendService{
 
     private final FriendRepository friendRepository;
     private final UserFeignClient userFeignClient;
+    private final NotiFeignClient notiFeignClient;
 
     //친구가 아닌 유저 검색
     @Transactional
@@ -36,23 +41,29 @@ public class FriendServiceImpl implements FriendService{
     // 친구 요청 보내기
     @Transactional
     @Override
-    public void sendFriendRequest(Long requesterId, Long receiverId) {
-        if (requesterId.equals(receiverId)) {
+    public ResponseEntity<Void> sendFriendRequest(FriendRequestDto friendRequestDto) {
+        Long userId = friendRequestDto.getUserId();
+        Long friendId = friendRequestDto.getFriendId();
+        String friendName = friendRequestDto.getFriendName();
+        String userName = friendRequestDto.getUserName();
+                if (userId.equals(friendId)) {
             throw new IllegalArgumentException("Cannot send an friend request to oneself.");
         }
         // 중복 요청 방지 로직
-        if (friendRepository.existsByRequesterIdAndReceiverId(requesterId, receiverId) ||
-            friendRepository.existsByRequesterIdAndReceiverId(receiverId, requesterId)) {
+        if (friendRepository.existsByRequesterIdAndReceiverId(userId, friendId) ||
+            friendRepository.existsByRequesterIdAndReceiverId(friendId, userId)) {
             throw new IllegalStateException("Already sent a friend request to this user.");
         }
 
         // 새로운 Friend 인스턴스 생성
         Friend friendRequest = Friend.builder()
-                .requesterId(requesterId)
-                .receiverId(receiverId)
+                .requesterId(friendRequestDto.getUserId())
+                .receiverId(friendRequestDto.getFriendId())
                 .status(Status.PENDING).build();
 
         friendRepository.save(friendRequest);
+
+        return notiFeignClient.friendRequest(friendName,userName);
     }
 
     //받은 친구 요청 목록 조회
@@ -84,8 +95,7 @@ public class FriendServiceImpl implements FriendService{
     public void rejectFriendRequest(Long friendRequestId) {
         Friend friendRequest = friendRepository.findById(friendRequestId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid friend request ID"));
-        friendRequest.setStatus(Status.REJECTED);
-        friendRepository.save(friendRequest);
+        friendRepository.delete(friendRequest);
     }
 
     // 친구 목록 조회

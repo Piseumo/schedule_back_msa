@@ -1,8 +1,5 @@
 package com.example.notificationService.constant;
 
-import lombok.Getter;
-
-@Getter
 public enum NotificationType {
 
     FRIEND_REQUEST("FRIEND_REQUEST", "/friend/request"),   // 친구신청
