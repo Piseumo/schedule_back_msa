@@ -9,14 +9,6 @@ import com.example.calendarservice.dto.response.ScheduleResponseYearDto;
 import com.example.calendarservice.entity.Calendars;
 import com.example.calendarservice.entity.Schedule;
 import com.example.calendarservice.entity.ScheduleImage;
-import com.example.calendarservice.exception.calendarsException.CalendarsErrorCode;
-import com.example.calendarservice.exception.calendarsException.CalendarsNotFoundException;
-import com.example.calendarservice.exception.commonException.CommonErrorCode;
-import com.example.calendarservice.exception.commonException.error.InvalidDay;
-import com.example.calendarservice.exception.commonException.error.InvalidMonth;
-import com.example.calendarservice.exception.commonException.error.InvalidYear;
-import com.example.calendarservice.exception.scheduleException.ScheduleErrorCode;
-import com.example.calendarservice.exception.scheduleException.ScheduleNotFoundException;
 import com.example.calendarservice.repository.CalendarRepository;
 import com.example.calendarservice.repository.ScheduleImageRepository;
 import com.example.calendarservice.repository.ScheduleRepository;
@@ -60,7 +52,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("Year must be a positive number and within the range of valid years");
         }
         if (!calendarRepository.existsById(calendarIdx)) {
-            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
+            throw new IllegalArgumentException("캘린더가 존재하지 않습니다.");
         }
 
         try {
@@ -87,12 +79,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional
     @Override
     public List<ScheduleResponseYearDto> findAllYearSchedule(Long calendarIdx, int year) {
-        if (!calendarRepository.existsById(calendarIdx)) {
-            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
-        }
-        if (year < 1 || year > 9999) {
-            throw new InvalidYear(CommonErrorCode.INVALID_YEAR);
-        }
+//        if (!calendarRepository.existsById(calendarIdx)) {
+//            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
+//        }
+//        if (year < 1 || year > 9999) {
+//            throw new InvalidYear(CommonErrorCode.INVALID_YEAR);
+//        }
 
         try {
             LocalDate startOfYear = LocalDate.of(year, 1, 1);
@@ -117,19 +109,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional
     @Override
     public List<ScheduleResponseDayDto> findScheduleByDay(Long calendarIdx, int year, int month, int day) {
-        if (!calendarRepository.existsById(calendarIdx)) {
-            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
-        }
-        if (month < 1 || month > 12) {
-            throw new InvalidMonth(CommonErrorCode.INVALID_MONTH);
-        }
-        if (year < 1 || year > 9999) {
-            throw new InvalidYear(CommonErrorCode.INVALID_YEAR);
-        }
-        int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
-        if (day < 1 || day > lastDayOfMonth) {
-            throw new InvalidDay(CommonErrorCode.INVALID_DAY);
-        }
+//        if (!calendarRepository.existsById(calendarIdx)) {
+//            throw new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND);
+//        }
+//        if (month < 1 || month > 12) {
+//            throw new InvalidMonth(CommonErrorCode.INVALID_MONTH);
+//        }
+//        if (year < 1 || year > 9999) {
+//            throw new InvalidYear(CommonErrorCode.INVALID_YEAR);
+//        }
+//        int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
+//        if (day < 1 || day > lastDayOfMonth) {
+//            throw new InvalidDay(CommonErrorCode.INVALID_DAY);
+//        }
 
         try {
             LocalDate date = LocalDate.of(year, month, day);
@@ -149,6 +141,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                             .color(schedule.getColor())
                             .repeatType(schedule.getRepeatType())
                             .repeatEndDate(schedule.getRepeatEndDate())
+                            .share(schedule.getShare())
                             .images(schedule.getScheduleImages().stream()
                                     .map(ScheduleImage::getImgUrl)
                                     .collect(Collectors.toList()))
@@ -168,7 +161,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleResponseDayDto findScheduleByOne(Long scheduleIdx) {
         // 유효성 검사
         Schedule schedule = scheduleRepository.findById(scheduleIdx)
-                .orElseThrow(() -> new ScheduleNotFoundException(ScheduleErrorCode.SCHEDULE_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException("일정이 존재하지 않습니다."));
 
         try {
             List<String> imageUrls = schedule.getScheduleImages()
@@ -186,6 +179,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                     .images(imageUrls)
                     .repeatType(schedule.getRepeatType())
                     .repeatEndDate(schedule.getRepeatEndDate())
+                    .share(schedule.getShare())
                     .build();
         } catch (Exception e) {
             throw new ServiceException("Failed to find schedule in ScheduleService.findScheduleByOne", e);
@@ -193,11 +187,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
 
+    // 일정 입력
     @Transactional
     @Override
     public void saveSchedule(ScheduleRequestInsertDto scheduleRequestInsertDto, List<MultipartFile> imageFileList) {
         Calendars calendarIdx = calendarRepository.findById(scheduleRequestInsertDto.getCalendarIdx())
-                .orElseThrow(() -> new CalendarsNotFoundException(CalendarsErrorCode.CALENDARS_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException("캘린더가 존재하지 않습니다."));
 
         try {
             LocalDateTime currentStart = scheduleRequestInsertDto.getStart();
@@ -295,7 +290,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         Schedule updateSchedule = scheduleRepository.findById(scheduleRequestUpdateDto.getIdx())
-                .orElseThrow(() -> new ScheduleNotFoundException(ScheduleErrorCode.SCHEDULE_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException("일정이 존재하지 않습니다."));
 
         try {
             boolean isRepeatTypeChanged = !updateSchedule.getRepeatType().equals(scheduleRequestUpdateDto.getRepeatType());
@@ -324,6 +319,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                                         .repeatType(RepeatType.NONE)
                                         .repeatEndDate(null)
                                         .repeatGroupId(newRepeatGroupId)
+                                        .share(scheduleRequestUpdateDto.getShare())
                                         .build();
                                 scheduleRepository.save(newSchedule);
                             } else {
@@ -344,6 +340,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                                             .repeatType(scheduleRequestUpdateDto.getRepeatType())
                                             .repeatEndDate(scheduleRequestUpdateDto.getRepeatEndDate())
                                             .repeatGroupId(newRepeatGroupId)
+                                            .share(scheduleRequestUpdateDto.getShare())
                                             .build();
                                     scheduleRepository.save(newSchedule);
 
@@ -379,6 +376,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 updateSchedule.setEnd(scheduleRequestUpdateDto.getEnd());
                 updateSchedule.setLocation(scheduleRequestUpdateDto.getLocation());
                 updateSchedule.setColor(scheduleRequestUpdateDto.getColor());
+                updateSchedule.setShare(scheduleRequestUpdateDto.getShare());
+
             }
 
             // 이미지 삭제
@@ -410,7 +409,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void deleteSchedule(Long scheduleId, boolean deleteAllRepeats, boolean deleteOnlyThis, boolean deleteAfter) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new ScheduleNotFoundException(ScheduleErrorCode.SCHEDULE_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException("일정이 존재하지 않습니다."));
 
         try {
             if (deleteAllRepeats) {

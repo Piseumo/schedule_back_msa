@@ -1,19 +1,18 @@
 package com.example.calendarservice.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "shared")
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Shared {
 
     @Id

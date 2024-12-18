@@ -30,4 +30,5 @@ public class DiaryRequestUpdateDto {
 
     private List<String> deletedImageList;
 
+    private List<Long> friendIdxList;
 }
