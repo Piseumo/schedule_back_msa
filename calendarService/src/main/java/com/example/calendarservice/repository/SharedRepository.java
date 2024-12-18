@@ -18,4 +18,18 @@ public interface SharedRepository extends JpaRepository<Shared, Long> {
     // 선택 친구 공개 (friendIdx가 나의 userIdx와 일치)
     @Query("SELECT s FROM Shared s WHERE s.friendIdx = :userId")
     List<Shared> findAllSharedWithChoose(@Param("userId") Long userId);
+
+
+    // 개인 유저 공유 컨텐츠 조회
+    @Query("SELECT s FROM Shared s " +
+            "JOIN Schedule sc ON s.scheduleIdx = sc.idx " +
+            "WHERE sc.calendars.userIdx = :userIdx " +
+            "ORDER BY s.shareDateTime DESC")
+    List<Shared> findSharedSchedulesByUser(@Param("userIdx") Long userIdx);
+
+    @Query("SELECT s FROM Shared s " +
+            "JOIN Diary d ON s.diaryIdx = d.idx " +
+            "WHERE d.calendars.userIdx = :userIdx " +
+            "ORDER BY s.shareDateTime DESC")
+    List<Shared> findSharedDiariesByUser(@Param("userIdx") Long userIdx);
 }

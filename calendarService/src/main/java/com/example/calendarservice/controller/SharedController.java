@@ -20,14 +20,19 @@ public class SharedController {
 
 
     // 쓰레드 첫화면(모든 친구의 공유 컨텐츠 조회)
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<SharedContentDto>> getSharedContents(@PathVariable Long userIdx) {
+    @GetMapping("/all/{userIdx}")
+    public ResponseEntity<List<SharedContentDto>> findAllShared(@PathVariable(value = "userIdx") Long userIdx) {
         List<SharedContentDto> sharedContents = sharedService.findAllShared(userIdx);
         return ResponseEntity.ok(sharedContents);
     }
 
 
-    // 클릭 했을 때 쓰레드 컨텐츠 개별 화면 조회 (+댓글 조회 메소드 호출)
+    // 클릭 했을 때 쓰레드 컨텐츠 개별 화면 조회 (1개)
+    @GetMapping("/one/{sharedIdx}")
+    public ResponseEntity<SharedContentDto> findOneShared(@PathVariable(value = "sharedIdx") Long sharedIdx){
+        SharedContentDto sharedContentDto = sharedService.findOneShared(sharedIdx);
+        return ResponseEntity.ok(sharedContentDto);
+    }
 
 
 
@@ -36,6 +41,9 @@ public class SharedController {
 
 
     // 사용자 개인의 공유 컨텐츠 모아보기
+
+
+    // 댓글 입력
 
 
     // 해당 게시글 전체 댓글 조회
