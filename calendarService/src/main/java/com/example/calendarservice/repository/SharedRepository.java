@@ -1,5 +1,6 @@
 package com.example.calendarservice.repository;
 
+import com.example.calendarservice.entity.Comments;
 import com.example.calendarservice.entity.Shared;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -42,4 +43,5 @@ public interface SharedRepository extends JpaRepository<Shared, Long> {
     // diaryIdx로 sharedIdx 찾기
     @Query("SELECT s.sharedIdx FROM Shared s WHERE s.diaryIdx = :diaryIdx")
     Long findSharedIdxByDiaryIdx(@Param("diaryIdx") Long diaryIdx);
+
 }

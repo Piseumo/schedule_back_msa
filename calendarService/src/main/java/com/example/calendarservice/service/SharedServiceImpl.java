@@ -34,8 +34,6 @@ public class SharedServiceImpl implements SharedService{
     private final ScheduleRepository scheduleRepository;
     private final DiaryRepository diaryRepository;
     private final CommentsRepository commentsRepository;
-    private final DiaryService diaryService;
-    private final ScheduleService scheduleService;
 
 
 
@@ -199,13 +197,19 @@ public class SharedServiceImpl implements SharedService{
                     .idx(shared.getScheduleIdx())
                     .share(Share.NONE)
                     .build();
-            scheduleService.updateSchedule(scheduleRequestUpdateDto, null);
+            Schedule updateSchedule = scheduleRepository.findById(scheduleRequestUpdateDto.getIdx())
+                    .orElseThrow(() -> new IllegalArgumentException("일정이 존재하지 않습니다."));
+            updateSchedule.setShare(scheduleRequestUpdateDto.getShare());
+            scheduleRepository.save(updateSchedule);
         } else if (shared.getScheduleIdx() == null && shared.getDiaryIdx() != null) {
             DiaryRequestUpdateDto diaryRequestUpdateDto = DiaryRequestUpdateDto.builder()
                     .idx(shared.getDiaryIdx())
                     .share(Share.NONE)
                     .build();
-            diaryService.updateDiary(diaryRequestUpdateDto, null);
+            Diary updateDiary = diaryRepository.findById(diaryRequestUpdateDto.getIdx())
+                    .orElseThrow(() -> new IllegalArgumentException("일기가 존재하지 않습니다."));
+            updateDiary.setShare(diaryRequestUpdateDto.getShare());
+            diaryRepository.save(updateDiary);
         } else {
             throw new IllegalArgumentException("일정, 일기 Idx가 모두 존재하지 않습니다.");
         }
@@ -300,10 +304,8 @@ public class SharedServiceImpl implements SharedService{
         List<CommentsResponseAllDto> commentsList = new ArrayList<>();
 
         if (shared.getScheduleIdx() != null) {
-            Schedule schedule = scheduleRepository.findById(shared.getScheduleIdx())
-                    .orElseThrow(() -> new IllegalArgumentException("Schedule 정보가 존재하지 않습니다."));
 
-            List<Comments> scheduleComments = commentsRepository.findByScheduleIdx(schedule.getIdx());
+            List<Comments> scheduleComments = commentsRepository.findBySharedIdx(sharedIdx);
             commentsList.addAll(scheduleComments.stream()
                     .map(comment -> CommentsResponseAllDto.builder()
                             .commentsIdx(comment.getCommentsIdx())
@@ -316,10 +318,8 @@ public class SharedServiceImpl implements SharedService{
         }
 
         if (shared.getDiaryIdx() != null) {
-            Diary diary = diaryRepository.findById(shared.getDiaryIdx())
-                    .orElseThrow(() -> new IllegalArgumentException("Diary 정보가 존재하지 않습니다."));
 
-            List<Comments> diaryComments = commentsRepository.findByDiaryIdx(diary.getIdx());
+            List<Comments> diaryComments = commentsRepository.findBySharedIdx(sharedIdx);
             commentsList.addAll(diaryComments.stream()
                     .map(comment -> CommentsResponseAllDto.builder()
                             .commentsIdx(comment.getCommentsIdx())
