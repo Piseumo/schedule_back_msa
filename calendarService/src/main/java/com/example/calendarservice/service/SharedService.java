@@ -16,6 +16,7 @@ public interface SharedService {
     public List<SharedContentDto> findAllShared(Long userIdx);
     public SharedContentDto findOneShared(Long sharedIdx);
     public void deleteShared(Long sharedIdx);
+    public void deleteContentShared(SharedRequestUpdateDto sharedRequestUpdateDto);
     public List<SharedContentDto> findSharedByUser(Long userIdx);
     public void saveComments(CommentsRequestInsertDto commentsRequestInsertDto);
     public List<CommentsResponseAllDto> findAllComments(Long sharedIdx);
