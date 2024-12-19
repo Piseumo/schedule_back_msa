@@ -1,9 +1,7 @@
 package com.example.calendarservice.service;
 
-import com.example.calendarservice.dto.request.CommentsRequestInsertDto;
-import com.example.calendarservice.dto.request.CommentsRequestUpdateDto;
-import com.example.calendarservice.dto.request.SharedRequestInsertDto;
-import com.example.calendarservice.dto.request.SharedRequestUpdateDto;
+import com.example.calendarservice.constant.Share;
+import com.example.calendarservice.dto.request.*;
 import com.example.calendarservice.dto.response.CommentsResponseAllDto;
 import com.example.calendarservice.dto.response.SharedContentDto;
 import com.example.calendarservice.dto.response.UserSearchResponseDto;
@@ -36,6 +34,8 @@ public class SharedServiceImpl implements SharedService{
     private final ScheduleRepository scheduleRepository;
     private final DiaryRepository diaryRepository;
     private final CommentsRepository commentsRepository;
+    private final DiaryService diaryService;
+    private final ScheduleService scheduleService;
 
 
 
@@ -57,6 +57,14 @@ public class SharedServiceImpl implements SharedService{
     // 공유 친구, 시간 수정
     @Transactional
     public void updateShared(SharedRequestUpdateDto sharedRequestUpdateDto){
+
+        if (sharedRequestUpdateDto.getScheduleIdx() != null && sharedRequestUpdateDto.getDiaryIdx() == null){
+            sharedRequestUpdateDto.setSharedIdx(sharedRepository.findSharedIdxByScheduleIdx(sharedRequestUpdateDto.getScheduleIdx()));
+        } else if (sharedRequestUpdateDto.getScheduleIdx() == null && sharedRequestUpdateDto.getDiaryIdx() != null) {
+            sharedRequestUpdateDto.setSharedIdx(sharedRepository.findSharedIdxByDiaryIdx(sharedRequestUpdateDto.getDiaryIdx()));
+        } else {
+            throw new IllegalArgumentException("일정, 일기 Idx가 모두 존재하지 않습니다.");
+        }
 
         Shared updateShared = sharedRepository.findById(sharedRequestUpdateDto.getSharedIdx())
                 .orElseThrow(() -> new IllegalArgumentException("공유 내역이 존재하지 않습니다."));
@@ -182,20 +190,46 @@ public class SharedServiceImpl implements SharedService{
     // 클릭 했을 때 쓰레드 컨텐츠 개별 화면에서 공유 취소
     @Transactional
     public void deleteShared(Long sharedIdx){
+
         Shared shared = sharedRepository.findById(sharedIdx)
                 .orElseThrow(() -> new IllegalArgumentException("공유 일정 or 일기가 존재하지 않습니다."));
+
+        if (shared.getScheduleIdx() != null && shared.getDiaryIdx() == null){
+            ScheduleRequestUpdateDto scheduleRequestUpdateDto = ScheduleRequestUpdateDto.builder()
+                    .idx(shared.getScheduleIdx())
+                    .share(Share.NONE)
+                    .build();
+            scheduleService.updateSchedule(scheduleRequestUpdateDto, null);
+        } else if (shared.getScheduleIdx() == null && shared.getDiaryIdx() != null) {
+            DiaryRequestUpdateDto diaryRequestUpdateDto = DiaryRequestUpdateDto.builder()
+                    .idx(shared.getDiaryIdx())
+                    .share(Share.NONE)
+                    .build();
+            diaryService.updateDiary(diaryRequestUpdateDto, null);
+        } else {
+            throw new IllegalArgumentException("일정, 일기 Idx가 모두 존재하지 않습니다.");
+        }
         sharedRepository.delete(shared);
     }
 
 
 
-    // 클릭 했을 때 쓰레드 컨텐츠 개별 화면에서 공유 취소
-//    @Transactional
-//    public void deleteShared(Long sharedIdx){
-//        Shared shared = sharedRepository.findById(sharedIdx)
-//                .orElseThrow(() -> new IllegalArgumentException("공유 일정 or 일기가 존재하지 않습니다."));
-//        sharedRepository.delete(shared);
-//    }
+    // 일정이나 일기에서 공유 취소
+    @Transactional
+    public void deleteContentShared(SharedRequestUpdateDto sharedRequestUpdateDto){
+
+        if (sharedRequestUpdateDto.getScheduleIdx() != null && sharedRequestUpdateDto.getDiaryIdx() == null){
+            sharedRequestUpdateDto.setSharedIdx(sharedRepository.findSharedIdxByScheduleIdx(sharedRequestUpdateDto.getScheduleIdx()));
+        } else if (sharedRequestUpdateDto.getScheduleIdx() == null && sharedRequestUpdateDto.getDiaryIdx() != null) {
+            sharedRequestUpdateDto.setSharedIdx(sharedRepository.findSharedIdxByDiaryIdx(sharedRequestUpdateDto.getDiaryIdx()));
+        } else {
+            throw new IllegalArgumentException("일정, 일기 Idx가 모두 존재하지 않습니다.");
+        }
+
+        Shared shared = sharedRepository.findById(sharedRequestUpdateDto.getSharedIdx())
+                .orElseThrow(() -> new IllegalArgumentException("공유 일정 or 일기가 존재하지 않습니다."));
+        sharedRepository.delete(shared);
+    }
 
 
 

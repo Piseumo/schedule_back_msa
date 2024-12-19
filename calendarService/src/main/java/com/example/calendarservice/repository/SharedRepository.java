@@ -32,4 +32,14 @@ public interface SharedRepository extends JpaRepository<Shared, Long> {
             "WHERE d.calendars.userIdx = :userIdx " +
             "ORDER BY s.shareDateTime DESC")
     List<Shared> findSharedDiariesByUser(@Param("userIdx") Long userIdx);
+
+
+    // scheduleIdx로 sharedIdx 찾기
+    @Query("SELECT s.sharedIdx FROM Shared s WHERE s.scheduleIdx = :scheduleIdx")
+    Long findSharedIdxByScheduleIdx(@Param("scheduleIdx") Long scheduleIdx);
+
+
+    // diaryIdx로 sharedIdx 찾기
+    @Query("SELECT s.sharedIdx FROM Shared s WHERE s.diaryIdx = :diaryIdx")
+    Long findSharedIdxByDiaryIdx(@Param("diaryIdx") Long diaryIdx);
 }

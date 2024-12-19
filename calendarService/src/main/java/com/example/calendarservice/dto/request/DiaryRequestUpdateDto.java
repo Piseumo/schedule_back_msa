@@ -3,6 +3,7 @@ package com.example.calendarservice.dto.request;
 import com.example.calendarservice.constant.Category;
 import com.example.calendarservice.constant.Share;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class DiaryRequestUpdateDto {
 
     private Long idx;
