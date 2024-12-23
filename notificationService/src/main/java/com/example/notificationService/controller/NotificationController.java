@@ -3,8 +3,6 @@ package com.example.notificationService.controller;
 import com.example.notificationService.service.NotiSubscriptionService;
 import com.example.notificationService.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,16 +29,17 @@ public class NotificationController {
 
     @Operation(summary = "친구 신청 알림")
     @GetMapping(value = "/friend-request")
-    public ResponseEntity<Boolean> friendRequest(@RequestParam String userName, String friendName) {
+    public ResponseEntity<Void> friendRequest(@RequestParam String userName,@RequestParam String friendName) {
+        System.out.println("일로오나");
         notificationService.sendFriendRequest(userName, friendName);
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "친구 수락 알림")
     @GetMapping(value = "/friend-accept")
-    public ResponseEntity<Void> friendAccept(@AuthenticationPrincipal UserDetails userDetails) {
-        notificationService.sendFriendAccept(userDetails.getUsername());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Boolean> friendAccept(@RequestParam String userName, String friendName) {
+        notificationService.sendFriendAccept(userName, friendName);
+        return ResponseEntity.ok(true);
     }
 
     @Operation(summary = "쪽지 알림")

@@ -1,46 +1,83 @@
 package com.example.notificationService.repository;
 
-
 import com.example.notificationService.entity.Notification;
-import feign.Param;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
+@Repository
+@Slf4j
+public class NotificationRepository {
 
+    // Emitter 관리 맵
+    private final Map<String, SseEmitter> sseEmitters = new ConcurrentHashMap<>();
 
-    // 1. SSE Emitter 저장
-    @Query("SELECT s FROM Notification n WHERE n.notificationId = :emitterId")
-    SseEmitter findEmitterById(@Param("emitterId") String emitterId);
+    // 이벤트 캐시 관리 맵
+    private final Map<String, Object> eventCache = new ConcurrentHashMap<>();
 
-    // 2. SSE 이벤트 캐시 저장 - 캐시를 저장할 데이터베이스 또는 서비스 구현 필요
-    void saveEventCache(String eventCacheId, Object event);
+    /**
+     * Emitter 저장
+     */
+    public SseEmitter subscribeSave(String emitterId, SseEmitter sseEmitter) {
+        sseEmitters.put(emitterId, sseEmitter);
+        log.info("SSE Emitter 등록: {}", emitterId);
+        return sseEmitter;
+    }
 
-    // 3. Receiver로 시작하는 모든 Emitters 찾기
-    @Query("SELECT n FROM Notification n WHERE n.receiver LIKE CONCAT(:username, '%')")
-    List<Notification> findAllEmitterStartsWithUsername(@Param("username") String username);
+    /**
+     * 특정 Emitter 검색
+     */
+    public SseEmitter findEmitterById(String emitterId) {
+        return sseEmitters.get(emitterId);
+    }
 
-    // 4. Receiver로 시작하는 모든 이벤트 캐시 찾기
-    @Query("SELECT n FROM Notification n WHERE n.receiver LIKE CONCAT(:username, '%')")
-    List<Object> findAllEventCacheStartsWithUsername(@Param("username") String username);
+    /**
+     * 특정 Emitter 삭제
+     */
+    public void deleteEmitterById(String emitterId) {
+        sseEmitters.remove(emitterId);
+        eventCache.remove(emitterId);
+        log.info("Emitter 제거: {}", emitterId);
+    }
 
-    // 5. 특정 Emitter 삭제
-    @Query("DELETE FROM Notification n WHERE n.notificationId = :emitterId")
-    void deleteEmitterById(@Param("emitterId") String id);
+    /**
+     * 특정 유저의 모든 Emitter 조회
+     */
+    public List<Notification> findAllEmitterStartsWithUsername(String username) {
+        List<Notification> notifications = new ArrayList<>();
+        sseEmitters.forEach((key, emitter) -> {
+            if (key.startsWith(username)) {
+                Notification notification = (Notification) eventCache.get(key);
+                if (notification != null) {
+                    notifications.add(notification);
+                }
+            }
+        });
+        return notifications;
+    }
 
-    // 6. 특정 ID로 시작하는 모든 Emitters 삭제
-    @Query("DELETE FROM Notification n WHERE n.notificationId LIKE CONCAT(:id, '%')")
-    void deleteAllEmitterStartsWithId(@Param("id") String id);
+    /**
+     * 특정 유저의 모든 이벤트 캐시 조회
+     */
+    public Map<String, Object> findAllEventCacheStartsWithUsername(String username) {
+        Map<String, Object> userEventCache = new HashMap<>();
+        eventCache.forEach((key, value) -> {
+            if (key.startsWith(username)) {
+                userEventCache.put(key, value);
+            }
+        });
+        return userEventCache;
+    }
 
-    // 7. 특정 ID로 시작하는 모든 이벤트 캐시 삭제
-    @Query("DELETE FROM Notification n WHERE n.notificationId LIKE CONCAT(:id, '%')")
-    void deleteAllEventCacheStartsWithId(@Param("id") String id);
-
-    // 8. 특정 Event Cache 삭제
-    @Query("DELETE FROM Notification n WHERE n.notificationId = :eventCacheId")
-    void deleteEventCacheById(@Param("eventCacheId") String emitterId);
+    /**
+     * 이벤트 캐시 저장
+     */
+    public void saveEventCache(String key, Object event) {
+        eventCache.put(key, event);
+        log.info("이벤트 캐시 저장: {}", key);
+    }
 }
