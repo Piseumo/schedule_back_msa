@@ -35,11 +35,11 @@ public class Notification {
     @Column(nullable = false)
     private String url;  // 알림 클릭 시 이동할 URL
 
-    @Column(nullable = false, length = 1)
-    private char readYn;  // 읽음 여부 ('N' 기본값)
+    @Column(nullable = false, length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
+    private char readYn = 'N';  // 읽음 여부 ('N' 기본값)
 
-    @Column(nullable = false, length = 1)
-    private char deletedYn;  // 삭제 여부 ('N' 기본값)
+    @Column(nullable = false, length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
+    private char deletedYn = 'N';  // 삭제 여부 ('N' 기본값)
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;  // 생성일자

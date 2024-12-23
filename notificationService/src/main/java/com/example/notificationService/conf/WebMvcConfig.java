@@ -1,4 +1,4 @@
-package com.example.friendservice.conf;
+package com.example.notificationService.conf;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

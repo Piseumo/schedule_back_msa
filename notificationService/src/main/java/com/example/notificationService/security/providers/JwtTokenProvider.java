@@ -1,4 +1,4 @@
-package com.example.friendservice.security.providers;
+package com.example.notificationService.security.providers;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

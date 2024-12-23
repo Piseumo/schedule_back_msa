@@ -1,7 +1,7 @@
-package com.example.friendservice.conf;
+package com.example.notificationService.conf;
 
-import com.example.friendservice.security.filter.JwtAuthenticationFilter;
-import com.example.friendservice.security.providers.JwtTokenProvider;
+import com.example.notificationService.security.filter.JwtAuthenticationFilter;
+import com.example.notificationService.security.providers.JwtTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

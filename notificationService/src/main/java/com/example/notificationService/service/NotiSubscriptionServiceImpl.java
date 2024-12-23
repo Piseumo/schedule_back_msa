@@ -1,5 +1,6 @@
 package com.example.notificationService.service;
 
+import com.example.notificationService.constant.NotificationType;
 import com.example.notificationService.entity.Notification;
 import com.example.notificationService.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +50,8 @@ import java.util.Map;
                     .notificationId(emitterId)
                     .receiver(username)
                     .content("Connection Established")
-                    .notificationType("SYSTEM")
-                    .url("/system")
+                    .notificationType(NotificationType.MESSAGE)
+                    .url(NotificationType.MESSAGE.getPath())
                     .readYn('N')
                     .deletedYn('N')
                     .build();
