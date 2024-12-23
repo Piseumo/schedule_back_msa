@@ -1,10 +1,6 @@
 package com.example.calendarservice.service;
 
 import com.example.calendarservice.entity.*;
-import com.example.calendarservice.exception.imageException.EmptyFileData;
-import com.example.calendarservice.exception.imageException.FileUploadError;
-import com.example.calendarservice.exception.imageException.ImageErrorCode;
-import com.example.calendarservice.exception.imageException.InvalidFileName;
 import com.example.calendarservice.repository.DiaryImageRepository;
 import com.example.calendarservice.repository.ScheduleImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,14 +28,14 @@ public class ImageServiceImpl implements ImageService {
 
     // 유효성 검사 메소드
     public void validateImageFile(MultipartFile imageFile) {
-        if (imageFile == null || imageFile.isEmpty()) {
-            throw new EmptyFileData(ImageErrorCode.EMPTY_FILE_DATA);
-        }
+//        if (imageFile == null || imageFile.isEmpty()) {
+//            throw new EmptyFileData(ImageErrorCode.EMPTY_FILE_DATA);
+//        }
 
-        String oriImgName = imageFile.getOriginalFilename();
-        if (oriImgName == null || !oriImgName.contains(".")) {
-            throw new InvalidFileName(ImageErrorCode.INVALID_FILE_NAME);
-        }
+//        String oriImgName = imageFile.getOriginalFilename();
+//        if (oriImgName == null || !oriImgName.contains(".")) {
+//            throw new InvalidFileName(ImageErrorCode.INVALID_FILE_NAME);
+//        }
     }
 
     @Transactional
@@ -62,7 +58,7 @@ public class ImageServiceImpl implements ImageService {
 
             return diaryImageRepository.save(diaryImage);
         } catch (Exception e) {
-            throw new FileUploadError(ImageErrorCode.FILE_UPLOAD_ERROR);
+            throw new IllegalArgumentException("파일 업로드 에러");
         }
     }
 
@@ -86,7 +82,7 @@ public class ImageServiceImpl implements ImageService {
 
             return scheduleImageRepository.save(scheduleImage);
         } catch (Exception e) {
-            throw new FileUploadError(ImageErrorCode.FILE_UPLOAD_ERROR);
+            throw new IllegalArgumentException("파일 업로드 에러");
         }
     }
 }

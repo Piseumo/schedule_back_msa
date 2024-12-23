@@ -268,10 +268,12 @@ public class DiaryServiceImpl implements DiaryService{
             if (diaryRequestUpdateDto.getCategory() != null) {
                 updateDiary.setCategory(diaryRequestUpdateDto.getCategory());
             }
+
             if (diaryRequestUpdateDto.getShare() != null){
                 if (diaryRequestUpdateDto.getShare() == ALL){
                     SharedRequestUpdateDto sharedRequestUpdateDto = SharedRequestUpdateDto.builder()
                             .diaryIdx(diaryRequestUpdateDto.getIdx())
+                            .scheduleIdx(null)
                             .friendIdx(null)
                             .shareDateTime(LocalDateTime.now())
                             .build();
@@ -280,20 +282,24 @@ public class DiaryServiceImpl implements DiaryService{
                     if (friendIdxList != null && !friendIdxList.isEmpty()){
                         for (Long friendIdx : friendIdxList){
                             SharedRequestUpdateDto sharedRequestUpdateDto = SharedRequestUpdateDto.builder()
-                                    .diaryIdx(createDiary.getIdx())
+                                    .diaryIdx(diaryRequestUpdateDto.getIdx())
+                                    .scheduleIdx(null)
                                     .friendIdx(friendIdx)
                                     .shareDateTime(LocalDateTime.now())
                                     .build();
-                            sharedService.saveShared(sharedRequestInsertDto);
+                            sharedService.updateShared(sharedRequestUpdateDto);
                         }
                     }
                 } else {
-                    updateDiary.setShare(diaryRequestUpdateDto.getShare());
+                    SharedRequestUpdateDto sharedRequestUpdateDto = SharedRequestUpdateDto.builder()
+                            .diaryIdx(diaryRequestUpdateDto.getIdx())
+                            .build();
+                    sharedService.deleteContentShared(sharedRequestUpdateDto);
                 }
+                    updateDiary.setShare(diaryRequestUpdateDto.getShare());
             }
 
             diaryRepository.save(updateDiary);
-
 
     // 이미지 삭제
             List<String> deleteImageList = diaryRequestUpdateDto.getDeletedImageList();
