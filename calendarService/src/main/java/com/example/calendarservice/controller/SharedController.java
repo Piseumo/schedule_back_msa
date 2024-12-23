@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/shared")
 @RequiredArgsConstructor
+@CrossOrigin
 public class SharedController {
 
 

@@ -46,8 +46,10 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
 
         try {
             System.out.println("Request Body: " + body);
-
-            return sendRequestForToken(url, body).getAccess_token();
+            KakaoTokenDto kakaoTokenDto = sendRequestForToken(url, body);
+            System.out.println("--------------------------------");
+            System.out.println(kakaoTokenDto);
+            return kakaoTokenDto.getAccess_token();
         } catch (HttpClientErrorException e) {
             throw new RuntimeException("Failed to get Kakao Access Token: " + e.getMessage());
         }

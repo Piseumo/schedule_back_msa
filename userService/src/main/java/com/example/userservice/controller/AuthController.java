@@ -11,8 +11,11 @@ import com.example.userservice.service.KakaoLoginService;
 import com.example.userservice.service.LoginService;
 import com.example.userservice.service.UserDetailsServiceImpl;
 import com.example.userservice.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -81,12 +84,29 @@ public class AuthController {
     @GetMapping("/kakao/login")
     public ResponseEntity<LoginResponseDto> kakaoLogin(@RequestParam(value = "code") String code) {
         String accessToken = kakaoLoginService.getKakaoAccessToken(code);
+
         KakaoUserInfoDto kakaoUserInfo = kakaoLoginService.getKakaoUserInfo(accessToken);
         User user = kakaoLoginService.createKakaoUser(kakaoUserInfo, code);
 
         // JWT 생성 및 저장
         LoginResponseDto responseDto = loginService.generateAndSaveTokens(user);
 
-        return ResponseEntity.ok(responseDto);
+        //카카오 토큰 클라이언트쪽에 저장
+        Cookie cookie = new Cookie("kakaoAccessToken", accessToken);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false); // HTTPS 환경에서만 동작
+        cookie.setPath("/");
+        cookie.setMaxAge(7 * 24 * 60 * 60); // 7일 동안 유효
+
+        // 쿠키를 헤더로 추가
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE,
+                String.format("%s=%s; Path=%s; Max-Age=%d; HttpOnly;",
+                        cookie.getName(),
+                        cookie.getValue(),
+                        cookie.getPath(),
+                        cookie.getMaxAge()));
+
+        return new ResponseEntity<>(responseDto, headers, HttpStatus.OK);
     }
 }

@@ -2,14 +2,12 @@ package com.example.calendarservice.controller;
 
 import com.example.calendarservice.service.CalendarService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("calendar-service")
 @RequiredArgsConstructor
+@CrossOrigin
 public class CalendarController {
     private final CalendarService calendarService;
 

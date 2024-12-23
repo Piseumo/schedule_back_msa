@@ -1,8 +1,9 @@
 package com.example.userservice.dto;
 
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+@Data
 public class KakaoTokenDto {
 
     private String access_token;

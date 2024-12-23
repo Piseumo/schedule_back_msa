@@ -5,26 +5,35 @@ import com.example.calendarservice.dto.request.ScheduleRequestUpdateDto;
 import com.example.calendarservice.dto.response.ScheduleResponseDayDto;
 import com.example.calendarservice.dto.response.ScheduleResponseMonthDto;
 import com.example.calendarservice.dto.response.ScheduleResponseYearDto;
+import com.example.calendarservice.feign.KakaoMessageClient;
 import com.example.calendarservice.service.ScheduleService;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/schedule")
 @RequiredArgsConstructor
+@CrossOrigin
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+
+    private final KakaoMessageClient kakaoMessageClient;
+
 
     // 홈페이지 첫화면 기본 창(월달력 조회)
     @GetMapping("/{calendarIdx}/{year}/{month}")
@@ -63,7 +72,7 @@ public class ScheduleController {
     // 일정 1개 조회
     @GetMapping("/{idx}")
     public ResponseEntity<ScheduleResponseDayDto> getOneSchedule(
-            @PathVariable(name = "idx") Long idx){
+            @PathVariable(name = "idx") Long idx) {
         ScheduleResponseDayDto scheduleResponseDayDto = scheduleService.findScheduleByOne(idx);
         return ResponseEntity.ok(scheduleResponseDayDto);
     }
@@ -72,8 +81,25 @@ public class ScheduleController {
     // 일정 입력
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> saveSchedule(
+            HttpServletRequest request,
+            @CookieValue(value = "kakaoAccessToken",required = false) String kakaoAccessToken,
             @RequestPart(name = "scheduleRequest") @Valid ScheduleRequestInsertDto scheduleRequestInsertDto,
             @RequestPart(name = "imageFiles", required = false) @Schema(type = "array", format = "binary", description = "이미지 파일들") List<MultipartFile> imageFileList) {
+
+        if (kakaoAccessToken != null && !kakaoAccessToken.isEmpty()) {
+            System.out.println(kakaoAccessToken);
+            kakaoMessageClient.sendMessage("Bearer "+kakaoAccessToken,
+        """
+                        {
+                        "object_type": "text",
+                        "text": "askdjfnldaksjfnlaksdjfnldaskjfn.",
+                        "link": {
+                            "web_url": "https://developers.kakao.com",
+                            "mobile_web_url": "https://developers.kakao.com"
+                        },
+                        "button_title": "바로 확인"
+                    }""");
+        }
 
         if (imageFileList == null) {
             imageFileList = Collections.emptyList();

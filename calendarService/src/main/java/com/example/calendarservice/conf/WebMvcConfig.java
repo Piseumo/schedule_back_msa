@@ -25,6 +25,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + profileImageLocation + "/");
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:5173")  // 클라이언트 URL
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")  // 모든 헤더 허용
+                .allowCredentials(true)  // 쿠키나 인증 정보 포함
+                .maxAge(3600);  // Preflight 요청의 캐시 시간 설정
+    }
+
 
 }
 
