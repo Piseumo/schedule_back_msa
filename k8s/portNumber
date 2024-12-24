@@ -1,3 +1,12 @@
 userService=50001
 calendarService=50002
 friendService=50003
+
+mariadb-users=30001
+mariadb-calendar=30002
+mariadb-friends=30003
+mariadb-messages=30004
+mariadb-notice=30005
+
+
+

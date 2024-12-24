@@ -13,7 +13,10 @@ spring:
     #    url: jdbc:mariadb://192.168.0.41:30004/newjeans?serverTimezone=Asia/Seoul
     #    url: jdbc:mariadb://localhost:3306/newjeans?serverTimezone=Asia/Seoul
     #    url: jdbc:mariadb://192.168.0.113:30004/newjeans?serverTimezone=Asia/Seoul
-    url: jdbc:mariadb://192.168.0.68:30004/newjeans?serverTimezone=Asia/Seoul
+    #    url: jdbc:mariadb://192.168.0.68:30004/newjeans?serverTimezone=Asia/Seoul
+    # 쿠버네티스 로컬 주소
+    url: jdbc:mariadb://192.168.0.17:30004/messages?serverTimezone=Asia/Seoul
+
     username: root
     password: 1234
 
@@ -51,6 +54,9 @@ profileUploadPath: "file:///D:/profileImages/"
 #uploadPath: "file:///Users/pc/Downloads/images/"
 #profileUploadPath: "file:///Users/pc/Downloads/profileImages/"
 
-user-service-url: http://localhost:50001
+users-service-url: http://localhost:50001
 calendar-service-url: http://localhost:50002
-friend-service-url: http://localhost:50003
+friends-service-url: http://localhost:50003
+messages-service-url: http://localhost:50004
+notice-service-url: http://localhost:50005
+

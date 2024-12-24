@@ -1,5 +1,6 @@
 package com.example.notificationService.controller;
 
+import com.example.notificationService.entity.Notification;
 import com.example.notificationService.service.NotiSubscriptionService;
 import com.example.notificationService.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,11 +30,14 @@ public class NotificationController {
 
     @Operation(summary = "친구 신청 알림")
     @GetMapping(value = "/friend-request")
-    public ResponseEntity<Void> friendRequest(@RequestParam String userName,@RequestParam String friendName) {
+    public String friendRequest(@RequestParam String userName, @RequestParam String friendName) {
         System.out.println("일로오나");
-        notificationService.sendFriendRequest(userName, friendName);
-        return ResponseEntity.ok().build();
+        String message;
+        message = notificationService.sendFriendRequest(userName, friendName);
+        return message;
     }
+    // db에 잇는거를 보여주는 컨트롤러 더 만들어야댐
+
 
     @Operation(summary = "친구 수락 알림")
     @GetMapping(value = "/friend-accept")

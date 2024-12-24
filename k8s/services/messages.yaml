@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment # pod 여러개
 metadata:
-  name: calendar-service-deployment
+  name: messages-service-deployment
 spec: # 어떻게 만들지에 대한 내용
   replicas: 1 # pod 몇 개 만들래
   selector:
     matchLabels:
-      app: calendar-service # 쿠버네티스 안에서 변수명
+      app: messages-service # 쿠버네티스 안에서 변수명
   template:
     metadata:
       labels:
-        app: calendar-service # 서비스에서 찾는 변수명
+        app: messages-service # 서비스에서 찾는 변수명
     spec: # pod 하나하나에 대한 내용
       containers:
-        - name: calendar-service
-          image: jeun0415/calendar-service:nj.k8.01 # dockerhub에 있는 image
+        - name: messages-service
+          image: jeun0415/messages-service:nj.k8.01 # dockerhub에 있는 image
           ports:
-            - containerPort: 50002
+            - containerPort: 50004
           env:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
                 configMapKeyRef:
                   name: nj-k8s-configmap
-                  key: spring-datasource-url-calendar
+                  key: spring-datasource-url-messages
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 configMapKeyRef:
@@ -32,7 +32,7 @@ spec: # 어떻게 만들지에 대한 내용
               valueFrom:
                 configMapKeyRef:
                   name: nj-k8s-configmap
-                  key: calendar-service-port
+                  key: messages-service-port
             - name: USERS_SERVICE_URL
               value: http://users-service:50001
             - name: CALENDAR_SERVICE_URL
@@ -48,11 +48,11 @@ spec: # 어떻게 만들지에 대한 내용
 apiVersion: v1
 kind: Service
 metadata:
-  name: calendar-service
+  name: messages-service
 spec:
   type: LoadBalancer
   ports:
-    - port: 50002
-      targetPort: 50002
+    - port: 50004
+      targetPort: 50004
   selector:
-    app: calendar-service
+    app: messages-service

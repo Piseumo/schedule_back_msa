@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "user-service", url = "${user-service-url}")
+@FeignClient(name = "user-service", url = "${users-service-url}")
 public interface UserFeignClient {
 
     // 친구 아닌 유저 검색

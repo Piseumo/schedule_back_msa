@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment # pod 여러개
 metadata:
-  name: friend-service-deployment
+  name: friends-service-deployment
 spec: # 어떻게 만들지에 대한 내용
   replicas: 1 # pod 몇 개 만들래
   selector:
     matchLabels:
-      app: friend-service # 쿠버네티스 안에서 변수명
+      app: friends-service # 쿠버네티스 안에서 변수명
   template:
     metadata:
       labels:
-        app: friend-service # 서비스에서 찾는 변수명
+        app: friends-service # 서비스에서 찾는 변수명
     spec: # pod 하나하나에 대한 내용
       containers:
-        - name: friend-service
-          image: jeun0415/friend-service:nj.k8.01 # dockerhub에 있는 image
+        - name: friends-service
+          image: jeun0415/friends-service:nj.k8.01 # dockerhub에 있는 image
           ports:
             - containerPort: 50003
           env:
@@ -22,7 +22,7 @@ spec: # 어떻게 만들지에 대한 내용
               valueFrom:
                 configMapKeyRef:
                   name: nj-k8s-configmap
-                  key: spring-datasource-url-friend
+                  key: spring-datasource-url-friends
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 configMapKeyRef:
@@ -32,17 +32,27 @@ spec: # 어떻게 만들지에 대한 내용
               valueFrom:
                 configMapKeyRef:
                   name: nj-k8s-configmap
-                  key: friend-service-port
+                  key: friends-service-port
+            - name: USERS_SERVICE_URL
+              value: http://users-service:50001
+            - name: CALENDAR_SERVICE_URL
+              value: http://calendar-service:50002
+            - name: FRIENDS_SERVICE_URL
+              value: http://friends-service:50003
+            - name: MESSAGES_SERVICE_URL
+              value: http://messages-service:50004
+            - name: NOTICE_SERVICE_URL
+              value: http://notice-service:50005
 
 --- # 환경을 두 개 지정할 때 쓰는 구분자
 apiVersion: v1
 kind: Service
 metadata:
-  name: friend-service
+  name: friends-service
 spec:
   type: LoadBalancer
   ports:
     - port: 50003
       targetPort: 50003
   selector:
-    app: friend-service
+    app: friends-service

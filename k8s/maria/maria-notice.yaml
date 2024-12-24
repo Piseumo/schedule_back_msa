@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment # what to create?
 metadata:
-  name: mariadb-calendars-deployment
+  name: mariadb-notice-deployment
 spec: # specification for deployment resource
   replicas: 1 # how many replicas of pods we want to create
   selector:
     matchLabels:
-      app: mariadb-calendars
+      app: mariadb-notice
   template: # blueprint for pods
     metadata:
       labels:
-        app: mariadb-calendars # service will look for this label
+        app: mariadb-notice # service will look for this label
     spec: # specification for pods
       containers:
-        - name: mariadb-calendars
+        - name: mariadb-notice
           image: mariadb
           ports:
             - containerPort: 3306 #default one
@@ -24,25 +24,25 @@ spec: # specification for deployment resource
                   name: mariadb-secret
                   key: password
           volumeMounts:
-            - name: mariadb-initdb-config-calendars
+            - name: mariadb-initdb-config-notice
               mountPath: /docker-entrypoint-initdb.d
       volumes:
-        - name: mariadb-initdb-config-calendars
+        - name: mariadb-initdb-config-notice
           configMap:
-            name: mariadb-initdb-config-calendars
+            name: mariadb-initdb-config-notice
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mariadb-calendars
+  name: mariadb-notice
 spec:
   type: NodePort
   ports:
     - port: 3306
       targetPort: 3306
-      nodePort: 30002
+      nodePort: 30005
   selector:
-    app: mariadb-calendars
+    app: mariadb-notice
 
 
 # pod scale 바꾸기

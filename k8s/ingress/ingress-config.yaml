@@ -6,13 +6,6 @@ spec:
   rules:
     - http:
         paths:
-          - path: /user-service
-            pathType: Prefix
-            backend:
-              service:
-                name: user-service
-                port:
-                  number: 50001
           - path: /calendar-service
             pathType: Prefix
             backend:
@@ -20,13 +13,47 @@ spec:
                 name: calendar-service
                 port:
                   number: 50002
-          - path: /friend-service
+          - path: /friends-service
             pathType: Prefix
             backend:
               service:
-                name: friend-service
+                name: friends-service
                 port:
                   number: 50003
-
+          - path: /message
+            pathType: Prefix
+            backend:
+              service:
+                name: messages-service
+                port:
+                  number: 50004
+          - path: /noti
+            pathType: Prefix
+            backend:
+              service:
+                name: notice-service
+                port:
+                  number: 50005
+          - path: /user-service
+            pathType: Prefix
+            backend:
+              service:
+                name: users-service
+                port:
+                  number: 50001
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: users-service
+                port:
+                  number: 50001
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: friends-service
+                port:
+                  number: 50003
 
   ingressClassName: nginx

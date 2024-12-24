@@ -40,6 +40,8 @@ public class SecurityConfig {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(List.of("http://localhost:8080",
                                                             "http://localhost:5173",
+                                                            "http://mafront.ildal.store",
+                                                            "http://ma.ildal.store",
                                                             "http://192.168.0.87:5173",
                                                             "http://192.168.0.17:8080"));
                     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

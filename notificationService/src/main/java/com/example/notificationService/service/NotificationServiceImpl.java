@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -30,7 +31,7 @@ public class NotificationServiceImpl implements NotificationService {
     //친구 신청 알람
     @Transactional
     @Override
-    public void sendFriendRequest(String userName, String friendName) {
+    public String sendFriendRequest(String userName, String friendName) {
         String emitterId = userName + "_" + System.currentTimeMillis();
         Notification notification = Notification.builder()
                 .notificationId(emitterId)
@@ -45,6 +46,7 @@ public class NotificationServiceImpl implements NotificationService {
         notificationJPARepository.save(notification);
         notificationRepository.saveEventCache(emitterId, notification);
         sendNotification(friendName, userName+"에게"+friendName+"님이 친구 요청을 보냈습니다", NotificationType.FRIEND_REQUEST);
+        return notification.getContent();
     }
 
     //친구 수락
