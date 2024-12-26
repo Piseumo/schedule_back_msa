@@ -6,7 +6,7 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "calendars")
+@Table(name = "calendar")
 @Getter
 @ToString
 @Builder

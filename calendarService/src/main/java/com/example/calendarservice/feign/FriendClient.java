@@ -10,7 +10,7 @@ import java.util.List;
 @FeignClient(name = "friend-service", url = "${friends-service-url}")
 public interface FriendClient {
 
-    @GetMapping("friend-service/{userIdx}/list")
-    List<UserSearchResponseDto> getFriendsList(@PathVariable(name = "idx") Long userId);
+    @GetMapping("friend/{userIdx}/list")
+    List<UserSearchResponseDto> getFriendsList(@PathVariable(name = "userIdx") Long userIdx);
 
 }

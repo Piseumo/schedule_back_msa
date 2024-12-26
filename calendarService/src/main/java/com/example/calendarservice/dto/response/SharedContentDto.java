@@ -30,8 +30,8 @@ public class SharedContentDto {
     private LocalDate repeatEndDate;
     private LocalDate date;
 
-    private List<ScheduleImage> scheduleImages;
-    private List<DiaryImage> diaryImages;
+    private List<String> scheduleImages;
+    private List<String> diaryImages;
 
     private Share share;
 }
