@@ -5,10 +5,7 @@ import com.example.calendarservice.dto.request.*;
 import com.example.calendarservice.dto.response.CommentsResponseAllDto;
 import com.example.calendarservice.dto.response.SharedContentDto;
 import com.example.calendarservice.dto.response.UserSearchResponseDto;
-import com.example.calendarservice.entity.Comments;
-import com.example.calendarservice.entity.Diary;
-import com.example.calendarservice.entity.Schedule;
-import com.example.calendarservice.entity.Shared;
+import com.example.calendarservice.entity.*;
 import com.example.calendarservice.feign.FriendClient;
 import com.example.calendarservice.repository.CommentsRepository;
 import com.example.calendarservice.repository.DiaryRepository;
@@ -95,6 +92,11 @@ public class SharedServiceImpl implements SharedService{
         List<SharedContentDto> result = sharedList.stream()
                 .map(shared -> {
                     if (shared.getScheduleIdx() != null) {
+                        List<String> imageUrls = scheduleRepository.findById(shared.getScheduleIdx())
+                                .stream().flatMap(schedule -> schedule.getScheduleImages().stream())
+                                .map(ScheduleImage::getImgUrl)
+                                .collect(Collectors.toList());
+
                         return scheduleRepository.findById(shared.getScheduleIdx())
                                 .map(schedule -> SharedContentDto.builder()
                                         .sharedIdx(shared.getSharedIdx())
@@ -107,11 +109,16 @@ public class SharedServiceImpl implements SharedService{
                                         .location(schedule.getLocation())
                                         .repeatType(schedule.getRepeatType())
                                         .repeatEndDate(schedule.getRepeatEndDate())
-                                        .scheduleImages(schedule.getScheduleImages())
+                                        .scheduleImages(imageUrls)
                                         .share(schedule.getShare())
                                         .build())
                                 .orElse(null);
                     } else if (shared.getDiaryIdx() != null) {
+                        List<String> imageUrls = diaryRepository.findById(shared.getDiaryIdx())
+                                .stream().flatMap(diary -> diary.getDiaryImages().stream())
+                                .map(DiaryImage::getImgUrl)
+                                .collect(Collectors.toList());
+
                         return diaryRepository.findById(shared.getDiaryIdx())
                                 .map(diary -> SharedContentDto.builder()
                                         .sharedIdx(shared.getSharedIdx())
@@ -121,7 +128,7 @@ public class SharedServiceImpl implements SharedService{
                                         .content(diary.getContent())
                                         .date(diary.getDate())
                                         .category(diary.getCategory().name())
-                                        .diaryImages(diary.getDiaryImages())
+                                        .diaryImages(imageUrls)
                                         .share(diary.getShare())
                                         .build())
                                 .orElse(null);
@@ -148,6 +155,11 @@ public class SharedServiceImpl implements SharedService{
             Schedule schedule = scheduleRepository.findById(shared.getScheduleIdx())
                     .orElseThrow(() -> new IllegalArgumentException("Schedule 정보가 존재하지 않습니다."));
 
+            List<String> imageUrls = scheduleRepository.findById(shared.getScheduleIdx())
+                    .stream().flatMap(schedule2 -> schedule2.getScheduleImages().stream())
+                    .map(ScheduleImage::getImgUrl)
+                    .collect(Collectors.toList());
+
             return SharedContentDto.builder()
                     .sharedIdx(shared.getSharedIdx())
                     .shareDate(shared.getShareDateTime())
@@ -159,13 +171,18 @@ public class SharedServiceImpl implements SharedService{
                     .location(schedule.getLocation())
                     .repeatType(schedule.getRepeatType())
                     .repeatEndDate(schedule.getRepeatEndDate())
-                    .scheduleImages(schedule.getScheduleImages())
+                    .scheduleImages(imageUrls)
                     .share(schedule.getShare())
                     .build();
 
         } else if (shared.getDiaryIdx() != null) {
             Diary diary = diaryRepository.findById(shared.getDiaryIdx())
                     .orElseThrow(() -> new IllegalArgumentException("Diary 정보가 존재하지 않습니다."));
+
+            List<String> imageUrls = diaryRepository.findById(shared.getDiaryIdx())
+                    .stream().flatMap(diary2 -> diary2.getDiaryImages().stream())
+                    .map(DiaryImage::getImgUrl)
+                    .collect(Collectors.toList());
 
             return SharedContentDto.builder()
                     .sharedIdx(shared.getSharedIdx())
@@ -175,7 +192,7 @@ public class SharedServiceImpl implements SharedService{
                     .content(diary.getContent())
                     .date(diary.getDate())
                     .category(diary.getCategory().name())
-                    .diaryImages(diary.getDiaryImages())
+                    .diaryImages(imageUrls)
                     .share(diary.getShare())
                     .build();
         } else {
@@ -246,6 +263,12 @@ public class SharedServiceImpl implements SharedService{
         return Stream.concat(
                         allSchedules.stream().map(shared -> {
                             Schedule schedule = scheduleRepository.findById(shared.getScheduleIdx()).orElse(null);
+
+                            List<String> imageUrls = scheduleRepository.findById(shared.getScheduleIdx())
+                                    .stream().flatMap(schedule2 -> schedule2.getScheduleImages().stream())
+                                    .map(ScheduleImage::getImgUrl)
+                                    .collect(Collectors.toList());
+
                             return SharedContentDto.builder()
                                     .sharedIdx(shared.getSharedIdx())
                                     .type("SCHEDULE")
@@ -255,11 +278,17 @@ public class SharedServiceImpl implements SharedService{
                                     .start(schedule.getStart())
                                     .end(schedule.getEnd())
                                     .location(schedule.getLocation())
-                                    .scheduleImages(schedule.getScheduleImages())
+                                    .scheduleImages(imageUrls)
                                     .build();
                         }),
                         allDiaries.stream().map(shared -> {
                             Diary diary = diaryRepository.findById(shared.getDiaryIdx()).orElse(null);
+
+                            List<String> imageUrls = diaryRepository.findById(shared.getDiaryIdx())
+                                    .stream().flatMap(diary2 -> diary2.getDiaryImages().stream())
+                                    .map(DiaryImage::getImgUrl)
+                                    .collect(Collectors.toList());
+
                             return SharedContentDto.builder()
                                     .sharedIdx(shared.getSharedIdx())
                                     .type("DIARY")
@@ -268,7 +297,7 @@ public class SharedServiceImpl implements SharedService{
                                     .shareDate(shared.getShareDateTime())
                                     .date(diary.getDate())
                                     .category(diary.getCategory().name())
-                                    .diaryImages(diary.getDiaryImages())
+                                    .diaryImages(imageUrls)
                                     .build();
                         })
                 ).sorted(Comparator.comparing(SharedContentDto::getShareDate).reversed())

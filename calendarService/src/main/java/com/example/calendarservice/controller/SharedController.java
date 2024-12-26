@@ -21,7 +21,7 @@ public class SharedController {
     private final SharedService sharedService;
 
 
-    // 쓰레드 첫화면(모든 친구의 공유 컨텐츠 조회)
+    // 쓰레드 첫화면(모든 친구의 공유 컨텐츠 조회)xxx
     @GetMapping("/all/{userIdx}")
     public ResponseEntity<List<SharedContentDto>> findAllShared(@PathVariable(value = "userIdx") Long userIdx) {
         List<SharedContentDto> sharedContents = sharedService.findAllShared(userIdx);
@@ -55,7 +55,7 @@ public class SharedController {
 
     // 댓글 입력
     @PostMapping("/create/comments")
-    public ResponseEntity<Boolean> saveComments(@RequestPart(name = "commentsRequestInsertDto")CommentsRequestInsertDto commentsRequestInsertDto){
+    public ResponseEntity<Boolean> saveComments(@RequestBody CommentsRequestInsertDto commentsRequestInsertDto){
         sharedService.saveComments(commentsRequestInsertDto);
         return ResponseEntity.ok(true);
     }
@@ -71,7 +71,7 @@ public class SharedController {
 
     // 댓글 수정
     @PostMapping("/update/comments")
-    public ResponseEntity<Boolean> updateComments(@RequestPart(name = "commentsRequestUpdateDto")CommentsRequestUpdateDto commentsRequestUpdateDto){
+    public ResponseEntity<Boolean> updateComments(@RequestBody CommentsRequestUpdateDto commentsRequestUpdateDto){
         sharedService.updateComments(commentsRequestUpdateDto);
         return ResponseEntity.ok(true);
     }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @EntityListeners(AuditingEntityListener.class)
 @Table(
-        name = "friend",
+        name = "friends",
         uniqueConstraints = @UniqueConstraint(columnNames = {"req_idx", "rec_idx"}) // 복합 유니크 키 설정
 )
 @NoArgsConstructor
