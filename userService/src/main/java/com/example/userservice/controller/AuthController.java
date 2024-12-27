@@ -32,6 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;

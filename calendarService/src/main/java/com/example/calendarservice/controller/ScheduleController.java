@@ -85,7 +85,6 @@ public class ScheduleController {
             @CookieValue(value = "kakaoAccessToken",required = false) String kakaoAccessToken,
             @RequestPart(name = "scheduleRequest") @Valid ScheduleRequestInsertDto scheduleRequestInsertDto,
             @RequestPart(name = "imageFiles", required = false) @Schema(type = "array", format = "binary", description = "이미지 파일들") List<MultipartFile> imageFileList) {
-
         if (kakaoAccessToken != null && !kakaoAccessToken.isEmpty()) {
             System.out.println(kakaoAccessToken);
             kakaoMessageClient.sendMessage("Bearer "+kakaoAccessToken,
