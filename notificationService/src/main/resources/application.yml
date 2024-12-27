@@ -67,8 +67,8 @@ profileUploadPath: "file:///D:/profileImages/"
 #uploadPath: "file:///Users/pc/Downloads/images/"
 #profileUploadPath: "file:///Users/pc/Downloads/profileImages/"
 
-users-service-url: http://localhost:50001
-calendar-service-url: http://localhost:50002
-friends-service-url: http://localhost:50003
-messages-service-url: http://localhost:50004
-notice-service-url: http://localhost:50005
+users-service-url: http://192.168.0.17:50001
+calendar-service-url: http://192.168.0.17:50002
+friends-service-url: http://192.168.0.17:50003
+messages-service-url: http://192.168.0.17:50004
+notice-service-url: http://192.168.0.17:50005

@@ -23,9 +23,9 @@ public class NotificationController {
     @Operation(summary = "sse세션연결")
     @GetMapping(value = "/api/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> subscribe(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam("userName") String userName,
             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
-        return ResponseEntity.ok(notiSubscriptionService.subscribe(userDetails.getUsername(), lastEventId));
+        return ResponseEntity.ok(notiSubscriptionService.subscribe(userName, lastEventId));
     }
 
     @Operation(summary = "친구 신청 알림")
@@ -36,6 +36,7 @@ public class NotificationController {
         message = notificationService.sendFriendRequest(userName, friendName);
         return message;
     }
+
     // db에 잇는거를 보여주는 컨트롤러 더 만들어야댐
 
 
