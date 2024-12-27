@@ -7,10 +7,12 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class LoginRequestDto {
     @NotBlank(message = "아이디를 입력해주세요.")
     @Email(message = "이메일 형식을 지켜주세요.")
