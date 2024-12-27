@@ -313,6 +313,7 @@ public class DiaryServiceImpl implements DiaryService{
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ServiceException("Failed to update diary in DiaryService.updateDiary", e);
         }
     }

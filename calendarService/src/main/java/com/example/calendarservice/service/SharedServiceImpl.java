@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,8 +38,6 @@ public class SharedServiceImpl implements SharedService{
     // 공유 내역 테이블 생성
     @Transactional
     public void saveShared(SharedRequestInsertDto sharedRequestInsertDto){
-
-
         Shared createShared = Shared.builder()
                 .scheduleIdx(sharedRequestInsertDto.getScheduleIdx())
                 .diaryIdx(sharedRequestInsertDto.getDiaryIdx())
@@ -49,29 +48,47 @@ public class SharedServiceImpl implements SharedService{
     }
 
 
+
     // 공유 친구, 시간 수정
     @Transactional
     public void updateShared(SharedRequestUpdateDto sharedRequestUpdateDto){
+        List<Long> sharedIdxList;
 
-        if (sharedRequestUpdateDto.getScheduleIdx() != null && sharedRequestUpdateDto.getDiaryIdx() == null){
-            sharedRequestUpdateDto.setSharedIdx(sharedRepository.findSharedIdxByScheduleIdx(sharedRequestUpdateDto.getScheduleIdx()));
+        if (sharedRequestUpdateDto.getScheduleIdx() != null && sharedRequestUpdateDto.getDiaryIdx() == null) {
+            sharedIdxList = sharedRepository.findSharedIdxByScheduleIdx(sharedRequestUpdateDto.getScheduleIdx());
         } else if (sharedRequestUpdateDto.getScheduleIdx() == null && sharedRequestUpdateDto.getDiaryIdx() != null) {
-            sharedRequestUpdateDto.setSharedIdx(sharedRepository.findSharedIdxByDiaryIdx(sharedRequestUpdateDto.getDiaryIdx()));
+            sharedIdxList = sharedRepository.findSharedIdxByDiaryIdx(sharedRequestUpdateDto.getDiaryIdx());
         } else {
             throw new IllegalArgumentException("일정, 일기 Idx가 모두 존재하지 않습니다.");
         }
 
+        if (sharedIdxList == null || sharedIdxList.isEmpty()) {
+            SharedRequestInsertDto insertDto = SharedRequestInsertDto.builder()
+                    .scheduleIdx(sharedRequestUpdateDto.getScheduleIdx())
+                    .diaryIdx(sharedRequestUpdateDto.getDiaryIdx())
+                    .friendIdx(sharedRequestUpdateDto.getFriendIdx())
+                    .shareDateTime(LocalDateTime.now())
+                    .build();
+
+            saveShared(insertDto);
+            return;
+        }
+
+        Long sharedIdx = sharedIdxList.get(0);
+        sharedRequestUpdateDto.setSharedIdx(sharedIdx);
+
         Shared updateShared = sharedRepository.findById(sharedRequestUpdateDto.getSharedIdx())
                 .orElseThrow(() -> new IllegalArgumentException("공유 내역이 존재하지 않습니다."));
 
-        if (sharedRequestUpdateDto.getFriendIdx() != null){
-            updateShared.setFriendIdx(sharedRequestUpdateDto.getFriendIdx());
-        }
-        if (sharedRequestUpdateDto.getShareDateTime() != null){
+//        if (sharedRequestUpdateDto.getFriendIdx() != null) {
+//            updateShared.setFriendIdx(sharedRequestUpdateDto.getFriendIdx());
+//        }
+        if (sharedRequestUpdateDto.getShareDateTime() != null) {
             updateShared.setShareDateTime(sharedRequestUpdateDto.getShareDateTime());
         }
         sharedRepository.save(updateShared);
     }
+
 
 
     // 쓰레드 첫화면(모든 친구의 공유 컨텐츠 조회)
@@ -237,19 +254,29 @@ public class SharedServiceImpl implements SharedService{
 
     // 일정이나 일기에서 공유 취소
     @Transactional
-    public void deleteContentShared(SharedRequestUpdateDto sharedRequestUpdateDto){
+    public void deleteContentShared(SharedRequestUpdateDto sharedRequestUpdateDto) {
+        List<Long> sharedIdxList;
 
-        if (sharedRequestUpdateDto.getScheduleIdx() != null && sharedRequestUpdateDto.getDiaryIdx() == null){
-            sharedRequestUpdateDto.setSharedIdx(sharedRepository.findSharedIdxByScheduleIdx(sharedRequestUpdateDto.getScheduleIdx()));
+        // 공유 데이터 ID 목록 조회
+        if (sharedRequestUpdateDto.getScheduleIdx() != null && sharedRequestUpdateDto.getDiaryIdx() == null) {
+            sharedIdxList = sharedRepository.findSharedIdxByScheduleIdx(sharedRequestUpdateDto.getScheduleIdx());
         } else if (sharedRequestUpdateDto.getScheduleIdx() == null && sharedRequestUpdateDto.getDiaryIdx() != null) {
-            sharedRequestUpdateDto.setSharedIdx(sharedRepository.findSharedIdxByDiaryIdx(sharedRequestUpdateDto.getDiaryIdx()));
+            sharedIdxList = sharedRepository.findSharedIdxByDiaryIdx(sharedRequestUpdateDto.getDiaryIdx());
         } else {
             throw new IllegalArgumentException("일정, 일기 Idx가 모두 존재하지 않습니다.");
         }
 
-        Shared shared = sharedRepository.findById(sharedRequestUpdateDto.getSharedIdx())
-                .orElseThrow(() -> new IllegalArgumentException("공유 일정 or 일기가 존재하지 않습니다."));
-        sharedRepository.delete(shared);
+        // 공유 데이터가 없는 경우 처리
+        if (sharedIdxList == null || sharedIdxList.isEmpty()) {
+            throw new IllegalArgumentException("삭제할 공유 데이터가 없습니다.");
+        }
+
+        // 공유 데이터 삭제
+        for (Long sharedIdx : sharedIdxList) {
+            Shared shared = sharedRepository.findById(sharedIdx)
+                    .orElseThrow(() -> new IllegalArgumentException("공유 일정 or 일기가 존재하지 않습니다. sharedIdx=" + sharedIdx));
+            sharedRepository.delete(shared);
+        }
     }
 
 
@@ -309,13 +336,16 @@ public class SharedServiceImpl implements SharedService{
     // 댓글 입력
     @Transactional
     public void saveComments(CommentsRequestInsertDto commentsRequestInsertDto){
-        Shared sharedIdx = sharedRepository.findById(commentsRequestInsertDto.getSharedIdx())
-                .orElseThrow(() -> new IllegalArgumentException("공유 컨텐츠(일정 or 일기)가 존재하지 않습니다."));
+        if ((commentsRequestInsertDto.getScheduleIdx() == null && commentsRequestInsertDto.getDiaryIdx() == null) ||
+                (commentsRequestInsertDto.getScheduleIdx() != null && commentsRequestInsertDto.getDiaryIdx() != null)) {
+            throw new IllegalArgumentException("일정 또는 일기 중 하나의 ID만 제공되어야 합니다.");
+        }
 
         Comments createComments = Comments.builder()
                 .userIdx(commentsRequestInsertDto.getUserIdx())
-                .sharedIdx(sharedIdx.getSharedIdx())
-                .dateTime(commentsRequestInsertDto.getDateTime())
+                .scheduleIdx(commentsRequestInsertDto.getScheduleIdx())
+                .diaryIdx(commentsRequestInsertDto.getDiaryIdx())
+                .dateTime(LocalDateTime.now())
                 .content(commentsRequestInsertDto.getContent())
                 .build();
         commentsRepository.save(createComments);
@@ -325,26 +355,31 @@ public class SharedServiceImpl implements SharedService{
 
     // 해당 게시글 전체 댓글 조회
     @Transactional
-    public List<CommentsResponseAllDto> findAllComments(Long sharedIdx){
+    public List<CommentsResponseAllDto> findAllComments(String type, Long mixedIdx){
 
-        Shared shared = sharedRepository.findById(sharedIdx)
-                .orElseThrow(() -> new IllegalArgumentException("Shared 정보가 존재하지 않습니다."));
+        if (type == "SCHEDULE"){
+            Schedule schedule = scheduleRepository.findById(mixedIdx)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
+            if (schedule.getIdx() != null){
+                List<Comments> scheduleComments = commentsRepository.findBySharedIdx(sharedIdx);
+                commentsList.addAll(scheduleComments.stream()
+                        .map(comment -> CommentsResponseAllDto.builder()
+                                .commentsIdx(comment.getCommentsIdx())
+                                .userIdx(comment.getUserIdx())
+                                .sharedIdx(comment.getSharedIdx())
+                                .dateTime(comment.getDateTime())
+                                .content(comment.getContent())
+                                .build())
+                        .toList());
+            }
+
+        }else {
+            Diary diary = diaryRepository.findById(mixedIdx)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 일기가 존재하지 않습니다."));
+        }
 
         List<CommentsResponseAllDto> commentsList = new ArrayList<>();
 
-        if (shared.getScheduleIdx() != null) {
-
-            List<Comments> scheduleComments = commentsRepository.findBySharedIdx(sharedIdx);
-            commentsList.addAll(scheduleComments.stream()
-                    .map(comment -> CommentsResponseAllDto.builder()
-                            .commentsIdx(comment.getCommentsIdx())
-                            .userIdx(comment.getUserIdx())
-                            .sharedIdx(comment.getSharedIdx())
-                            .dateTime(comment.getDateTime())
-                            .content(comment.getContent())
-                            .build())
-                    .toList());
-        }
 
         if (shared.getDiaryIdx() != null) {
 
@@ -367,7 +402,7 @@ public class SharedServiceImpl implements SharedService{
     // 댓글 수정
     @Transactional
     public void updateComments(CommentsRequestUpdateDto commentsRequestUpdateDto){
-        Comments updateComments = commentsRepository.findById(commentsRequestUpdateDto.getCommentsIdx())
+            Comments updateComments = commentsRepository.findById(commentsRequestUpdateDto.getCommentsIdx())
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
 
         if (commentsRequestUpdateDto.getContent() != null){

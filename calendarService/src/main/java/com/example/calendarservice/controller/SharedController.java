@@ -21,7 +21,7 @@ public class SharedController {
     private final SharedService sharedService;
 
 
-    // 쓰레드 첫화면(모든 친구의 공유 컨텐츠 조회)xxx
+    // 쓰레드 첫화면(모든 친구의 공유 컨텐츠 조회)
     @GetMapping("/all/{userIdx}")
     public ResponseEntity<List<SharedContentDto>> findAllShared(@PathVariable(value = "userIdx") Long userIdx) {
         List<SharedContentDto> sharedContents = sharedService.findAllShared(userIdx);
@@ -62,9 +62,9 @@ public class SharedController {
 
 
     // 해당 게시글 전체 댓글 조회
-    @GetMapping("/all/comments/{sharedIdx}")
-    public ResponseEntity<List<CommentsResponseAllDto>> findAllComments(@PathVariable(value = "sharedIdx") Long sharedIdx){
-        List<CommentsResponseAllDto> commentsResponseAllDto = sharedService.findAllComments(sharedIdx);
+    @GetMapping("/all/comments/{type}/{mixedIdx}")
+    public ResponseEntity<List<CommentsResponseAllDto>> findAllComments(@PathVariable(value = "type") String type, @PathVariable(value = "sharedIdx") Long mixedIdx){
+        List<CommentsResponseAllDto> commentsResponseAllDto = sharedService.findAllComments(type, mixedIdx);
         return ResponseEntity.ok(commentsResponseAllDto);
     }
 

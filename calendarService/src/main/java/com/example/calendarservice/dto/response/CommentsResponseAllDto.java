@@ -18,7 +18,9 @@ public class CommentsResponseAllDto {
 
     private Long userIdx;
 
-    private Long sharedIdx;
+    private Long scheduleIdx;
+
+    private Long diaryIdx;
 
     private LocalDateTime dateTime;
 

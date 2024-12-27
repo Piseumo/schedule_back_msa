@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 public class CommentsRequestInsertDto {
 
     private Long userIdx;
-    private Long sharedIdx;
+    private Long scheduleIdx;
+    private Long diaryIdx;
     private LocalDateTime dateTime;
     private String content;
 }
