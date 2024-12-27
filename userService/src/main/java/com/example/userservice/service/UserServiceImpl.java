@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public ResponseEntity<UserResponseDto> createUser(@Valid UserRequestInsertDto userRequestInsertDto) {
         try {
-
             User user = User.builder()
                     .email(userRequestInsertDto.getEmail())
                     .password(passwordEncoder.encode(userRequestInsertDto.getPassword()))
@@ -62,7 +61,6 @@ public class UserServiceImpl implements UserService {
                     .build();
 
             userRepository.save(user);
-
             calendarClient.createCalendar(user.getIdx());
 
             return ResponseEntity.ok(new UserResponseDto(user.getIdx()));

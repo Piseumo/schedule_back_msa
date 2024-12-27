@@ -12,7 +12,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
 #    url: jdbc:mariadb://192.168.0.41:30003/newjeans?serverTimezone=Asia/Seoul
 #    url: jdbc:mariadb://localhost:3306/newjeans?serverTimezone=Asia/Seoul
-    url: jdbc:mariadb://192.168.0.113:30003/friends?serverTimezone=Asia/Seoul
+    url: jdbc:mariadb://192.168.0.17:30003/friends?serverTimezone=Asia/Seoul
 #    url: jdbc:mariadb://192.168.0.68:30003/newjeans?serverTimezone=Asia/Seoul
 #    url: jdbc:mariadb://192.168.0.83:30003/newjeans?serverTimezone=Asia/Seoul
 
@@ -67,8 +67,11 @@ profileUploadPath: "file:///D:/profileImages/"
 #uploadPath: "file:///Users/pc/Downloads/images/"
 #profileUploadPath: "file:///Users/pc/Downloads/profileImages/"
 
-users-service-url: http://localhost:50001
-calendar-service-url: http://localhost:50002
-friends-service-url: http://localhost:50003
-messages-service-url: http://localhost:50004
-notice-service-url: http://localhost:50005
+users-service-url: http://192.168.0.17:50001
+calendar-service-url: http://192.168.0.17:50002
+friends-service-url: http://192.168.0.17:50003
+messages-service-url: http://192.168.0.17:50004
+notice-service-url: http://192.168.0.17:50005
+
+cors:
+  allowed-origins: http://localhost:8080, http://localhost:5173, http://mafront.ildal.store, http://ma.ildal.store, http://msafront.ildal.store, http://msa.ildal.store, http://192.168.0.87:5173, http://192.168.0.17:8080

@@ -38,7 +38,6 @@ public class ScheduleRequestInsertDto {
 
         private LocalDate repeatEndDate;  // 반복 종료 일자 (반복이 언제까지 지속되는지)
 
-
         // 날짜 유효성 검사
         @AssertTrue(message = "End time must be after the start time.")
         public boolean isEndAfterStart() {

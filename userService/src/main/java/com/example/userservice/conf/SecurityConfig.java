@@ -2,9 +2,11 @@ package com.example.userservice.conf;
 
 import com.example.userservice.security.filter.JwtAuthenticationFilter;
 import com.example.userservice.security.providers.JwtTokenProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,15 +17,28 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+    private final List<String> allowedOrigins;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final Environment environment;
+
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider, Environment environment) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.environment = environment;
+        String[] origins = environment.getProperty("cors.allowed-origins", String[].class);
+        if (origins != null) {
+            allowedOrigins = List.of(origins);
+            log.error(allowedOrigins.toString());
+        } else {
+            allowedOrigins = List.of(); // 기본값으로 빈 리스트
+        }
     }
 
     @Bean
@@ -38,12 +53,7 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(List.of("http://localhost:8080",
-                                                            "http://localhost:5173",
-                                                            "http://mafront.ildal.store",
-                                                            "http://ma.ildal.store",
-                                                            "http://192.168.0.87:5173",
-                                                            "http://192.168.0.17:8080"));
+                    configuration.setAllowedOrigins(allowedOrigins);
                     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     configuration.setAllowedHeaders(List.of("*"));
                     configuration.setAllowCredentials(true);

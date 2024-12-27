@@ -1,3 +1,4 @@
 # 이미지 생성 명령어
-docker build -t jeun0415/notice-service:nj.k8.01 .
-docker push jeun0415/notice-service:nj.k8.01
+docker rmi jeun0415/notice-service:nj.k8.01
+docker build -t jeun0415/notice-service:nj.k8.02 .
+docker push jeun0415/notice-service:nj.k8.02
