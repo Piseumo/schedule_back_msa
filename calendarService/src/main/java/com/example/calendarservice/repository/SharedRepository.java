@@ -44,4 +44,6 @@ public interface SharedRepository extends JpaRepository<Shared, Long> {
     @Query("SELECT s.sharedIdx FROM Shared s WHERE s.diaryIdx = :diaryIdx")
     Long findSharedIdxByDiaryIdx(@Param("diaryIdx") Long diaryIdx);
 
+
+    List<Shared> findByDiaryIdx(Long diaryIdx);
 }

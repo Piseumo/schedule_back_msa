@@ -186,6 +186,7 @@ public class DiaryServiceImpl implements DiaryService{
                     .collect(Collectors.toList());
 
             return DiaryResponseDayDto.builder()
+                    .diaryIdx(idx)
                     .title(diary.getTitle())
                     .content(diary.getContent())
                     .date(diary.getDate())
@@ -271,12 +272,7 @@ public class DiaryServiceImpl implements DiaryService{
 
             if (diaryRequestUpdateDto.getShare() != null){
                 if (diaryRequestUpdateDto.getShare() == ALL){
-                    SharedRequestUpdateDto sharedRequestUpdateDto = SharedRequestUpdateDto.builder()
-                            .diaryIdx(diaryRequestUpdateDto.getIdx())
-                            .scheduleIdx(null)
-                            .friendIdx(null)
-                            .shareDateTime(LocalDateTime.now())
-                            .build();
+                    sharedService.updateToAll(diaryRequestUpdateDto.getIdx());
                 } else if (diaryRequestUpdateDto.getShare() == CHOOSE) {
                     List<Long> friendIdxList = diaryRequestUpdateDto.getFriendIdxList();
                     if (friendIdxList != null && !friendIdxList.isEmpty()){
@@ -291,10 +287,7 @@ public class DiaryServiceImpl implements DiaryService{
                         }
                     }
                 } else {
-                    SharedRequestUpdateDto sharedRequestUpdateDto = SharedRequestUpdateDto.builder()
-                            .diaryIdx(diaryRequestUpdateDto.getIdx())
-                            .build();
-                    sharedService.deleteContentShared(sharedRequestUpdateDto);
+                    sharedService.deleteAllSharedByDiaryIdx(diaryRequestUpdateDto.getIdx());
                 }
                     updateDiary.setShare(diaryRequestUpdateDto.getShare());
             }

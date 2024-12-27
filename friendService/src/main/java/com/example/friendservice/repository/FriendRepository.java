@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface FriendRepository extends JpaRepository<Friend, Long> {
     // 특정 유저가 받은 모든 친구 요청 조회 (수락 대기 상태)
     List<Friend> findByReceiverIdAndStatus(Long receiverId, Status status);
+    List<Friend> findByRequesterIdAndStatus(Long requesterId, Status status);
 
     boolean existsByRequesterIdAndReceiverId(Long requesterId, Long receiverId);
 

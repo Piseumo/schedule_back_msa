@@ -385,4 +385,37 @@ public class SharedServiceImpl implements SharedService{
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 댓글이 존재하지 않습니다."));
         commentsRepository.delete(comments);
     }
+
+
+
+    @Transactional
+    @Override
+    public void updateToAll(Long diaryIdx) {
+        List<Shared> sharedList = sharedRepository.findByDiaryIdx(diaryIdx);
+
+        if (sharedList.isEmpty()) {
+            throw new IllegalStateException("공유 데이터가 없습니다.");
+        }
+
+        Shared mainShared = sharedList.get(0);
+        mainShared.setFriendIdx(null);
+        sharedRepository.save(mainShared);
+
+        for (int i = 1; i < sharedList.size(); i++) {
+            sharedRepository.delete(sharedList.get(i));
+        }
+    }
+
+
+    @Transactional
+    @Override
+    public void deleteAllSharedByDiaryIdx(Long diaryIdx) {
+        List<Shared> sharedList = sharedRepository.findByDiaryIdx(diaryIdx);
+
+        if (!sharedList.isEmpty()) {
+            for (Shared shared : sharedList) {
+                sharedRepository.delete(shared);
+            }
+        }
+    }
 }

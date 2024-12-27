@@ -22,4 +22,7 @@ public interface SharedService {
     public List<CommentsResponseAllDto> findAllComments(Long sharedIdx);
     public void updateComments(CommentsRequestUpdateDto commentsRequestUpdateDto);
     public void deleteComments(Long commentsIdx);
+
+    void updateToAll(Long diaryIdx);
+    void deleteAllSharedByDiaryIdx(Long diaryIdx);
 }

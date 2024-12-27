@@ -98,18 +98,36 @@ public class FriendServiceImpl implements FriendService{
         friendRepository.delete(friendRequest);
     }
 
+
     // 친구 목록 조회
     @Transactional
     @Override
     public List<UserSearchResponseDto> getFriendsList(Long userId) {
-        List<Friend> friends = friendRepository.findByReceiverIdAndStatus(userId, Status.ACCEPTED);
+        // 수신자가 userId인 친구 관계 조회
+        List<Friend> receivedFriends = friendRepository.findByReceiverIdAndStatus(userId, Status.ACCEPTED);
 
-        List<Long> userIds = friends.stream()
-                .flatMap(friend -> Stream.of(friend.getRequesterId(), friend.getReceiverId()))
+        // 요청자가 userId인 친구 관계 조회
+        List<Friend> requestedFriends = friendRepository.findByRequesterIdAndStatus(userId, Status.ACCEPTED);
+
+        // 양쪽 관계 병합
+        List<Long> friendIds = Stream.concat(
+                        receivedFriends.stream().map(Friend::getRequesterId),
+                        requestedFriends.stream().map(Friend::getReceiverId)
+                )
                 .distinct()
                 .collect(Collectors.toList());
 
-        return userFeignClient.getFriendsList(userIds);
+        // 외부 서비스에서 사용자 정보 조회
+        List<UserSearchResponseDto> userDetails = userFeignClient.getFriendsList(friendIds);
+
+        // 반환 DTO 생성
+        return friendIds.stream()
+                .map(friendId -> userDetails.stream()
+                        .filter(user -> user.getUserId().equals(friendId))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("User data not found for friend ID: " + friendId))
+                )
+                .collect(Collectors.toList());
     }
 
 
