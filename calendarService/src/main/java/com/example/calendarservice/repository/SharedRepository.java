@@ -46,4 +46,6 @@ public interface SharedRepository extends JpaRepository<Shared, Long> {
 
 
     List<Shared> findByDiaryIdx(Long diaryIdx);
+
+    List<Shared> findByScheduleIdx(Long diaryIdx);
 }

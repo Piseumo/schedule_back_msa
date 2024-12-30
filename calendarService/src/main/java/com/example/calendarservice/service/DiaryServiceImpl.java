@@ -272,7 +272,11 @@ public class DiaryServiceImpl implements DiaryService{
 
             if (diaryRequestUpdateDto.getShare() != null){
                 if (diaryRequestUpdateDto.getShare() == ALL){
-                    sharedService.updateToAll(diaryRequestUpdateDto.getIdx());
+                    SharedRequestInsertDto sharedRequestInsertDto = SharedRequestInsertDto.builder()
+                            .diaryIdx(diaryRequestUpdateDto.getIdx())
+                            .shareDateTime(LocalDateTime.now())
+                            .build();
+                    sharedService.updateToAll(sharedRequestInsertDto);
                 } else if (diaryRequestUpdateDto.getShare() == CHOOSE) {
                     List<Long> friendIdxList = diaryRequestUpdateDto.getFriendIdxList();
                     if (friendIdxList != null && !friendIdxList.isEmpty()){
