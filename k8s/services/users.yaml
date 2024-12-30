@@ -14,7 +14,7 @@ spec: # 어떻게 만들지에 대한 내용
     spec: # pod 하나하나에 대한 내용
       containers:
         - name: users-service
-          image: jeun0415/users-service:nj.k8.05 # dockerhub에 있는 image
+          image: jeun0415/users-service:nj.k8.07 # dockerhub에 있는 image
           ports:
             - containerPort: 50001
           env:

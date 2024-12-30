@@ -26,6 +26,13 @@ spec:
                 name: calendar-service
                 port:
                   number: 50002
+          - path: /shared
+            pathType: Prefix
+            backend:
+              service:
+                name: calendar-service
+                port:
+                  number: 50002
           - path: /calendar-service
             pathType: Prefix
             backend:

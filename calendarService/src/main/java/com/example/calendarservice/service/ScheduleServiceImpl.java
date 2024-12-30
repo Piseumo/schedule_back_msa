@@ -69,6 +69,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
             return schedules.stream()
                     .map(schedule -> ScheduleResponseMonthDto.builder()
+                            .idx(schedule.getIdx())
                             .title(schedule.getTitle())
                             .start(schedule.getStart())
                             .end(schedule.getEnd())
@@ -214,10 +215,10 @@ public class ScheduleServiceImpl implements ScheduleService {
             long daysBetween = Duration.between(currentStart.toLocalDate().atStartOfDay(), currentEnd.toLocalDate().atStartOfDay()).toDays();
 
             // 차이가 하루 이상이고 반복 유형이 NONE인 경우 반복 유형을 DAILY로 설정하고 반복 종료 날짜를 end 날짜로 설정
-            if (daysBetween >= 1 && effectiveRepeatType == RepeatType.NONE) {
-                effectiveRepeatType = RepeatType.DAILY;
-                effectiveRepeatEndDate = currentEnd.toLocalDate();
-            }
+//            if (daysBetween >= 1 && effectiveRepeatType == RepeatType.NONE) {
+//                effectiveRepeatType = RepeatType.DAILY;
+//                effectiveRepeatEndDate = currentEnd.toLocalDate();
+//            }
 
             if (effectiveRepeatType == RepeatType.NONE) {
                 effectiveRepeatEndDate = currentEnd.toLocalDate();

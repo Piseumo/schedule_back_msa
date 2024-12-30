@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 public class ScheduleResponseMonthDto {
 
+    private Long idx;
 
     private String title;
 
