@@ -5,7 +5,6 @@ import com.example.friendservice.dto.response.UserSearchResponseDto;
 import com.example.friendservice.service.FriendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

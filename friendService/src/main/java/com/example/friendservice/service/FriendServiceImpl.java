@@ -7,7 +7,6 @@ import com.example.friendservice.entity.Friend;
 import com.example.friendservice.feign.NotiFeignClient;
 import com.example.friendservice.feign.UserFeignClient;
 import com.example.friendservice.repository.FriendRepository;
-import com.example.friendservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

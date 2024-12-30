@@ -357,16 +357,19 @@ public class SharedServiceImpl implements SharedService{
     @Transactional
     public List<CommentsResponseAllDto> findAllComments(String type, Long mixedIdx){
 
+        List<CommentsResponseAllDto> commentsList = new ArrayList<>();
+
         if (type == "SCHEDULE"){
             Schedule schedule = scheduleRepository.findById(mixedIdx)
                     .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
             if (schedule.getIdx() != null){
-                List<Comments> scheduleComments = commentsRepository.findBySharedIdx(sharedIdx);
+                List<Comments> scheduleComments = commentsRepository.findByScheduleIdx(schedule.getIdx());
                 commentsList.addAll(scheduleComments.stream()
                         .map(comment -> CommentsResponseAllDto.builder()
                                 .commentsIdx(comment.getCommentsIdx())
                                 .userIdx(comment.getUserIdx())
-                                .sharedIdx(comment.getSharedIdx())
+                                .scheduleIdx(comment.getScheduleIdx())
+                                .diaryIdx(comment.getDiaryIdx())
                                 .dateTime(comment.getDateTime())
                                 .content(comment.getContent())
                                 .build())
@@ -376,23 +379,19 @@ public class SharedServiceImpl implements SharedService{
         }else {
             Diary diary = diaryRepository.findById(mixedIdx)
                     .orElseThrow(() -> new IllegalArgumentException("해당 일기가 존재하지 않습니다."));
-        }
-
-        List<CommentsResponseAllDto> commentsList = new ArrayList<>();
-
-
-        if (shared.getDiaryIdx() != null) {
-
-            List<Comments> diaryComments = commentsRepository.findBySharedIdx(sharedIdx);
-            commentsList.addAll(diaryComments.stream()
-                    .map(comment -> CommentsResponseAllDto.builder()
-                            .commentsIdx(comment.getCommentsIdx())
-                            .userIdx(comment.getUserIdx())
-                            .sharedIdx(comment.getSharedIdx())
-                            .dateTime(comment.getDateTime())
-                            .content(comment.getContent())
-                            .build())
-                    .toList());
+            if (diary.getIdx() != null){
+                List<Comments> diaryComments = commentsRepository.findByDiaryIdx(diary.getIdx());
+                commentsList.addAll(diaryComments.stream()
+                        .map(comment -> CommentsResponseAllDto.builder()
+                                .commentsIdx(comment.getCommentsIdx())
+                                .userIdx(comment.getUserIdx())
+                                .scheduleIdx(comment.getScheduleIdx())
+                                .diaryIdx(comment.getDiaryIdx())
+                                .dateTime(comment.getDateTime())
+                                .content(comment.getContent())
+                                .build())
+                        .toList());
+            }
         }
         return commentsList;
     }
