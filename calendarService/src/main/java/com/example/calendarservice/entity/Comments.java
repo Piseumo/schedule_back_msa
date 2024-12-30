@@ -23,10 +23,13 @@ public class Comments {
     @Column(name = "u_idx")
     private Long userIdx;
 
-    @Column(name = "sh_idx")
-    private Long sharedIdx;
+    @Column(name = "s_idx")
+    private Long scheduleIdx;
 
-    @Column(name = "com_date_time", nullable = false)
+    @Column(name = "d_idx")
+    private Long diaryIdx;
+
+    @Column(name = "com_date_time", nullable = false, updatable = false)
     private LocalDateTime dateTime;
 
     @Column(name = "com_content")

@@ -12,6 +12,8 @@ import java.util.List;
 @Getter
 public class DiaryResponseDayDto {
 
+    private Long diaryIdx;
+
     private String title;
 
     private String content;

@@ -19,7 +19,10 @@ public interface SharedService {
     public void deleteContentShared(SharedRequestUpdateDto sharedRequestUpdateDto);
     public List<SharedContentDto> findSharedByUser(Long userIdx);
     public void saveComments(CommentsRequestInsertDto commentsRequestInsertDto);
-    public List<CommentsResponseAllDto> findAllComments(Long sharedIdx);
+    public List<CommentsResponseAllDto> findAllComments(String type, Long mixedIdx);
     public void updateComments(CommentsRequestUpdateDto commentsRequestUpdateDto);
     public void deleteComments(Long commentsIdx);
+
+    void updateToAll(Long diaryIdx);
+    void deleteAllSharedByDiaryIdx(Long diaryIdx);
 }

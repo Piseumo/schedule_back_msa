@@ -24,7 +24,7 @@ public class DiaryRequestInsertDto {
 
     private Share share;
 
-    @Schema(example = "c_idx", hidden = true)
+    @Schema(example = "c_idx")
     private Long calendarIdx;
 
     private List<Long> friendIdxList;
