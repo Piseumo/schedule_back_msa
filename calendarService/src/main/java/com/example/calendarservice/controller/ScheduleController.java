@@ -118,6 +118,16 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body("Schedule updated successfully");
     }
 
+    //드래그 앤 드랍 관련
+    @PutMapping("/{idx}")
+    public ResponseEntity<String> updateScheduleDate(
+            @PathVariable(name = "idx") Long scheduleIdx,
+            @RequestBody ScheduleRequestUpdateDto scheduleRequestUpdateDto) {
+
+        scheduleService.updateScheduleDate(scheduleIdx, scheduleRequestUpdateDto);
+        return ResponseEntity.ok("Schedule date updated successfully");
+    }
+
 
     // 일정 삭제
     @DeleteMapping(value = "/delete/{idx}")

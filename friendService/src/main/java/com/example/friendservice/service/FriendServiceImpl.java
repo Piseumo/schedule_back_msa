@@ -40,7 +40,7 @@ public class FriendServiceImpl implements FriendService{
     // 친구 요청 보내기
     @Transactional
     @Override
-    public ResponseEntity<Void> sendFriendRequest(FriendRequestDto friendRequestDto) {
+    public ResponseEntity<String> sendFriendRequest(FriendRequestDto friendRequestDto) {
         Long userId = friendRequestDto.getUserId();
         Long friendId = friendRequestDto.getFriendId();
         String friendName = friendRequestDto.getFriendName();

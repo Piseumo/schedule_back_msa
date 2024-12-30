@@ -33,7 +33,7 @@ spec:
                 name: calendar-service
                 port:
                   number: 50002
-          - path: /friends-service
+          - path: /friend
             pathType: Prefix
             backend:
               service:

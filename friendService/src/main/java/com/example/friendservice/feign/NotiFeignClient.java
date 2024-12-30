@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "notification-service", url = "${notice-service-url}")
+@FeignClient(name = "noti", url = "${notice-service-url}")
 public interface NotiFeignClient {
 
     //친구 요청 알림
     @GetMapping(value = "/noti/friend-request")
-    ResponseEntity<Void> friendRequest(@RequestParam String userName, @RequestParam String friendName);
+    ResponseEntity<String> friendRequest(@RequestParam String userName, @RequestParam String friendName);
 
 //    //친구 수락 알림
 //    @GetMapping(value = "/noti/friend-accept/{receiverId}/{requestId}")

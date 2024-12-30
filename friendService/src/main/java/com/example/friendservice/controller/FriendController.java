@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/friend")
@@ -18,9 +20,11 @@ public class FriendController {
 
     // 친구 요청 보내기
     @PostMapping("/request")
-    public ResponseEntity<String> sendFriendRequest(@RequestBody FriendRequestDto friendRequestDto) {
+    public ResponseEntity<Map<String, String>> sendFriendRequest(@RequestBody FriendRequestDto friendRequestDto) {
         friendService.sendFriendRequest(friendRequestDto);
-        return ResponseEntity.ok("Friend request sent successfully.");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Friend request sent successfully.");
+        return ResponseEntity.ok(response);
     }
 
     // 친구 요청 조회

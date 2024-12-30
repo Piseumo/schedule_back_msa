@@ -71,7 +71,9 @@ public class ScheduleServiceImpl implements ScheduleService {
                     .map(schedule -> ScheduleResponseMonthDto.builder()
                             .title(schedule.getTitle())
                             .start(schedule.getStart())
+                            .end(schedule.getEnd())
                             .color(schedule.getColor())
+                            .share(schedule.getShare())
                             .build())
                     .sorted(Comparator.comparing(ScheduleResponseMonthDto::getStart))
                     .collect(Collectors.toList());
@@ -483,6 +485,24 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         } catch (Exception e) {
             throw new ServiceException("Failed to update schedule in ScheduleService.updateSchedule", e);
+        }
+    }
+
+    //드래그 앤 드랍 관련
+    @Transactional
+    @Override
+    public void updateScheduleDate(Long scheduleIdx, ScheduleRequestUpdateDto scheduleRequestUpdateDto) {
+        // 일정 조회
+        Schedule schedule = scheduleRepository.findById(scheduleIdx)
+                .orElseThrow(() -> new IllegalArgumentException("fail"));
+
+        try {
+            // 시작 날짜 및 종료 날짜 업데이트
+            schedule.setStart(scheduleRequestUpdateDto.getStart());
+            schedule.setEnd(scheduleRequestUpdateDto.getEnd());
+            scheduleRepository.save(schedule); // 변경 사항 저장
+        } catch (Exception e) {
+            throw new ServiceException("Failed to update schedule date in ScheduleService.updateScheduleDate", e);
         }
     }
 

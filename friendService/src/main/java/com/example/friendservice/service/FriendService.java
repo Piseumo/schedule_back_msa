@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FriendService {
 
-    ResponseEntity<Void> sendFriendRequest(FriendRequestDto friendRequestDto);
+    ResponseEntity<String> sendFriendRequest(FriendRequestDto friendRequestDto);
 
     List<UserSearchResponseDto> getFriendRequests(Long userId);
 
