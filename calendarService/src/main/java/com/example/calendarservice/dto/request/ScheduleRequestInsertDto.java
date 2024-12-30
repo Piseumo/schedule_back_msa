@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ScheduleRequestInsertDto {
@@ -32,6 +33,8 @@ public class ScheduleRequestInsertDto {
 
         @Schema(example = "c_idx", hidden = true)
         private Long calendarIdx;
+
+        private List<Long> friendIdxList;
 
         // 반복 일정 관련 필드 추가
         private RepeatType repeatType;  // 반복 유형: NONE, DAILY, WEEKLY, MONTHLY, YEARLY
