@@ -211,6 +211,10 @@ public class ScheduleServiceImpl implements ScheduleService {
                 effectiveRepeatEndDate = currentEnd.toLocalDate();
             }
 
+            if (effectiveRepeatType == RepeatType.NONE) {
+                effectiveRepeatEndDate = currentEnd.toLocalDate();
+            }
+
             do {
                 if (currentEnd.toLocalDate().isAfter(effectiveRepeatEndDate)) {
                     currentEnd = LocalDateTime.of(effectiveRepeatEndDate, currentEnd.toLocalTime());
