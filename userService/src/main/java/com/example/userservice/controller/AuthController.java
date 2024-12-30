@@ -14,6 +14,7 @@ import com.example.userservice.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +28,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -45,12 +48,12 @@ public class AuthController {
 
             // 유효성 검사 오류 처리
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            // 오류 메시지 처리
-            System.out.println(fieldError.getField() + ": " + fieldError.getDefaultMessage());
+            for (FieldError fieldError : fieldErrors) {
+                // 오류 메시지 처리
+                System.out.println(fieldError.getField() + ": " + fieldError.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body("비밀번호는 8자~20자 사이여야 하며, 영문, 숫자, 특수문자를 각 하나씩 사용하셔야 합니다.");
         }
-        return ResponseEntity.badRequest().body("비밀번호는 8자~20자 사이여야 하며, 영문, 숫자, 특수문자를 각 하나씩 사용하셔야 합니다.");
-    }
 
         userService.createUser(userRequestInsertDto);
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
@@ -59,6 +62,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto) {
+        log.error(requestDto.toString());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword())
         );
