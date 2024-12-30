@@ -80,7 +80,11 @@ public class SharedServiceImpl implements SharedService{
         Shared updateShared = sharedRepository.findById(sharedRequestUpdateDto.getSharedIdx())
                 .orElseThrow(() -> new IllegalArgumentException("공유 내역이 존재하지 않습니다."));
 
-        if (!sharedRequestUpdateDto.getFriendIdx().equals(updateShared.getFriendIdx())) {
+        if (updateShared.getFriendIdx() == null && sharedRequestUpdateDto.getFriendIdx() != null) {
+            updateShared.setFriendIdx(sharedRequestUpdateDto.getFriendIdx());
+            updateShared.setShareDateTime(LocalDateTime.now());
+            sharedRepository.save(updateShared);
+        } else if (!sharedRequestUpdateDto.getFriendIdx().equals(updateShared.getFriendIdx())) {
             Shared newShared = Shared.builder()
                     .scheduleIdx(updateShared.getScheduleIdx())
                     .diaryIdx(updateShared.getDiaryIdx())
@@ -434,19 +438,47 @@ public class SharedServiceImpl implements SharedService{
 
     @Transactional
     @Override
-    public void updateToAll(Long diaryIdx) {
-        List<Shared> sharedList = sharedRepository.findByDiaryIdx(diaryIdx);
+    public void updateToAll(SharedRequestInsertDto sharedRequestInsertDto) {
+        List<Shared> sharedList = sharedRepository.findByDiaryIdx(sharedRequestInsertDto.getDiaryIdx());
 
         if (sharedList.isEmpty()) {
-            throw new IllegalStateException("공유 데이터가 없습니다.");
+            Shared createShared = Shared.builder()
+                    .diaryIdx(sharedRequestInsertDto.getDiaryIdx())
+                    .shareDateTime(LocalDateTime.now())
+                    .build();
+            sharedRepository.save(createShared);
+        }else {
+
+            Shared mainShared = sharedList.get(0);
+            mainShared.setFriendIdx(null);
+            sharedRepository.save(mainShared);
+
+            for (int i = 1; i < sharedList.size(); i++) {
+                sharedRepository.delete(sharedList.get(i));
+            }
         }
+    }
 
-        Shared mainShared = sharedList.get(0);
-        mainShared.setFriendIdx(null);
-        sharedRepository.save(mainShared);
+    @Transactional
+    @Override
+    public void updateToAllSchedule(SharedRequestInsertDto sharedRequestInsertDto) {
+        List<Shared> sharedList = sharedRepository.findByScheduleIdx(sharedRequestInsertDto.getScheduleIdx());
 
-        for (int i = 1; i < sharedList.size(); i++) {
-            sharedRepository.delete(sharedList.get(i));
+        if (sharedList.isEmpty()) {
+            Shared createShared = Shared.builder()
+                    .scheduleIdx(sharedRequestInsertDto.getScheduleIdx())
+                    .shareDateTime(LocalDateTime.now())
+                    .build();
+            sharedRepository.save(createShared);
+        }else {
+
+            Shared mainShared = sharedList.get(0);
+            mainShared.setFriendIdx(null);
+            sharedRepository.save(mainShared);
+
+            for (int i = 1; i < sharedList.size(); i++) {
+                sharedRepository.delete(sharedList.get(i));
+            }
         }
     }
 
@@ -455,6 +487,19 @@ public class SharedServiceImpl implements SharedService{
     @Override
     public void deleteAllSharedByDiaryIdx(Long diaryIdx) {
         List<Shared> sharedList = sharedRepository.findByDiaryIdx(diaryIdx);
+
+        if (!sharedList.isEmpty()) {
+            for (Shared shared : sharedList) {
+                sharedRepository.delete(shared);
+            }
+        }
+    }
+
+
+    @Transactional
+    @Override
+    public void deleteAllSharedByScheduleIdx(Long scheduleIdx) {
+        List<Shared> sharedList = sharedRepository.findByScheduleIdx(scheduleIdx);
 
         if (!sharedList.isEmpty()) {
             for (Shared shared : sharedList) {
