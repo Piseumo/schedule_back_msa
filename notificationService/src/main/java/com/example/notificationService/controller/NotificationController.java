@@ -7,8 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -47,26 +45,26 @@ public class NotificationController {
         return ResponseEntity.ok(true);
     }
 
-    @Operation(summary = "쪽지 알림")
-    @GetMapping(value = "/message")
-    public ResponseEntity<Void> messageNotification(@AuthenticationPrincipal UserDetails userDetails) {
-        notificationService.sendMessage(userDetails.getUsername());
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "댓글 알림")
-    @GetMapping(value = "/comment")
-    public ResponseEntity<Void> commentNotification(@AuthenticationPrincipal UserDetails userDetails) {
-        notificationService.sendComment(userDetails.getUsername());
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "친구 새 글 알림")
-    @GetMapping(value = "/friend-post")
-    public ResponseEntity<Void> friendPostNotification(@AuthenticationPrincipal UserDetails userDetails) {
-        notificationService.sendFriendPost(userDetails.getUsername());
-        return ResponseEntity.ok().build();
-    }
+//    @Operation(summary = "쪽지 알림")
+//    @GetMapping(value = "/message")
+//    public ResponseEntity<Void> messageNotification(@AuthenticationPrincipal UserDetails userDetails) {
+//        notificationService.sendMessage(userDetails.getUsername());
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @Operation(summary = "댓글 알림")
+//    @GetMapping(value = "/comment")
+//    public ResponseEntity<Void> commentNotification(@AuthenticationPrincipal UserDetails userDetails) {
+//        notificationService.sendComment(userDetails.getUsername());
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @Operation(summary = "친구 새 글 알림")
+//    @GetMapping(value = "/friend-post")
+//    public ResponseEntity<Void> friendPostNotification(@AuthenticationPrincipal UserDetails userDetails) {
+//        notificationService.sendFriendPost(userDetails.getUsername());
+//        return ResponseEntity.ok().build();
+//    }
 
 }
 // 다섯개 알람 각각 어떻게 뭘받고 뭘 보낼지 정하고 쌤한테 확인 받기

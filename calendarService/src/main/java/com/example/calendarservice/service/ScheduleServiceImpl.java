@@ -269,6 +269,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             } while (!currentStart.toLocalDate().isAfter(effectiveRepeatEndDate));
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ServiceException("Failed to save schedule in ScheduleService.saveSchedule", e);
         }
     }

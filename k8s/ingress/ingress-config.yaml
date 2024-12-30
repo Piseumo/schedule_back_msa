@@ -12,6 +12,20 @@ spec:
   rules:
     - http:
         paths:
+          - path: /schedule
+            pathType: Prefix
+            backend:
+              service:
+                name: calendar-service
+                port:
+                  number: 50002
+          - path: /diary
+            pathType: Prefix
+            backend:
+              service:
+                name: calendar-service
+                port:
+                  number: 50002
           - path: /calendar-service
             pathType: Prefix
             backend:
