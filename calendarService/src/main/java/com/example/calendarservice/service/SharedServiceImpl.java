@@ -80,13 +80,23 @@ public class SharedServiceImpl implements SharedService{
         Shared updateShared = sharedRepository.findById(sharedRequestUpdateDto.getSharedIdx())
                 .orElseThrow(() -> new IllegalArgumentException("공유 내역이 존재하지 않습니다."));
 
-//        if (sharedRequestUpdateDto.getFriendIdx() != null) {
-//            updateShared.setFriendIdx(sharedRequestUpdateDto.getFriendIdx());
-//        }
-        if (sharedRequestUpdateDto.getShareDateTime() != null) {
-            updateShared.setShareDateTime(sharedRequestUpdateDto.getShareDateTime());
+        if (!sharedRequestUpdateDto.getFriendIdx().equals(updateShared.getFriendIdx())) {
+            Shared newShared = Shared.builder()
+                    .scheduleIdx(updateShared.getScheduleIdx())
+                    .diaryIdx(updateShared.getDiaryIdx())
+                    .friendIdx(sharedRequestUpdateDto.getFriendIdx())
+                    .shareDateTime(sharedRequestUpdateDto.getShareDateTime() != null
+                            ? sharedRequestUpdateDto.getShareDateTime()
+                            : LocalDateTime.now())
+                    .build();
+
+            sharedRepository.save(newShared);
+        } else {
+            if (sharedRequestUpdateDto.getShareDateTime() != null) {
+                updateShared.setShareDateTime(sharedRequestUpdateDto.getShareDateTime());
+            }
+            sharedRepository.save(updateShared);
         }
-        sharedRepository.save(updateShared);
     }
 
 

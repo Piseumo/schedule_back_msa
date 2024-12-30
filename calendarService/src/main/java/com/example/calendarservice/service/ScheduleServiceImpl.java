@@ -3,6 +3,8 @@ package com.example.calendarservice.service;
 import com.example.calendarservice.constant.RepeatType;
 import com.example.calendarservice.dto.request.ScheduleRequestInsertDto;
 import com.example.calendarservice.dto.request.ScheduleRequestUpdateDto;
+import com.example.calendarservice.dto.request.SharedRequestInsertDto;
+import com.example.calendarservice.dto.request.SharedRequestUpdateDto;
 import com.example.calendarservice.dto.response.ScheduleResponseDayDto;
 import com.example.calendarservice.dto.response.ScheduleResponseMonthDto;
 import com.example.calendarservice.dto.response.ScheduleResponseYearDto;
@@ -30,6 +32,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import static com.example.calendarservice.constant.Share.ALL;
+import static com.example.calendarservice.constant.Share.CHOOSE;
+
 @EnableAsync
 @Service
 @RequiredArgsConstructor
@@ -40,6 +45,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleImageRepository scheduleImageRepository;
     private final ImageService imageService;
     private final FileService fileService;
+    private final SharedService sharedService;
 
     // 월달력 전체 일정 조회
     @Transactional
@@ -233,7 +239,19 @@ public class ScheduleServiceImpl implements ScheduleService {
                         .repeatGroupId(repeatGroupId)
                         .share(scheduleRequestInsertDto.getShare())
                         .build();
-                scheduleRepository.save(createSchedule);
+                createSchedule = scheduleRepository.save(createSchedule);
+
+                List<Long> friendIdxList = scheduleRequestInsertDto.getFriendIdxList();
+                if (friendIdxList != null && !friendIdxList.isEmpty()){
+                    for (Long friendIdx : friendIdxList){
+                        SharedRequestInsertDto sharedRequestInsertDto = SharedRequestInsertDto.builder()
+                                .scheduleIdx(createSchedule.getIdx())
+                                .friendIdx(friendIdx)
+                                .shareDateTime(LocalDateTime.now())
+                                .build();
+                        sharedService.saveShared(sharedRequestInsertDto);
+                    }
+                }
 
                 //이미지 저장 로직
                 for (MultipartFile file : imageFileList) {
@@ -324,8 +342,28 @@ public class ScheduleServiceImpl implements ScheduleService {
                                         .repeatType(RepeatType.NONE)
                                         .repeatEndDate(null)
                                         .repeatGroupId(newRepeatGroupId)
-                                        .share(scheduleRequestUpdateDto.getShare())
                                         .build();
+                                if (scheduleRequestUpdateDto.getShare() != null){
+                                    if (scheduleRequestUpdateDto.getShare() == ALL){
+                                        sharedService.updateToAll(scheduleRequestUpdateDto.getIdx());
+                                    } else if (scheduleRequestUpdateDto.getShare() == CHOOSE) {
+                                        List<Long> friendIdxList = scheduleRequestUpdateDto.getFriendIdxList();
+                                        if (friendIdxList != null && !friendIdxList.isEmpty()){
+                                            for (Long friendIdx : friendIdxList){
+                                                SharedRequestUpdateDto sharedRequestUpdateDto = SharedRequestUpdateDto.builder()
+                                                        .scheduleIdx(scheduleRequestUpdateDto.getIdx())
+                                                        .diaryIdx(null)
+                                                        .friendIdx(friendIdx)
+                                                        .shareDateTime(LocalDateTime.now())
+                                                        .build();
+                                                sharedService.updateShared(sharedRequestUpdateDto);
+                                            }
+                                        }
+                                    } else {
+                                        sharedService.deleteAllSharedByDiaryIdx(scheduleRequestUpdateDto.getIdx());
+                                    }
+                                    newSchedule.setShare(scheduleRequestUpdateDto.getShare());
+                                }
                                 scheduleRepository.save(newSchedule);
                             } else {
                                 // 반복 타입 변경 또는 종료 날짜 변경: 새로운 반복 일정 생성
@@ -345,8 +383,28 @@ public class ScheduleServiceImpl implements ScheduleService {
                                             .repeatType(scheduleRequestUpdateDto.getRepeatType())
                                             .repeatEndDate(scheduleRequestUpdateDto.getRepeatEndDate())
                                             .repeatGroupId(newRepeatGroupId)
-                                            .share(scheduleRequestUpdateDto.getShare())
                                             .build();
+                                    if (scheduleRequestUpdateDto.getShare() != null){
+                                        if (scheduleRequestUpdateDto.getShare() == ALL){
+                                            sharedService.updateToAll(scheduleRequestUpdateDto.getIdx());
+                                        } else if (scheduleRequestUpdateDto.getShare() == CHOOSE) {
+                                            List<Long> friendIdxList = scheduleRequestUpdateDto.getFriendIdxList();
+                                            if (friendIdxList != null && !friendIdxList.isEmpty()){
+                                                for (Long friendIdx : friendIdxList){
+                                                    SharedRequestUpdateDto sharedRequestUpdateDto = SharedRequestUpdateDto.builder()
+                                                            .scheduleIdx(scheduleRequestUpdateDto.getIdx())
+                                                            .diaryIdx(null)
+                                                            .friendIdx(friendIdx)
+                                                            .shareDateTime(LocalDateTime.now())
+                                                            .build();
+                                                    sharedService.updateShared(sharedRequestUpdateDto);
+                                                }
+                                            }
+                                        } else {
+                                            sharedService.deleteAllSharedByDiaryIdx(scheduleRequestUpdateDto.getIdx());
+                                        }
+                                        newSchedule.setShare(scheduleRequestUpdateDto.getShare());
+                                    }
                                     scheduleRepository.save(newSchedule);
 
                                     // 반복 설정에 따른 날짜 계산
@@ -382,7 +440,27 @@ public class ScheduleServiceImpl implements ScheduleService {
                 updateSchedule.setLocation(scheduleRequestUpdateDto.getLocation());
                 updateSchedule.setColor(scheduleRequestUpdateDto.getColor());
                 updateSchedule.setShare(scheduleRequestUpdateDto.getShare());
-
+                if (scheduleRequestUpdateDto.getShare() != null){
+                    if (scheduleRequestUpdateDto.getShare() == ALL){
+                        sharedService.updateToAll(scheduleRequestUpdateDto.getIdx());
+                    } else if (scheduleRequestUpdateDto.getShare() == CHOOSE) {
+                        List<Long> friendIdxList = scheduleRequestUpdateDto.getFriendIdxList();
+                        if (friendIdxList != null && !friendIdxList.isEmpty()){
+                            for (Long friendIdx : friendIdxList){
+                                SharedRequestUpdateDto sharedRequestUpdateDto = SharedRequestUpdateDto.builder()
+                                        .scheduleIdx(scheduleRequestUpdateDto.getIdx())
+                                        .diaryIdx(null)
+                                        .friendIdx(friendIdx)
+                                        .shareDateTime(LocalDateTime.now())
+                                        .build();
+                                sharedService.updateShared(sharedRequestUpdateDto);
+                            }
+                        }
+                    } else {
+                        sharedService.deleteAllSharedByDiaryIdx(scheduleRequestUpdateDto.getIdx());
+                    }
+                    updateSchedule.setShare(scheduleRequestUpdateDto.getShare());
+                }
             }
 
             // 이미지 삭제

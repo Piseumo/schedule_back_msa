@@ -63,7 +63,7 @@ public class SharedController {
 
     // 해당 게시글 전체 댓글 조회
     @GetMapping("/all/comments/{type}/{mixedIdx}")
-    public ResponseEntity<List<CommentsResponseAllDto>> findAllComments(@PathVariable(value = "type") String type, @PathVariable(value = "sharedIdx") Long mixedIdx){
+    public ResponseEntity<List<CommentsResponseAllDto>> findAllComments(@PathVariable(value = "type") String type, @PathVariable(value = "mixedIdx") Long mixedIdx){
         List<CommentsResponseAllDto> commentsResponseAllDto = sharedService.findAllComments(type, mixedIdx);
         return ResponseEntity.ok(commentsResponseAllDto);
     }
