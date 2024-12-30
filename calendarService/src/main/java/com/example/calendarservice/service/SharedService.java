@@ -23,6 +23,8 @@ public interface SharedService {
     public void updateComments(CommentsRequestUpdateDto commentsRequestUpdateDto);
     public void deleteComments(Long commentsIdx);
 
-    void updateToAll(Long diaryIdx);
+    void updateToAll(SharedRequestInsertDto sharedRequestInsertDto);
+    void updateToAllSchedule(SharedRequestInsertDto sharedRequestInsertDto);
     void deleteAllSharedByDiaryIdx(Long diaryIdx);
+    void deleteAllSharedByScheduleIdx(Long scheduleIdx);
 }

@@ -347,7 +347,11 @@ public class ScheduleServiceImpl implements ScheduleService {
                                         .build();
                                 if (scheduleRequestUpdateDto.getShare() != null){
                                     if (scheduleRequestUpdateDto.getShare() == ALL){
-                                        sharedService.updateToAll(scheduleRequestUpdateDto.getIdx());
+                                        SharedRequestInsertDto sharedRequestInsertDto = SharedRequestInsertDto.builder()
+                                                .scheduleIdx(scheduleRequestUpdateDto.getIdx())
+                                                .shareDateTime(LocalDateTime.now())
+                                                .build();
+                                        sharedService.updateToAllSchedule(sharedRequestInsertDto);
                                     } else if (scheduleRequestUpdateDto.getShare() == CHOOSE) {
                                         List<Long> friendIdxList = scheduleRequestUpdateDto.getFriendIdxList();
                                         if (friendIdxList != null && !friendIdxList.isEmpty()){
@@ -362,7 +366,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                                             }
                                         }
                                     } else {
-                                        sharedService.deleteAllSharedByDiaryIdx(scheduleRequestUpdateDto.getIdx());
+                                        sharedService.deleteAllSharedByScheduleIdx(scheduleRequestUpdateDto.getIdx());
                                     }
                                     newSchedule.setShare(scheduleRequestUpdateDto.getShare());
                                 }
@@ -388,7 +392,11 @@ public class ScheduleServiceImpl implements ScheduleService {
                                             .build();
                                     if (scheduleRequestUpdateDto.getShare() != null){
                                         if (scheduleRequestUpdateDto.getShare() == ALL){
-                                            sharedService.updateToAll(scheduleRequestUpdateDto.getIdx());
+                                            SharedRequestInsertDto sharedRequestInsertDto = SharedRequestInsertDto.builder()
+                                                    .scheduleIdx(scheduleRequestUpdateDto.getIdx())
+                                                    .shareDateTime(LocalDateTime.now())
+                                                    .build();
+                                            sharedService.updateToAllSchedule(sharedRequestInsertDto);
                                         } else if (scheduleRequestUpdateDto.getShare() == CHOOSE) {
                                             List<Long> friendIdxList = scheduleRequestUpdateDto.getFriendIdxList();
                                             if (friendIdxList != null && !friendIdxList.isEmpty()){
@@ -403,7 +411,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                                                 }
                                             }
                                         } else {
-                                            sharedService.deleteAllSharedByDiaryIdx(scheduleRequestUpdateDto.getIdx());
+                                            sharedService.deleteAllSharedByScheduleIdx(scheduleRequestUpdateDto.getIdx());
                                         }
                                         newSchedule.setShare(scheduleRequestUpdateDto.getShare());
                                     }
@@ -444,7 +452,11 @@ public class ScheduleServiceImpl implements ScheduleService {
                 updateSchedule.setShare(scheduleRequestUpdateDto.getShare());
                 if (scheduleRequestUpdateDto.getShare() != null){
                     if (scheduleRequestUpdateDto.getShare() == ALL){
-                        sharedService.updateToAll(scheduleRequestUpdateDto.getIdx());
+                        SharedRequestInsertDto sharedRequestInsertDto = SharedRequestInsertDto.builder()
+                                .scheduleIdx(scheduleRequestUpdateDto.getIdx())
+                                .shareDateTime(LocalDateTime.now())
+                                .build();
+                        sharedService.updateToAllSchedule(sharedRequestInsertDto);
                     } else if (scheduleRequestUpdateDto.getShare() == CHOOSE) {
                         List<Long> friendIdxList = scheduleRequestUpdateDto.getFriendIdxList();
                         if (friendIdxList != null && !friendIdxList.isEmpty()){
@@ -459,7 +471,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                             }
                         }
                     } else {
-                        sharedService.deleteAllSharedByDiaryIdx(scheduleRequestUpdateDto.getIdx());
+                        sharedService.deleteAllSharedByScheduleIdx(scheduleRequestUpdateDto.getIdx());
                     }
                     updateSchedule.setShare(scheduleRequestUpdateDto.getShare());
                 }
@@ -484,7 +496,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
 
         } catch (Exception e) {
-            throw new ServiceException("Failed to update schedule in ScheduleService.updateSchedule", e);
+            e.printStackTrace();
         }
     }
 
