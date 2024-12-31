@@ -33,6 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public String sendFriendRequest(String userName, String friendName) {
         String emitterId = userName + "_" + System.currentTimeMillis();
+        log.info("친구 알림 생성: userName={}, friendName={}", userName, friendName);
         Notification notification = Notification.builder()
                 .notificationId(emitterId)
                 .receiver(userName)

@@ -67,9 +67,9 @@ public class FriendController {
 
 
     // 친구 삭제
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<String> deleteFriend(@RequestParam(name = "userId") Long userId,
-                                               @RequestParam(name = "FriendId") Long deleteFriendId) {
+                                               @RequestParam(name = "friendId") Long deleteFriendId) {
         friendService.deleteFriend(userId, deleteFriendId);
         return ResponseEntity.ok("Friend deleted.");
     }

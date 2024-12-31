@@ -1,6 +1,6 @@
 # 이미지 생성 명령어
 
 kubectl delete deploy calendar-service-deployment
-docker rmi jeun0415/calendar-service:nj.k8.14
-docker build -t jeun0415/calendar-service:nj.k8.15 .
-docker push jeun0415/calendar-service:nj.k8.15
+docker rmi jeun0415/calendar-service:nj.k8.15
+docker build -t jeun0415/calendar-service:nj.k8.16 .
+docker push jeun0415/calendar-service:nj.k8.16

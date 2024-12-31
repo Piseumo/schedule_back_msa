@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class FriendServiceImpl implements FriendService{
+public class FriendServiceImpl implements FriendService {
 
     private final FriendRepository friendRepository;
     private final UserFeignClient userFeignClient;
@@ -45,12 +45,12 @@ public class FriendServiceImpl implements FriendService{
         Long friendId = friendRequestDto.getFriendId();
         String friendName = friendRequestDto.getFriendName();
         String userName = friendRequestDto.getUserName();
-                if (userId.equals(friendId)) {
+        if (userId.equals(friendId)) {
             throw new IllegalArgumentException("Cannot send an friend request to oneself.");
         }
         // 중복 요청 방지 로직
         if (friendRepository.existsByRequesterIdAndReceiverId(userId, friendId) ||
-            friendRepository.existsByRequesterIdAndReceiverId(friendId, userId)) {
+                friendRepository.existsByRequesterIdAndReceiverId(friendId, userId)) {
             throw new IllegalStateException("Already sent a friend request to this user.");
         }
 
@@ -62,7 +62,7 @@ public class FriendServiceImpl implements FriendService{
 
         friendRepository.save(friendRequest);
 
-        return notiFeignClient.friendRequest(friendName,userName);
+        return notiFeignClient.friendRequest(friendName, userName);
     }
 
     //받은 친구 요청 목록 조회
@@ -124,6 +124,13 @@ public class FriendServiceImpl implements FriendService{
                 .map(friendId -> userDetails.stream()
                         .filter(user -> user.getUserId().equals(friendId))
                         .findFirst()
+                        .map(user -> new UserSearchResponseDto(
+                                user.getUserId(),
+                                friendId, // friendId 추가
+                                user.getUserName(),
+                                user.getProfileImageUrl(),
+                                user.getEmail()
+                        ))
                         .orElseThrow(() -> new IllegalArgumentException("User data not found for friend ID: " + friendId))
                 )
                 .collect(Collectors.toList());

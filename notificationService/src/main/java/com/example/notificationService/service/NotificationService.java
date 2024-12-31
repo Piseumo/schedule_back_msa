@@ -13,5 +13,6 @@ public interface NotificationService {
     void sendComment(String username);
     void sendFriendPost(String username);
 
-
 }
+
+

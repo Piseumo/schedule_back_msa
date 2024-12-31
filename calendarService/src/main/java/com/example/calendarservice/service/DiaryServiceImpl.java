@@ -229,6 +229,12 @@ public class DiaryServiceImpl implements DiaryService{
                             .build();
                     sharedService.saveShared(sharedRequestInsertDto);
                 }
+            }else {
+                SharedRequestInsertDto sharedRequestInsertDto = SharedRequestInsertDto.builder()
+                        .diaryIdx(createDiary.getIdx())
+                        .shareDateTime(LocalDateTime.now())
+                        .build();
+                sharedService.saveShared(sharedRequestInsertDto);
             }
 
             for (MultipartFile file : imageFileList) {
