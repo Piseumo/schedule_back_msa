@@ -30,7 +30,7 @@ public class NotificationController {
     }
 
     @Operation(summary = "친구 신청 알림")
-    @PostMapping(value = "/friend-request")
+    @GetMapping(value = "/friend-request")
     public ResponseEntity<String> friendRequest(@RequestParam String userName, @RequestParam String friendName) {
         try {
             String message = notificationService.sendFriendRequest(userName, friendName);
@@ -42,7 +42,7 @@ public class NotificationController {
     }
 
     @Operation(summary = "친구 수락 알림")
-    @PostMapping(value = "/friend-accept")
+    @GetMapping(value = "/friend-accept")
     public ResponseEntity<String> friendAccept(@RequestParam String userName, @RequestParam String friendName) {
         try {
             notificationService.sendFriendAccept(userName, friendName);
