@@ -22,4 +22,6 @@ public interface UserService {
     List<UserSearchResponseDto> searchRequester(List<Long> requesterId);
     List<UserSearchResponseDto> searchFriend(List<Long> requesterId);
     UserInfoDto getUserById(Long userId);
+
+    String getUserName(Long userIdx);
 }

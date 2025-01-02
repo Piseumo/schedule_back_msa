@@ -82,5 +82,12 @@ public class UserController {
         UserInfoDto userInfo = userService.getUserById(userId);
         return ResponseEntity.ok(userInfo);
     }
+
+
+    // userName 조회(Feign)
+    @GetMapping("/name/{userIdx}")
+    public String getUserName(@PathVariable(name = "userIdx") Long userIdx){
+        return userService.getUserName(userIdx);
+    }
 }
 
