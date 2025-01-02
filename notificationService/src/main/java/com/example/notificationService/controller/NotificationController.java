@@ -1,11 +1,9 @@
 package com.example.notificationService.controller;
 
-import com.example.notificationService.entity.Notification;
 import com.example.notificationService.service.NotiSubscriptionService;
 import com.example.notificationService.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -18,32 +16,43 @@ public class NotificationController {
     private final NotiSubscriptionService notiSubscriptionService;
     private final NotificationService notificationService;
 
-    @Operation(summary = "sse세션연결")
-    @GetMapping(value = "/api/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @Operation(summary = "SSE 세션 연결")
+    @GetMapping(value = "/api/subscribe", produces = "text/event-stream")
     public ResponseEntity<SseEmitter> subscribe(
             @RequestParam("userName") String userName,
             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
-        return ResponseEntity.ok(notiSubscriptionService.subscribe(userName, lastEventId));
+        try {
+            SseEmitter emitter = notiSubscriptionService.subscribe(userName, lastEventId);
+            return ResponseEntity.ok(emitter);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(null);
+        }
     }
 
     @Operation(summary = "친구 신청 알림")
-    @GetMapping(value = "/friend-request")
-    public String friendRequest(@RequestParam String userName, @RequestParam String friendName) {
-        System.out.println("일로오나");
-        String message;
-        message = notificationService.sendFriendRequest(userName, friendName);
-        return message;
+    @PostMapping(value = "/friend-request")
+    public ResponseEntity<String> friendRequest(@RequestParam String userName, @RequestParam String friendName) {
+        try {
+            String message = notificationService.sendFriendRequest(userName, friendName);
+            notiSubscriptionService.sendEvent(friendName, userName + "님이 친구 요청을 보냈습니다.");
+            return ResponseEntity.ok("친구 요청이 전송되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("친구 요청 전송 실패");
+        }
     }
-
-    // db에 잇는거를 보여주는 컨트롤러 더 만들어야댐
-
 
     @Operation(summary = "친구 수락 알림")
-    @GetMapping(value = "/friend-accept")
-    public ResponseEntity<Boolean> friendAccept(@RequestParam String userName, String friendName) {
-        notificationService.sendFriendAccept(userName, friendName);
-        return ResponseEntity.ok(true);
+    @PostMapping(value = "/friend-accept")
+    public ResponseEntity<String> friendAccept(@RequestParam String userName, @RequestParam String friendName) {
+        try {
+            notificationService.sendFriendAccept(userName, friendName);
+            notiSubscriptionService.sendEvent(friendName, userName + "님이 친구 요청을 수락했습니다.");
+            return ResponseEntity.ok("친구 요청을 수락했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("친구 요청 수락 실패");
+        }
     }
+}
 
 //    @Operation(summary = "쪽지 알림")
 //    @GetMapping(value = "/message")
@@ -66,7 +75,7 @@ public class NotificationController {
 //        return ResponseEntity.ok().build();
 //    }
 
-}
+
 // 다섯개 알람 각각 어떻게 뭘받고 뭘 보낼지 정하고 쌤한테 확인 받기
 
 //    친구 신청 : 1번님이 userId님에게 친구 신청을 하였습니다<수락, 거절>
