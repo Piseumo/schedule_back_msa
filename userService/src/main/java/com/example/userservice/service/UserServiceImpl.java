@@ -133,6 +133,16 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+
+    // userName 조회(Feign)
+    @Override
+    public String getUserName(Long userIdx) {
+        User user = userRepository.findById(userIdx)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userIdx));
+        return user.getUserName();
+    }
+
+
     // 닉네임 수정
     @Override
     @Transactional

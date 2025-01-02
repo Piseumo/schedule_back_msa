@@ -23,6 +23,8 @@ public class SharedContentDto {
     private String content;
     private String category;
     private String location;
+    private String author;
+    private Long authorIdx;
 
     private LocalDateTime start;
     private LocalDateTime end;

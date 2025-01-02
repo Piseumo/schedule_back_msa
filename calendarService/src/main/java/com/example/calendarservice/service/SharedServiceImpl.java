@@ -7,6 +7,7 @@ import com.example.calendarservice.dto.response.SharedContentDto;
 import com.example.calendarservice.dto.response.UserSearchResponseDto;
 import com.example.calendarservice.entity.*;
 import com.example.calendarservice.feign.FriendClient;
+import com.example.calendarservice.feign.UserClient;
 import com.example.calendarservice.repository.CommentsRepository;
 import com.example.calendarservice.repository.DiaryRepository;
 import com.example.calendarservice.repository.ScheduleRepository;
@@ -32,6 +33,7 @@ public class SharedServiceImpl implements SharedService{
     private final ScheduleRepository scheduleRepository;
     private final DiaryRepository diaryRepository;
     private final CommentsRepository commentsRepository;
+    private final UserClient userClient;
 
 
 
@@ -138,6 +140,8 @@ public class SharedServiceImpl implements SharedService{
                                         .start(schedule.getStart())
                                         .end(schedule.getEnd())
                                         .location(schedule.getLocation())
+                                        .authorIdx(schedule.getCalendars().getUserIdx())
+                                        .author(userClient.getUserName(schedule.getCalendars().getUserIdx()))
                                         .repeatType(schedule.getRepeatType())
                                         .repeatEndDate(schedule.getRepeatEndDate())
                                         .scheduleImages(imageUrls)
@@ -157,6 +161,8 @@ public class SharedServiceImpl implements SharedService{
                                         .type("DIARY")
                                         .title(diary.getTitle())
                                         .content(diary.getContent())
+                                        .authorIdx(diary.getCalendars().getUserIdx())
+                                        .author(userClient.getUserName(diary.getCalendars().getUserIdx()))
                                         .date(diary.getDate())
                                         .category(diary.getCategory().name())
                                         .diaryImages(imageUrls)
