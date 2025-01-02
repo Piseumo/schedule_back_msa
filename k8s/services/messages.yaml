@@ -14,7 +14,7 @@ spec: # 어떻게 만들지에 대한 내용
     spec: # pod 하나하나에 대한 내용
       containers:
         - name: messages-service
-          image: jeun0415/messages-service:nj.k8.03 # dockerhub에 있는 image
+          image: jeun0415/messages-service:nj.k8.08 # dockerhub에 있는 image
           ports:
             - containerPort: 50004
           env:
