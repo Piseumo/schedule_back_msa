@@ -203,7 +203,6 @@ public class UserServiceImpl implements UserService {
         );
 
         userRepository.deleteById(user.getIdx());
+        calendarClient.deleteCalendar(user.getIdx());
     }
-
-
 }

@@ -25,4 +25,11 @@ public class CalendarServiceImpl implements CalendarService{
         calendarRepository.save(createCalendar);
 
     }
+
+    @Override
+    @Transactional
+    public void deleteCalendar(Long userId) {
+
+        calendarRepository.deleteById(userId);
+    }
 }

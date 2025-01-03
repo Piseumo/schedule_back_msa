@@ -18,4 +18,10 @@ public class CalendarController {
         return "성공하였습니다.";
     }
 
+    @DeleteMapping("/delete/{userId}")
+    String deleteCalendar(@PathVariable(value = "userId") Long userId) {
+        calendarService.deleteCalendar(userId);
+        return "success";
+    }
+
 }
