@@ -40,7 +40,7 @@ public class NotificationController {
 
     @Operation(summary = "친구 신청 알림")
     @GetMapping(value = "/friend-request")
-    public ResponseEntity<String> friendRequest(@RequestParam String userName, @RequestParam String friendName) {
+    public ResponseEntity<String> friendRequest(@RequestParam(value = "userName") String userName, @RequestParam(value = "friendName") String friendName) {
         try {
             String message = notificationService.sendFriendRequest(userName, friendName);
             notiSubscriptionService.sendEvent(friendName, userName + "님이 친구 요청을 보냈습니다.");

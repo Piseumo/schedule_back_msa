@@ -28,6 +28,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final NotificationJPARepository notificationJPARepository;
+    private final NotiSubscriptionService notiSubscriptionService;
 
     //친구 신청 알람
     @Transactional
@@ -76,14 +77,10 @@ public class NotificationServiceImpl implements NotificationService {
         sendNotification(username, "A new comment has been posted on your post.", NotificationType.COMMENT);
     }
 
-    @Transactional
-    @Override
-    public void sendFriendPost(String username) {
-        sendNotification(username, "Your friend has posted something new!", NotificationType.FRIEND_NEW_POST);
-    }
-
-    // 메세지정보 전달
+    // 메세지 정보 전달
     private void sendNotification(String username, String content, NotificationType type) {
+        log.info("Preparing to send notification to user: {}, content: {}", username, content);
+
         // Notification 생성
         Notification notification = Notification.builder()
                 .notificationId(username + "_" + System.currentTimeMillis())
@@ -95,19 +92,19 @@ public class NotificationServiceImpl implements NotificationService {
                 .deletedYn('N')
                 .build();
 
-        // Receiver로 시작하는 모든 Notification 조회
-        List<Notification> notifications = notificationRepository.findAllEmitterStartsWithUsername(username);
+        // Notification 저장
+        notificationRepository.saveEventCache(notification.getNotificationId(), notification);
 
-        // Notification 리스트를 Map<String, SseEmitter>로 변환
-        Map<String, SseEmitter> sseEmitters = notifications.stream()
-                .collect(Collectors.toMap(
-                        Notification::getNotificationId, // Key: Notification ID
-                        n -> new SseEmitter(Long.MAX_VALUE) // Value: 새로운 SseEmitter 생성
-                ));
+        // Receiver와 관련된 모든 Emitter 조회
+        List<SseEmitter> emitters = notificationRepository.findAllEmittersStartsWithUsername(username);
 
-        // SseEmitter로 알림 전송 및 캐시 저장
-        sseEmitters.forEach((key, sseEmitter) -> emitAndCacheEvent(sseEmitter, key, notification));
+        if (!emitters.isEmpty()) {
+            emitters.forEach(emitter ->notiSubscriptionService.emitEventToClient(emitter, notification.getNotificationId(), notification));
+        } else {
+            log.warn("No active SSE emitters found for user: {}", username);
+        }
     }
+
 
 
     // 실제 메세지 전송 및 캐쉬 저장 하는 곳
