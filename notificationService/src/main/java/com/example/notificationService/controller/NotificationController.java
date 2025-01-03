@@ -27,7 +27,7 @@ public class NotificationController {
     @Operation(summary = "SSE 세션 연결")
     @GetMapping(value = "/api/subscribe", produces = "text/event-stream")
     public ResponseEntity<SseEmitter> subscribe(
-            @RequestParam("userName") String userName,
+            @RequestParam(value = "userName") String userName,
             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
         try {
             SseEmitter emitter = notiSubscriptionService.subscribe(userName, lastEventId);
@@ -38,7 +38,7 @@ public class NotificationController {
     }
 
     @GetMapping(value = "/initial-data")
-    public ResponseEntity<List<Notification>> getInitialNotifications(@RequestParam("userName") String userName) {
+    public ResponseEntity<List<Notification>> getInitialNotifications(@RequestParam(value = "userName") String userName) {
         List<Notification> notifications = notificationService.getUnreadNotifications(userName);
         return ResponseEntity.ok(notifications);
     }

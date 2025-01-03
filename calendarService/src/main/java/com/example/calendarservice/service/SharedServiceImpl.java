@@ -118,6 +118,9 @@ public class SharedServiceImpl implements SharedService{
         List<Shared> allShared = sharedRepository.findAllSharedWithAllAndFriends(friendIds);
         List<Shared> chooseShared = sharedRepository.findAllSharedWithChoose(userIdx);
 
+        System.out.println(allShared);
+        System.out.println(chooseShared);
+
         List<Shared> sharedList = new ArrayList<>();
         sharedList.addAll(allShared);
         sharedList.addAll(chooseShared);
