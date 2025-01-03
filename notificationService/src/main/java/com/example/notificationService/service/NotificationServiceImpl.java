@@ -51,6 +51,12 @@ public class NotificationServiceImpl implements NotificationService {
         return notification.getContent();
     }
 
+    @Transactional
+    @Override
+    public List<Notification> getUnreadNotifications(String userName) {
+        return notificationJPARepository.findByReceiverAndReadYn(userName, 'N');
+    }
+
     //친구 수락
     @Transactional
     @Override
