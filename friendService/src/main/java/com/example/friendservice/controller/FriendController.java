@@ -1,5 +1,6 @@
 package com.example.friendservice.controller;
 
+import com.example.friendservice.dto.request.AcceptFriendRequestDto;
 import com.example.friendservice.dto.request.FriendRequestDto;
 import com.example.friendservice.dto.response.UserSearchResponseDto;
 import com.example.friendservice.service.FriendService;
@@ -37,7 +38,10 @@ public class FriendController {
 
     // 친구 요청 수락
     @PostMapping("/accept")
-    public ResponseEntity<String> acceptFriendRequest(@RequestParam(name = "requesterId") Long requesterId, @RequestParam(name = "receiverId") Long receiverId){
+    public ResponseEntity<String> acceptFriendRequest(@RequestBody AcceptFriendRequestDto acceptFriendRequestDto){
+        Long requesterId = acceptFriendRequestDto.getRequesterId();
+        Long receiverId = acceptFriendRequestDto.getReceiverId();
+
         friendService.acceptFriendRequest(requesterId, receiverId);
         return ResponseEntity.ok("Friend request accepted.");
     }
