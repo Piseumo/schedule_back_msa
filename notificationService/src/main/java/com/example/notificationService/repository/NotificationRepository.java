@@ -12,12 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Repository
 @Slf4j
 public class NotificationRepository {
-
     // Emitter 관리 맵
     private final Map<String, SseEmitter> sseEmitters = new ConcurrentHashMap<>();
 
     // 이벤트 캐시 관리 맵
-    private final Map<String, Object> eventCache = new ConcurrentHashMap<>();
+    private final Map<String, Notification> eventCache = new ConcurrentHashMap<>();
 
     /**
      * Emitter 저장
@@ -28,11 +27,33 @@ public class NotificationRepository {
         return sseEmitter;
     }
 
+
+
     /**
      * 특정 Emitter 검색
      */
     public SseEmitter findEmitterById(String emitterId) {
-        return sseEmitters.get(emitterId);
+        SseEmitter emitter = sseEmitters.get(emitterId);
+        if (emitter != null) {
+            log.info("Emitter 조회 성공: {}", emitterId);
+        } else {
+            log.warn("Emitter 조회 실패: {}", emitterId);
+        }
+        return emitter;
+    }
+
+    /**
+     * 특정 유저의 모든 Emitter 조회
+     */
+    public List<SseEmitter> findAllEmittersStartsWithUsername(String username) {
+        List<SseEmitter> emitters = new ArrayList<>();
+        sseEmitters.forEach((key, emitter) -> {
+            if (key.startsWith(username)) {
+                emitters.add(emitter);
+            }
+        });
+        log.info("사용자 '{}'의 모든 Emitter 조회 완료. 총 {}개", username, emitters.size());
+        return emitters;
     }
 
     /**
@@ -41,43 +62,42 @@ public class NotificationRepository {
     public void deleteEmitterById(String emitterId) {
         sseEmitters.remove(emitterId);
         eventCache.remove(emitterId);
-        log.info("Emitter 제거: {}", emitterId);
+        log.info("Emitter 및 이벤트 캐시 제거: {}", emitterId);
     }
 
     /**
-     * 특정 유저의 모든 Emitter 조회
+     * 특정 유저의 모든 Notification 조회
      */
-    public List<Notification> findAllEmitterStartsWithUsername(String username) {
+    public List<Notification> findAllNotificationsByUsername(String username) {
         List<Notification> notifications = new ArrayList<>();
-        sseEmitters.forEach((key, emitter) -> {
+        eventCache.forEach((key, notification) -> {
             if (key.startsWith(username)) {
-                Notification notification = (Notification) eventCache.get(key);
-                if (notification != null) {
-                    notifications.add(notification);
-                }
+                notifications.add(notification);
             }
         });
+        log.info("사용자 '{}'의 모든 Notification 조회 완료. 총 {}개", username, notifications.size());
         return notifications;
-    }
-
-    /**
-     * 특정 유저의 모든 이벤트 캐시 조회
-     */
-    public Map<String, Object> findAllEventCacheStartsWithUsername(String username) {
-        Map<String, Object> userEventCache = new HashMap<>();
-        eventCache.forEach((key, value) -> {
-            if (key.startsWith(username)) {
-                userEventCache.put(key, value);
-            }
-        });
-        return userEventCache;
     }
 
     /**
      * 이벤트 캐시 저장
      */
-    public void saveEventCache(String key, Object event) {
-        eventCache.put(key, event);
-        log.info("이벤트 캐시 저장: {}", key);
+    public void saveEventCache(String key, Notification notification) {
+        eventCache.put(key, notification);
+        log.info("Notification 이벤트 캐시 저장: {}", key);
+    }
+
+    /**
+     * 특정 유저의 모든 이벤트 캐시 조회
+     */
+    public Map<String, Notification> findAllEventCacheStartsWithUsername(String username) {
+        Map<String, Notification> userEventCache = new HashMap<>();
+        eventCache.forEach((key, value) -> {
+            if (key.startsWith(username)) {
+                userEventCache.put(key, value);
+            }
+        });
+        log.info("사용자 '{}'의 모든 이벤트 캐시 조회 완료. 총 {}개", username, userEventCache.size());
+        return userEventCache;
     }
 }

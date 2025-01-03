@@ -14,7 +14,6 @@ public interface NotificationService {
     List<Notification> getUnreadNotifications(String userName);
     void sendMessage(String username);
     void sendComment(String username);
-    void sendFriendPost(String username);
 
 }
 
