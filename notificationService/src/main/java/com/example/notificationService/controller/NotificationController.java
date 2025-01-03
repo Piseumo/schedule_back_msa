@@ -3,6 +3,7 @@ package com.example.notificationService.controller;
 import com.example.notificationService.entity.Notification;
 import com.example.notificationService.service.NotiSubscriptionService;
 import com.example.notificationService.service.NotificationService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class NotificationController {
 
     private final NotiSubscriptionService notiSubscriptionService;
     private final NotificationService notificationService;
+    private  final ObjectMapper objectMapper;
 
     @Operation(summary = "SSE 세션 연결")
     @GetMapping(value = "/api/subscribe", produces = "text/event-stream")
@@ -46,22 +48,25 @@ public class NotificationController {
     public ResponseEntity<String> friendRequest(@RequestParam String userName, @RequestParam String friendName) {
         try {
             notificationService.sendFriendRequest(userName, friendName);
+
             // JSON 데이터 생성
             Map<String, Object> eventData = new HashMap<>();
             eventData.put("content", userName + "님이 친구 요청을 보냈습니다.");
             eventData.put("timestamp", System.currentTimeMillis());
 
-            // SSE 이벤트 전송
-            notiSubscriptionService.sendEvent(friendName, eventData.toString());
+            // JSON 데이터 변환 및 이벤트 전송
+            String jsonData = objectMapper.writeValueAsString(eventData);
+            notiSubscriptionService.sendEvent(friendName, jsonData);
 
             return ResponseEntity.ok("친구 요청 알림이 전송되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("친구 요청 전송 실패");
+        }
 
 //            String message = notificationService.sendFriendRequest(userName, friendName);
 //            notiSubscriptionService.sendEvent(friendName, userName + "님이 친구 요청을 보냈습니다.");
 //            return ResponseEntity.ok("친구 요청이 전송되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("친구 요청 전송 실패");
-        }
+
     }
 
     @Operation(summary = "친구 수락 알림")
