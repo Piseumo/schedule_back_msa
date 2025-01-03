@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Data
-@AllArgsConstructor // 모든 필드에 대한 생성자
-@NoArgsConstructor  // 기본 생성자
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserSearchResponseDto {
 
     private Long userId;

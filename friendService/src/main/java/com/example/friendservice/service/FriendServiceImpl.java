@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,11 +70,24 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional
     public List<UserSearchResponseDto> getFriendRequests(Long userId) {
-        List<Long> requesterId = friendRepository.findByReceiverIdAndStatus(userId, Status.PENDING).stream()
+        List<Long> requesterIds = friendRepository.findByReceiverIdAndStatus(userId, Status.PENDING)
+                .stream()
                 .map(friend -> friend.getRequesterId())
                 .collect(Collectors.toList());
 
-        return userFeignClient.friendRequestList(requesterId);
+        List<UserSearchResponseDto> requesterInfo = userFeignClient.friendRequestList(requesterIds);
+
+        Map<Long, UserSearchResponseDto> requesterMap = requesterInfo.stream()
+                .collect(Collectors.toMap(UserSearchResponseDto::getUserId, dto -> dto));
+
+        return requesterIds.stream()
+                .map(requesterId -> {
+                    UserSearchResponseDto dto = requesterMap.get(requesterId);
+                    dto.setUserId(userId); // 내 ID 설정
+                    dto.setFriendId(requesterId); // 요청자 ID 설정
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
     // 친구 요청 수락
@@ -96,7 +110,6 @@ public class FriendServiceImpl implements FriendService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid friend request ID"));
         friendRepository.delete(friendRequest);
     }
-
 
     // 친구 목록 조회
     @Transactional

@@ -48,7 +48,7 @@ public class FriendController {
 
     // 친구 요청 거절
     @PostMapping("/reject")
-    public ResponseEntity<String> rejectFriendRequest(@RequestParam(name = "rejectedRequestId") Long friendRequestId) {
+    public ResponseEntity<String> rejectFriendRequest(@PathVariable(name = "rejectedRequestId") Long friendRequestId) {
         friendService.rejectFriendRequest(friendRequestId);
         return ResponseEntity.ok("Friend request rejected.");
     }
