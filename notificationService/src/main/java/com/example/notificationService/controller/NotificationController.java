@@ -1,5 +1,6 @@
 package com.example.notificationService.controller;
 
+import com.example.notificationService.entity.Notification;
 import com.example.notificationService.service.NotiSubscriptionService;
 import com.example.notificationService.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/noti")
@@ -30,6 +33,12 @@ public class NotificationController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(null);
         }
+    }
+
+    @GetMapping(value = "/initial-data")
+    public ResponseEntity<List<Notification>> getInitialNotifications(@RequestParam("userName") String userName) {
+        List<Notification> notifications = notificationService.getUnreadNotifications(userName);
+        return ResponseEntity.ok(notifications);
     }
 
     @Operation(summary = "친구 신청 알림")
