@@ -10,11 +10,17 @@ import java.util.List;
 
 public interface SharedRepository extends JpaRepository<Shared, Long> {
 
-    // 전체 공개 (friendIdx가 NULL) + 작성자가 친구 목록에 속함
-    @Query("SELECT s FROM Shared s " +
-            "JOIN Calendars c ON c.idx = s.scheduleIdx OR c.idx = s.diaryIdx " +
-            "WHERE s.friendIdx IS NULL AND c.userIdx IN :friendIds")
-    List<Shared> findAllSharedWithAllAndFriends(@Param("friendIds") List<Long> friendIds);
+    // 전체 공개 (다이어리)
+    @Query("SELECT sh FROM Shared sh " +
+            "INNER JOIN Diary d ON sh.diaryIdx = d.idx " +
+            "WHERE sh.friendIdx IS NULL AND d.calendars.userIdx IN :friendIds")
+    List<Shared> findAllSharedWithAllAndFriendsDiaries(@Param("friendIds") List<Long> friendIds);
+
+    // 전체 공개 (스케쥴)
+    @Query("SELECT sh FROM Shared sh " +
+            "INNER JOIN Schedule s ON sh.scheduleIdx = s.idx " +
+            "WHERE sh.friendIdx IS NULL AND s.calendars.userIdx IN :friendIds")
+    List<Shared> findAllSharedWithAllAndFriendsSchedules(@Param("friendIds") List<Long> friendIds);
 
     // 선택 친구 공개 (friendIdx가 나의 userIdx와 일치)
     @Query("SELECT s FROM Shared s WHERE s.friendIdx = :userId")

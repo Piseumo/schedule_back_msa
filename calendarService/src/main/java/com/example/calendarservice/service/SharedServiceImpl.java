@@ -115,14 +115,13 @@ public class SharedServiceImpl implements SharedService{
                 .map(UserSearchResponseDto::getUserId)
                 .collect(Collectors.toList());
 
-        List<Shared> allShared = sharedRepository.findAllSharedWithAllAndFriends(friendIds);
+        List<Shared> allSharedDiaries = sharedRepository.findAllSharedWithAllAndFriendsDiaries(friendIds);
+        List<Shared> allSharedSchedules = sharedRepository.findAllSharedWithAllAndFriendsSchedules(friendIds);
         List<Shared> chooseShared = sharedRepository.findAllSharedWithChoose(userIdx);
 
-        System.out.println(allShared);
-        System.out.println(chooseShared);
-
         List<Shared> sharedList = new ArrayList<>();
-        sharedList.addAll(allShared);
+        sharedList.addAll(allSharedDiaries);
+        sharedList.addAll(allSharedSchedules);
         sharedList.addAll(chooseShared);
 
         List<SharedContentDto> result = sharedList.stream()
@@ -208,6 +207,8 @@ public class SharedServiceImpl implements SharedService{
                     .content(schedule.getContent())
                     .start(schedule.getStart())
                     .end(schedule.getEnd())
+                    .authorIdx(schedule.getCalendars().getUserIdx())
+                    .author(userClient.getUserName(schedule.getCalendars().getUserIdx()))
                     .location(schedule.getLocation())
                     .repeatType(schedule.getRepeatType())
                     .repeatEndDate(schedule.getRepeatEndDate())
@@ -230,6 +231,8 @@ public class SharedServiceImpl implements SharedService{
                     .type("DIARY")
                     .title(diary.getTitle())
                     .content(diary.getContent())
+                    .authorIdx(diary.getCalendars().getUserIdx())
+                    .author(userClient.getUserName(diary.getCalendars().getUserIdx()))
                     .date(diary.getDate())
                     .category(diary.getCategory().name())
                     .diaryImages(imageUrls)
@@ -327,6 +330,8 @@ public class SharedServiceImpl implements SharedService{
                                     .shareDate(shared.getShareDateTime())
                                     .start(schedule.getStart())
                                     .end(schedule.getEnd())
+                                    .authorIdx(schedule.getCalendars().getUserIdx())
+                                    .author(userClient.getUserName(schedule.getCalendars().getUserIdx()))
                                     .location(schedule.getLocation())
                                     .scheduleImages(imageUrls)
                                     .build();
@@ -346,6 +351,8 @@ public class SharedServiceImpl implements SharedService{
                                     .content(diary.getContent())
                                     .shareDate(shared.getShareDateTime())
                                     .date(diary.getDate())
+                                    .authorIdx(diary.getCalendars().getUserIdx())
+                                    .author(userClient.getUserName(diary.getCalendars().getUserIdx()))
                                     .category(diary.getCategory().name())
                                     .diaryImages(imageUrls)
                                     .build();
