@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import java.util.List;
 
 @RestController
@@ -42,9 +45,20 @@ public class NotificationController {
     @GetMapping(value = "/friend-request")
     public ResponseEntity<String> friendRequest(@RequestParam String userName, @RequestParam String friendName) {
         try {
-            String message = notificationService.sendFriendRequest(userName, friendName);
-            notiSubscriptionService.sendEvent(friendName, userName + "님이 친구 요청을 보냈습니다.");
-            return ResponseEntity.ok("친구 요청이 전송되었습니다.");
+            notificationService.sendFriendRequest(userName, friendName);
+            // JSON 데이터 생성
+            Map<String, Object> eventData = new HashMap<>();
+            eventData.put("content", userName + "님이 친구 요청을 보냈습니다.");
+            eventData.put("timestamp", System.currentTimeMillis());
+
+            // SSE 이벤트 전송
+            notiSubscriptionService.sendEvent(friendName, eventData.toString());
+
+            return ResponseEntity.ok("친구 요청 알림이 전송되었습니다.");
+
+//            String message = notificationService.sendFriendRequest(userName, friendName);
+//            notiSubscriptionService.sendEvent(friendName, userName + "님이 친구 요청을 보냈습니다.");
+//            return ResponseEntity.ok("친구 요청이 전송되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("친구 요청 전송 실패");
         }
