@@ -254,6 +254,12 @@ public class ScheduleServiceImpl implements ScheduleService {
                                 .build();
                         sharedService.saveShared(sharedRequestInsertDto);
                     }
+                }else {
+                    SharedRequestInsertDto sharedRequestInsertDto = SharedRequestInsertDto.builder()
+                            .scheduleIdx(createSchedule.getIdx())
+                            .shareDateTime(LocalDateTime.now())
+                            .build();
+                    sharedService.saveShared(sharedRequestInsertDto);
                 }
 
                 //이미지 저장 로직
