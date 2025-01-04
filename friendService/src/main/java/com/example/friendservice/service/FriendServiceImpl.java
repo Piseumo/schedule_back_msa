@@ -4,6 +4,7 @@ import com.example.friendservice.constant.Status;
 import com.example.friendservice.dto.request.FriendRequestDto;
 import com.example.friendservice.dto.response.UserSearchResponseDto;
 import com.example.friendservice.entity.Friend;
+import com.example.friendservice.feign.MessageFeignClient;
 import com.example.friendservice.feign.NotiFeignClient;
 import com.example.friendservice.feign.UserFeignClient;
 import com.example.friendservice.repository.FriendRepository;
@@ -24,6 +25,7 @@ public class FriendServiceImpl implements FriendService {
     private final FriendRepository friendRepository;
     private final UserFeignClient userFeignClient;
     private final NotiFeignClient notiFeignClient;
+    private final MessageFeignClient messageFeignClient;
 
     //친구가 아닌 유저 검색
     @Transactional
@@ -157,6 +159,8 @@ public class FriendServiceImpl implements FriendService {
 
         friendRepository.deleteByRequesterIdAndReceiverId(userId, deletedFriendId);
         friendRepository.deleteByRequesterIdAndReceiverId(deletedFriendId, userId);
+
+        messageFeignClient.deleteMessage(userId, deletedFriendId);
     }
 }
 

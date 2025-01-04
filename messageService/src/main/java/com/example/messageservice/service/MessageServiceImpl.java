@@ -75,7 +75,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Transactional
     @Override
-    public void deleteMessage(Long messageId) {
-        messageRepository.deleteById(messageId);
+    public void deleteMessage(Long userId, Long friendId) {
+        messageRepository.deleteMessagesBetweenUsers(userId, friendId);
     }
 }

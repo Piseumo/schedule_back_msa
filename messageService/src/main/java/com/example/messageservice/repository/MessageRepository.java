@@ -22,4 +22,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
             "ORDER BY MAX(m.timestamp) DESC")
     List<Message> findRecentConversations(@Param("userId") Long userId);
 
+    @Query("DELETE FROM Message m WHERE (m.senderId = :userId AND m.receiverId = :friendId) OR (m.senderId = :friendId AND m.receiverId = :userId)")
+    void deleteMessagesBetweenUsers(@Param("userId") Long userId, @Param("friendId") Long friendId);
+
 }

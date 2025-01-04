@@ -68,9 +68,10 @@ public class MessageController {
         return ResponseEntity.ok(conversations);
     }
 
-//    @DeleteMapping("/{messageId}")
-//    public ResponseEntity<Void> deleteMessage(@PathVariable(name = "messageId") Long messageId) {
-//        messageService.deleteMessage(messageId);
-//        return ResponseEntity.noContent().build();
-//    }
+    @DeleteMapping("/{userId}/{friendId}")
+    public ResponseEntity<String> deleteMessage(@PathVariable Long userId,
+                                                           @PathVariable Long friendId) {
+        messageService.deleteMessage(userId, friendId);
+        return ResponseEntity.ok("All message deleted.");
+    }
 }

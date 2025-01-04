@@ -14,6 +14,6 @@ public interface MessageService {
 
     List<ConversationDto> getRecentConversations(Long userId);
 
-    void deleteMessage(Long messageId);
+    void deleteMessage(Long userId, Long friendId);
 
 }
