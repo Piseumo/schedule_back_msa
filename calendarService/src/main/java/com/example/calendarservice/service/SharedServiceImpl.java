@@ -3,6 +3,7 @@ package com.example.calendarservice.service;
 import com.example.calendarservice.constant.Share;
 import com.example.calendarservice.dto.request.*;
 import com.example.calendarservice.dto.response.CommentsResponseAllDto;
+import com.example.calendarservice.dto.response.CommentsResponseInsertDto;
 import com.example.calendarservice.dto.response.SharedContentDto;
 import com.example.calendarservice.dto.response.UserSearchResponseDto;
 import com.example.calendarservice.entity.*;
@@ -367,7 +368,7 @@ public class SharedServiceImpl implements SharedService{
 
     // 댓글 입력
     @Transactional
-    public void saveComments(CommentsRequestInsertDto commentsRequestInsertDto){
+    public CommentsResponseInsertDto saveComments(CommentsRequestInsertDto commentsRequestInsertDto){
         if ((commentsRequestInsertDto.getScheduleIdx() == null && commentsRequestInsertDto.getDiaryIdx() == null) ||
                 (commentsRequestInsertDto.getScheduleIdx() != null && commentsRequestInsertDto.getDiaryIdx() != null)) {
             throw new IllegalArgumentException("일정 또는 일기 중 하나의 ID만 제공되어야 합니다.");
@@ -380,7 +381,12 @@ public class SharedServiceImpl implements SharedService{
                 .dateTime(LocalDateTime.now())
                 .content(commentsRequestInsertDto.getContent())
                 .build();
-        commentsRepository.save(createComments);
+        Comments savedComments = commentsRepository.save(createComments);
+
+        return CommentsResponseInsertDto.builder()
+                .commentsIdx(savedComments.getCommentsIdx())
+                .cAuthor(userClient.getUserName(savedComments.getUserIdx()))
+                .build();
     }
 
 

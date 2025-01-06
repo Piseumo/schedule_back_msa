@@ -5,6 +5,7 @@ import com.example.calendarservice.dto.request.CommentsRequestUpdateDto;
 import com.example.calendarservice.dto.request.SharedRequestInsertDto;
 import com.example.calendarservice.dto.request.SharedRequestUpdateDto;
 import com.example.calendarservice.dto.response.CommentsResponseAllDto;
+import com.example.calendarservice.dto.response.CommentsResponseInsertDto;
 import com.example.calendarservice.dto.response.SharedContentDto;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface SharedService {
     public void deleteShared(Long sharedIdx);
     public void deleteContentShared(SharedRequestUpdateDto sharedRequestUpdateDto);
     public List<SharedContentDto> findSharedByUser(Long userIdx);
-    public void saveComments(CommentsRequestInsertDto commentsRequestInsertDto);
+    public CommentsResponseInsertDto saveComments(CommentsRequestInsertDto commentsRequestInsertDto);
     public List<CommentsResponseAllDto> findAllComments(String type, Long mixedIdx);
     public void updateComments(CommentsRequestUpdateDto commentsRequestUpdateDto);
     public void deleteComments(Long commentsIdx);

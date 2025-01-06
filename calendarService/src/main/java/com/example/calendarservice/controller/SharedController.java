@@ -3,6 +3,7 @@ package com.example.calendarservice.controller;
 import com.example.calendarservice.dto.request.CommentsRequestInsertDto;
 import com.example.calendarservice.dto.request.CommentsRequestUpdateDto;
 import com.example.calendarservice.dto.response.CommentsResponseAllDto;
+import com.example.calendarservice.dto.response.CommentsResponseInsertDto;
 import com.example.calendarservice.dto.response.SharedContentDto;
 import com.example.calendarservice.service.SharedService;
 import lombok.RequiredArgsConstructor;
@@ -55,9 +56,9 @@ public class SharedController {
 
     // 댓글 입력
     @PostMapping("/create/comments")
-    public ResponseEntity<Boolean> saveComments(@RequestBody CommentsRequestInsertDto commentsRequestInsertDto){
-        sharedService.saveComments(commentsRequestInsertDto);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<CommentsResponseInsertDto> saveComments(@RequestBody CommentsRequestInsertDto commentsRequestInsertDto){
+        CommentsResponseInsertDto commentsResponseInsertDto = sharedService.saveComments(commentsRequestInsertDto);
+        return ResponseEntity.ok(commentsResponseInsertDto);
     }
 
 

@@ -48,7 +48,7 @@ public class NotificationController {
     public ResponseEntity<String> friendRequest(@RequestParam(value = "userName") String userName, @RequestParam(value = "friendName") String friendName) {
         try {
             Notification notification;
-            notification = notificationService.sendFriendRequest(friendName, userName);
+            notification = notificationService.sendFriendRequest(userName, friendName);
 
 
             // JSON 데이터 생성
@@ -60,7 +60,7 @@ public class NotificationController {
 
             // JSON 데이터 변환 및 이벤트 전송
             String jsonData = objectMapper.writeValueAsString(eventData);
-            notiSubscriptionService.sendEvent(userName, jsonData);
+            notiSubscriptionService.sendEvent(friendName, jsonData);
 
             return ResponseEntity.ok("친구 요청 알림이 전송되었습니다.");
         } catch (Exception e) {
