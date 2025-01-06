@@ -32,7 +32,7 @@ public class NotiSubscriptionServiceImpl implements NotiSubscriptionService {
         try {
             sseEmitter.send(SseEmitter.event()
                     .id(emitterId)
-                    .name("sse")
+                    .name("notification")
                     .data("Connection Established"));
         } catch (IOException e) {
             log.error("Failed to send initial SSE event: {}", e.getMessage());

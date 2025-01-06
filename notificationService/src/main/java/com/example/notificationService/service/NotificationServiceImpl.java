@@ -48,7 +48,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .build();
         notificationJPARepository.save(notification);
         notificationRepository.saveEventCache(emitterId, notification);
-        sendNotification(friendName, userName+"에게"+friendName+"님이 친구 요청을 보냈습니다", NotificationType.FRIEND_REQUEST);
+//        sendNotification(friendName, userName+"에게"+friendName+"님이 친구 요청을 보냈습니다", NotificationType.FRIEND_REQUEST);
         return notification.getContent();
     }
 
@@ -59,56 +59,56 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     //친구 수락
-    @Transactional
-    @Override
-    public void sendFriendAccept(String friendName, String userName) {
-        sendNotification(userName, friendName+"께서 친구요청을 수락했습니다.", NotificationType.FRIEND_ACCEPT);
-    }
+//    @Transactional
+//    @Override
+//    public void sendFriendAccept(String friendName, String userName) {
+//        sendNotification(userName, friendName+"께서 친구요청을 수락했습니다.", NotificationType.FRIEND_ACCEPT);
+//    }
+//
+//    @Transactional
+//    @Override
+//    public void sendMessage(String username) {
+//        sendNotification(username, "You have a new message!", NotificationType.MESSAGE);
+//    }
+//
+//    @Transactional
+//    @Override
+//    public void sendComment(String username) {
+//        sendNotification(username, "A new comment has been posted on your post.", NotificationType.COMMENT);
+//    }
 
-    @Transactional
-    @Override
-    public void sendMessage(String username) {
-        sendNotification(username, "You have a new message!", NotificationType.MESSAGE);
-    }
-
-    @Transactional
-    @Override
-    public void sendComment(String username) {
-        sendNotification(username, "A new comment has been posted on your post.", NotificationType.COMMENT);
-    }
-
-    // 메세지 정보 전달
-    private void sendNotification(String username, String content, NotificationType type) {
-        log.info("Preparing to send notification to user: {}, content: {}", username, content);
-
-        // Notification 생성
-        Notification notification = Notification.builder()
-                .notificationId(username + "_" + System.currentTimeMillis())
-                .receiver(username)
-                .content(content)
-                .notificationType(type)
-                .url(type.getPath())
-                .readYn('N')
-                .deletedYn('N')
-                .build();
-
-        // Notification 저장
-        notificationRepository.saveEventCache(notification.getNotificationId(), notification);
-
-        // Receiver와 관련된 모든 Emitter 조회
-        List<SseEmitter> emitters = notificationRepository.findAllEmittersStartsWithUsername(username);
-
-        if (!emitters.isEmpty()) {
-            emitters.forEach(emitter ->notiSubscriptionService.emitEventToClient(emitter, notification.getNotificationId(), notification));
-        } else {
-            log.warn("No active SSE emitters found for user: {}", username);
-        }
-    }
+//    // 메세지 정보 전달
+//    private void sendNotification(String username, String content, NotificationType type) {
+//        log.info("Preparing to send notification to user: {}, content: {}", username, content);
+//
+//        // Notification 생성
+//        Notification notification = Notification.builder()
+//                .notificationId(username + "_" + System.currentTimeMillis())
+//                .receiver(username)
+//                .content(content)
+//                .notificationType(type)
+//                .url(type.getPath())
+//                .readYn('N')
+//                .deletedYn('N')
+//                .build();
+//
+//        // Notification 저장
+//        notificationRepository.saveEventCache(notification.getNotificationId(), notification);
+//
+//        // Receiver와 관련된 모든 Emitter 조회
+//        List<SseEmitter> emitters = notificationRepository.findAllEmittersStartsWithUsername(username);
+//
+//        if (!emitters.isEmpty()) {
+//            emitters.forEach(emitter ->notiSubscriptionService.emitEventToClient(emitter, notification.getNotificationId(), notification));
+//        } else {
+//            log.warn("No active SSE emitters found for user: {}", username);
+//        }
+//    }
 
 
 
     // 실제 메세지 전송 및 캐쉬 저장 하는 곳
-    private void emitAndCacheEvent(SseEmitter emitter, String key, Notification notification) {
+    public void emitAndCacheEvent(SseEmitter emitter, String key, Notification notification) {
         try {
             notificationRepository.saveEventCache(key, notification); // 캐시 저장
             emitter.send(SseEmitter.event()
