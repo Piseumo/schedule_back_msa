@@ -13,5 +13,5 @@ public class CommentsResponseInsertDto {
 
     private Long commentsIdx;
 
-    private String cAuthor;
+    private String comAuthor;
 }

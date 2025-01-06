@@ -385,7 +385,7 @@ public class SharedServiceImpl implements SharedService{
 
         return CommentsResponseInsertDto.builder()
                 .commentsIdx(savedComments.getCommentsIdx())
-                .cAuthor(userClient.getUserName(savedComments.getUserIdx()))
+                .comAuthor(userClient.getUserName(savedComments.getUserIdx()))
                 .build();
     }
 
