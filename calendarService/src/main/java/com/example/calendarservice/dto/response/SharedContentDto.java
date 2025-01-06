@@ -26,6 +26,9 @@ public class SharedContentDto {
     private String author;
     private Long authorIdx;
 
+    private Long scheduleIdx;
+    private Long diaryIdx;
+
     private LocalDateTime start;
     private LocalDateTime end;
     private RepeatType repeatType;

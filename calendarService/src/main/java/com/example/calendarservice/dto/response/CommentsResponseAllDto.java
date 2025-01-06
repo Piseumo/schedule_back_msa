@@ -25,4 +25,8 @@ public class CommentsResponseAllDto {
     private LocalDateTime dateTime;
 
     private String content;
+
+    private String author;
+
+    private Long authorIdx;
 }
