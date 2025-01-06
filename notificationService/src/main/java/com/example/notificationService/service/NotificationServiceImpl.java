@@ -48,7 +48,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .build();
         notificationJPARepository.save(notification);
         notificationRepository.saveEventCache(emitterId, notification);
-        sendNotification(friendName, userName+"에게"+friendName+"님이 친구 요청을 보냈습니다", NotificationType.FRIEND_REQUEST);
+//        sendNotification(friendName, userName+"에게"+friendName+"님이 친구 요청을 보냈습니다", NotificationType.FRIEND_REQUEST);
         return notification;
     }
 

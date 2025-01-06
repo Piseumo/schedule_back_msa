@@ -14,7 +14,7 @@ spec: # 어떻게 만들지에 대한 내용
     spec: # pod 하나하나에 대한 내용
       containers:
         - name: calendar-service
-          image: jeun0415/calendar-service:nj.k8.23 # dockerhub에 있는 image
+          image: jeun0415/calendar-service:nj.k8.26 # dockerhub에 있는 image
           ports:
             - containerPort: 50002
           env:

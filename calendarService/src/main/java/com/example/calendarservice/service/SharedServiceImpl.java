@@ -391,7 +391,7 @@ public class SharedServiceImpl implements SharedService{
 
         List<CommentsResponseAllDto> commentsList = new ArrayList<>();
 
-        if (type == "SCHEDULE"){
+        if (type.equals("SCHEDULE")){
             Schedule schedule = scheduleRepository.findById(mixedIdx)
                     .orElseThrow(() -> new IllegalArgumentException("해당 일정이 존재하지 않습니다."));
             if (schedule.getIdx() != null){
@@ -404,7 +404,7 @@ public class SharedServiceImpl implements SharedService{
                                 .diaryIdx(comment.getDiaryIdx())
                                 .dateTime(comment.getDateTime())
                                 .content(comment.getContent())
-                                .author(userClient.getUserName(comment.getUserIdx()))
+                                .comAuthor(userClient.getUserName(comment.getUserIdx()))
                                 .build())
                         .toList());
             }
@@ -422,7 +422,7 @@ public class SharedServiceImpl implements SharedService{
                                 .diaryIdx(comment.getDiaryIdx())
                                 .dateTime(comment.getDateTime())
                                 .content(comment.getContent())
-                                .author(userClient.getUserName(comment.getUserIdx()))
+                                .comAuthor(userClient.getUserName(comment.getUserIdx()))
                                 .build())
                         .toList());
             }
