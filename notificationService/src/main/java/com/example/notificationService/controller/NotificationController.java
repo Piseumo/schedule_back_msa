@@ -22,7 +22,7 @@ public class NotificationController {
 
     private final NotiSubscriptionService notiSubscriptionService;
     private final NotificationService notificationService;
-    private  final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     @Operation(summary = "SSE 세션 연결")
     @GetMapping(value = "/api/subscribe", produces = "text/event-stream")
@@ -60,7 +60,7 @@ public class NotificationController {
 
             // JSON 데이터 변환 및 이벤트 전송
             String jsonData = objectMapper.writeValueAsString(eventData);
-            notiSubscriptionService.sendEvent(friendName, jsonData);
+            notiSubscriptionService.sendEvent(userName, jsonData);
 
             return ResponseEntity.ok("친구 요청 알림이 전송되었습니다.");
         } catch (Exception e) {
@@ -81,20 +81,19 @@ public class NotificationController {
             return ResponseEntity.internalServerError().body("알림 읽음 처리 중 오류 발생");
         }
     }
-
-
-    @Operation(summary = "친구 수락 알림")
-    @GetMapping(value = "/friend-accept")
-    public ResponseEntity<String> friendAccept(@RequestParam String userName, @RequestParam String friendName) {
-        try {
-            notificationService.sendFriendAccept(userName, friendName);
-            notiSubscriptionService.sendEvent(friendName, userName + "님이 친구 요청을 수락했습니다.");
-            return ResponseEntity.ok("친구 요청을 수락했습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("친구 요청 수락 실패");
-        }
-    }
 }
+//    @Operation(summary = "친구 수락 알림")
+//    @GetMapping(value = "/friend-accept")
+//    public ResponseEntity<String> friendAccept(@RequestParam String userName, @RequestParam String friendName) {
+//        try {
+//            notificationService.sendFriendAccept(userName, friendName);
+//            notiSubscriptionService.sendEvent(friendName, userName + "님이 친구 요청을 수락했습니다.");
+//            return ResponseEntity.ok("친구 요청을 수락했습니다.");
+//        } catch (Exception e) {
+//            return ResponseEntity.internalServerError().body("친구 요청 수락 실패");
+//        }
+//    }
+//}
 
 //    @Operation(summary = "쪽지 알림")
 //    @GetMapping(value = "/message")

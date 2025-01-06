@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment # pod 여러개
+metadata:
+  name: msa-front-service-deployment
+spec: # 어떻게 만들지에 대한 내용
+  replicas: 1 # pod 몇 개 만들래
+  selector:
+    matchLabels:
+      app: msa-front-service # 쿠버네티스 안에서 변수명
+  template:
+    metadata:
+      labels:
+        app: msa-front-service # 서비스에서 찾는 변수명
+    spec: # pod 하나하나에 대한 내용
+      containers:
+        - name: msa-front-service
+          image: jeun0415/msa-front:nj.k8.2 # dockerhub에 있는 image
+          ports:
+            - containerPort: 5173
+          env:
+            - name: BASE_URL
+              value: "http://mafront.ildal.store"
+
+--- # 환경을 두 개 지정할 때 쓰는 구분자
+apiVersion: v1
+kind: Service
+metadata:
+  name: msa-front-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 5173
+      targetPort: 5173
+  selector:
+    app: msa-front-service
