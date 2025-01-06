@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface NotificationService {
 
-    String sendFriendRequest(String userName, String friendName);
+    Notification sendFriendRequest(String userName, String friendName);
+    void markAsRead(Long id);
+    void sendFriendAccept(String friendName, String userName);
     List<Notification> getUnreadNotifications(String userName);
     void emitAndCacheEvent(SseEmitter emitter, String key, Notification notification);
 //    void sendFriendAccept(String friendName, String userName);

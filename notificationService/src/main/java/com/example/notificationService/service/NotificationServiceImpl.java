@@ -33,7 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
     //친구 신청 알람
     @Transactional
     @Override
-    public String sendFriendRequest(String userName, String friendName) {
+    public Notification sendFriendRequest(String userName, String friendName) {
         String emitterId = userName + "_" + System.currentTimeMillis();
         log.info("친구 알림 생성: userName={}, friendName={}", userName, friendName);
         Notification notification = Notification.builder()
@@ -48,9 +48,25 @@ public class NotificationServiceImpl implements NotificationService {
                 .build();
         notificationJPARepository.save(notification);
         notificationRepository.saveEventCache(emitterId, notification);
-//        sendNotification(friendName, userName+"에게"+friendName+"님이 친구 요청을 보냈습니다", NotificationType.FRIEND_REQUEST);
-        return notification.getContent();
+        sendNotification(friendName, userName+"에게"+friendName+"님이 친구 요청을 보냈습니다", NotificationType.FRIEND_REQUEST);
+        return notification;
     }
+
+
+    @Transactional
+    @Override
+    public void markAsRead(Long id) {
+        Notification notification = notificationJPARepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 알림을 찾을 수 없습니다. ID: " + id));
+
+        if (notification.getReadYn() == 'Y') {
+            throw new IllegalStateException("이미 읽음 처리된 알림입니다.");
+        }
+
+        notification.setReadYn('Y');
+        notificationJPARepository.save(notification);
+    }
+
 
     @Transactional
     @Override
