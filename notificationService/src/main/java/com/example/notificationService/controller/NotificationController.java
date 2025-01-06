@@ -47,12 +47,16 @@ public class NotificationController {
     @GetMapping(value = "/friend-request")
     public ResponseEntity<String> friendRequest(@RequestParam(value = "userName") String userName, @RequestParam(value = "friendName") String friendName) {
         try {
-            notificationService.sendFriendRequest(userName, friendName);
+            Notification notification;
+            notification = notificationService.sendFriendRequest(friendName, userName);
+
 
             // JSON 데이터 생성
             Map<String, Object> eventData = new HashMap<>();
-            eventData.put("content", userName + "님이 친구 요청을 보냈습니다.");
+            eventData.put("content", friendName + "님이 친구 요청을 보냈습니다.");
             eventData.put("timestamp", System.currentTimeMillis());
+            eventData.put("idx", notification.getId());
+            eventData.put("read",notification.getReadYn());
 
             // JSON 데이터 변환 및 이벤트 전송
             String jsonData = objectMapper.writeValueAsString(eventData);
@@ -63,11 +67,21 @@ public class NotificationController {
             return ResponseEntity.internalServerError().body("친구 요청 전송 실패");
         }
 
-//            String message = notificationService.sendFriendRequest(userName, friendName);
-//            notiSubscriptionService.sendEvent(friendName, userName + "님이 친구 요청을 보냈습니다.");
-//            return ResponseEntity.ok("친구 요청이 전송되었습니다.");
 
     }
+    // 알림 읽음 처리
+    @PutMapping("/notifications/{id}/read")
+    public ResponseEntity<String> markNotificationAsRead(@PathVariable Long id) {
+        try {
+            notificationService.markAsRead(id);
+            return ResponseEntity.ok("알림이 읽음으로 처리되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("알림 읽음 처리 중 오류 발생");
+        }
+    }
+
 
     @Operation(summary = "친구 수락 알림")
     @GetMapping(value = "/friend-accept")
