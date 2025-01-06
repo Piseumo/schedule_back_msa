@@ -26,7 +26,5 @@ public class CommentsResponseAllDto {
 
     private String content;
 
-    private String author;
-
-    private Long authorIdx;
+    private String comAuthor;
 }
