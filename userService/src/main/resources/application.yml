@@ -45,7 +45,7 @@ spring:
 kakao:
   client-id: 2515f45fc0d9a50bfeee4e2db7c37005
   client-secret: VTtYUbpcA51R3KZaRhcB4cWDTqL40akQ
-  redirect-uri: "http://localhost:5173/kakaologin"
+  redirect-uri: "http://msa.ildal.store"
 
 # 로컬 이미지 저장 루트
 #ImgLocation: "D:/images"

@@ -202,6 +202,7 @@ public class SharedServiceImpl implements SharedService{
             return SharedContentDto.builder()
                     .sharedIdx(shared.getSharedIdx())
                     .shareDate(shared.getShareDateTime())
+                    .scheduleIdx(shared.getScheduleIdx())
                     .type("SCHEDULE")
                     .title(schedule.getTitle())
                     .content(schedule.getContent())
@@ -228,6 +229,7 @@ public class SharedServiceImpl implements SharedService{
             return SharedContentDto.builder()
                     .sharedIdx(shared.getSharedIdx())
                     .shareDate(shared.getShareDateTime())
+                    .diaryIdx(shared.getDiaryIdx())
                     .type("DIARY")
                     .title(diary.getTitle())
                     .content(diary.getContent())
@@ -402,6 +404,7 @@ public class SharedServiceImpl implements SharedService{
                                 .diaryIdx(comment.getDiaryIdx())
                                 .dateTime(comment.getDateTime())
                                 .content(comment.getContent())
+                                .author(userClient.getUserName(comment.getUserIdx()))
                                 .build())
                         .toList());
             }
@@ -419,6 +422,7 @@ public class SharedServiceImpl implements SharedService{
                                 .diaryIdx(comment.getDiaryIdx())
                                 .dateTime(comment.getDateTime())
                                 .content(comment.getContent())
+                                .author(userClient.getUserName(comment.getUserIdx()))
                                 .build())
                         .toList());
             }
